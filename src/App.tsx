@@ -30,7 +30,7 @@ function GlobalLoader({ onComplete }: { onComplete: () => void }) {
         className="relative z-10 flex flex-col items-center"
       >
         <div className="relative mb-8">
-          <img src="/logo.png" alt="ElKairon Global Connect Logo" className="h-24 w-auto object-contain block" />
+          <img src="/ellogo.png" alt="ElKairon Global Connect Logo" className="h-24 w-auto object-contain block" />
         </div>
           
       </motion.div>

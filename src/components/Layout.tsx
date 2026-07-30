@@ -64,7 +64,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
           >
             <div className="relative flex items-center justify-center">
               <img 
-                src="/logo.png" 
+                src="/ellogo.png" 
                 alt="ElKairon Global Connect Logo" 
                 className="h-16 w-auto object-contain transition-transform group-hover:scale-105"
               />
