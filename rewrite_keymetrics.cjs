@@ -1,4 +1,6 @@
-import { motion, useInView } from 'motion/react';
+const fs = require('fs');
+
+const code = `import { motion, useInView } from 'motion/react';
 import { useRef, useEffect, useState } from 'react';
 import { Users, Globe, Building2 } from 'lucide-react';
 import { InteractiveMap } from './InteractiveMap';
@@ -117,3 +119,6 @@ export function KeyMetrics() {
     </section>
   );
 }
+`;
+
+fs.writeFileSync('src/components/home/KeyMetrics.tsx', code);

@@ -12,7 +12,7 @@ const reasons = [
 
 export function WhyGermany() {
   return (
-    <section className="py-24 bg-teal-600 text-white relative overflow-hidden">
+    <section id="germany" className="py-24 bg-teal-600 text-white relative overflow-hidden">
       <div className="absolute top-0 right-0 w-1/2 h-full bg-teal-500/50 blur-3xl rounded-full translate-x-1/3 -translate-y-1/4" />
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">

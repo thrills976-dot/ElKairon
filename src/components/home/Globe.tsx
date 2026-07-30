@@ -26,20 +26,20 @@ export function Globe() {
 
     // Enhance Earth Material
     const globeMaterial = myGlobe.globeMaterial() as THREE.MeshStandardMaterial;
-    globeMaterial.bumpScale = 10;
-    globeMaterial.roughness = 0.6;
-    globeMaterial.metalness = 0.1;
+    globeMaterial.bumpScale = 12;
+    globeMaterial.roughness = 0.5;
+    globeMaterial.metalness = 0.15;
 
-    // Lighting for Cinematic Effect
-    const sunLight = new THREE.DirectionalLight(0xffffff, 2);
-    sunLight.position.set(500, 300, 500);
+    // Cinematic Lighting
+    const sunLight = new THREE.DirectionalLight(0xffffff, 6.0);
+    sunLight.position.set(200, 100, 300);
     myGlobe.scene().add(sunLight);
 
-    const fillLight = new THREE.DirectionalLight(0x0ea5e9, 1);
-    fillLight.position.set(-500, -300, -500);
-    myGlobe.scene().add(fillLight);
+    const rimLight = new THREE.DirectionalLight(0x0ea5e9, 5.0);
+    rimLight.position.set(-300, -100, -300);
+    myGlobe.scene().add(rimLight);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
     myGlobe.scene().add(ambientLight);
 
     // 1. Universal Studios 3D Golden Text
@@ -96,7 +96,7 @@ export function Globe() {
 
     function createPlane() {
       const group = new THREE.Group();
-      const material = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5, roughness: 0.2 });
+      const material = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.8, roughness: 0.2 });
       
       const fuselageGeo = new THREE.ConeGeometry(1.5, 8, 8);
       fuselageGeo.rotateX(Math.PI / 2); 
@@ -117,7 +117,8 @@ export function Globe() {
     }
 
     const numPlanes = 4;
-    const planes: { group: THREE.Group, speed: number }[] = [];
+    const planes: { group: THREE.Group, speed: number, offset: number }[] = [];
+
     for (let i = 0; i < numPlanes; i++) {
       const plane = createPlane();
       
@@ -133,40 +134,49 @@ export function Globe() {
       
       planes.push({
         group: orbitGroup,
-        speed: 0.004 + Math.random() * 0.004
+        speed: 0.003 + Math.random() * 0.002,
+        offset: Math.random() * Math.PI * 2
       });
     }
 
     // 3. Animation & Intro Sequence
     let animationFrameId: number;
+    let time = 0;
     function animate() {
       animationFrameId = requestAnimationFrame(animate);
+      time += 0.05;
       
       if (textGroup) {
-        textGroup.rotation.y -= 0.003;
+        textGroup.rotation.y -= 0.002;
       }
       
-      planes.forEach(p => {
+      planes.forEach((p, idx) => {
         p.group.rotation.z -= p.speed; 
+        // Smoother flight bobbing
+        p.group.children[0].position.z = GLOBE_RADIUS * 1.15 + Math.sin(time + p.offset) * 2;
+        p.group.children[0].rotation.z = Math.sin(time * 0.5 + p.offset) * 0.1;
       });
     }
     animate();
 
+    // Responsive sizing and altitude
+    const isMobile = window.innerWidth < 768;
+    const targetAltitude = isMobile ? 3.2 : 2.2;
+
     // Cinematic Intro Setup
     myGlobe.controls().autoRotate = false;
     myGlobe.controls().enableZoom = false; 
-
-    myGlobe.pointOfView({ lat: 60, lng: -150, altitude: 5 });
+    myGlobe.pointOfView({ lat: 60, lng: -150, altitude: 6 });
 
     const zoomTimeout = setTimeout(() => {
-      myGlobe.pointOfView({ lat: 5, lng: 0, altitude: 2.5 }, 5000);
+      myGlobe.pointOfView({ lat: 10, lng: 0, altitude: targetAltitude }, 4000);
     }, 200);
 
     const controlTimeout = setTimeout(() => {
       myGlobe.controls().enableZoom = true;
       myGlobe.controls().autoRotate = true;
-      myGlobe.controls().autoRotateSpeed = 0.8;
-    }, 5200);
+      myGlobe.controls().autoRotateSpeed = 0.5;
+    }, 4200);
 
     const handleResize = () => {
       if (containerRef.current) {
@@ -177,7 +187,6 @@ export function Globe() {
     
     // Initial size
     handleResize();
-
     window.addEventListener('resize', handleResize);
 
     return () => {
@@ -198,4 +207,3 @@ export function Globe() {
     </div>
   );
 }
-

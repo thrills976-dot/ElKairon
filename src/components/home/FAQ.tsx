@@ -40,7 +40,13 @@ export function FAQ() {
           </p>
         </div>
 
-        <div className="space-y-4">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+          className="space-y-4"
+        >
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
 
@@ -51,6 +57,7 @@ export function FAQ() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
+                variants={{ hidden: { opacity: 0, y: 20, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100 } } }}
                 className={`border rounded-2xl overflow-hidden transition-colors duration-300 ${isOpen ? 'border-teal-500 bg-teal-50/30' : 'border-gray-200 bg-white hover:border-teal-300'}`}
               >
                 <button
@@ -87,7 +94,7 @@ export function FAQ() {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
         
         <div className="mt-12 text-center">
           <p className="text-gray-500 text-sm">

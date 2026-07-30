@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'motion/react';
-import { UploadCloud, FileText, CheckCircle, Clock, AlertCircle, ChevronRight, X } from 'lucide-react';
+import { UploadCloud, FileText, CheckCircle, Clock, AlertCircle, ChevronRight, X, Bell } from 'lucide-react';
 import { Toast } from '../ui/Toast';
 
 const steps = [
@@ -18,6 +18,7 @@ export function CandidateDashboard() {
   const [uploadedFiles, setUploadedFiles] = useState<{ name: string; size: number }[]>([]);
   const [currentStep, setCurrentStep] = useState(2); // Start at step 2 (waiting for docs)
   const [showToast, setShowToast] = useState(false);
+  const [jobAlertSubscribed, setJobAlertSubscribed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -252,7 +253,7 @@ export function CandidateDashboard() {
             </div>
 
             {/* Information Card */}
-            <div className="bg-navy-900 rounded-2xl p-8 text-white relative overflow-hidden shadow-xl">
+            <div className="bg-navy-900 rounded-2xl p-8 text-white relative overflow-hidden shadow-xl mb-6">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/20 blur-2xl rounded-full" />
               <div className="relative z-10 flex items-start gap-4">
                 <AlertCircle className="text-gold-400 shrink-0 mt-1" size={24} />
@@ -268,7 +269,122 @@ export function CandidateDashboard() {
               </div>
             </div>
 
-          </div>
+            {/* Job Alerts Form */}
+            <div className="bg-teal-50 rounded-2xl p-8 border border-teal-100 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-32 h-32 bg-teal-200/50 blur-2xl rounded-full pointer-events-none" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-teal-600 rounded-lg flex items-center justify-center text-white shadow-md">
+                    <Bell size={20} />
+                  </div>
+                  <h3 className="font-display text-xl font-bold text-navy-900">Job Match Alerts</h3>
+                </div>
+                <p className="text-gray-600 text-sm mb-6">
+                  Subscribe to automated email alerts for new job postings that match your specific skills and job preferences.
+                </p>
+                
+                {jobAlertSubscribed ? (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-white p-4 rounded-xl border border-teal-200 text-center flex flex-col items-center gap-2"
+                  >
+                    <CheckCircle className="text-teal-500" size={32} />
+                    <p className="text-navy-900 font-bold">You're Subscribed!</p>
+                    <p className="text-xs text-gray-500">We'll email you when matching roles are posted.</p>
+                  </motion.div>
+                ) : (
+                  <form 
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      import('react-hot-toast').then(toast => toast.default.success('Successfully subscribed to Job Alerts!'));
+                      setJobAlertSubscribed(true);
+                    }} 
+                    className="space-y-4"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-widest text-navy-900 mb-1">Preferred Industry</label>
+                        <select required className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none">
+                          <option value="">Select Industry</option>
+                          <option value="healthcare">Healthcare</option>
+                          <option value="construction">Construction</option>
+                          <option value="hospitality">Hospitality</option>
+                          <option value="logistics">Logistics & Trades</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-widest text-navy-900 mb-1">Preferred Country</label>
+                        <select required className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none">
+                          <option value="">Select Country</option>
+                          <option value="germany">Germany</option>
+                          <option value="uk">United Kingdom</option>
+                          <option value="uae">UAE</option>
+                          <option value="europe">Other Europe</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-navy-900 mb-1">Keywords / Skills</label>
+                      <input type="text" placeholder="e.g. Registered Nurse, Welders, Manager" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                    </div>
+                    <button type="submit" className="w-full py-3 bg-navy-900 text-white rounded-lg font-bold uppercase tracking-widest text-xs hover:bg-navy-800 transition-colors shadow-lg">
+                      Activate Alerts
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+
+                    </div>
+
+            {/* Privacy & Security Card */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 col-span-1 lg:col-span-2">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="font-display text-xl font-bold text-navy-900">Privacy & Data Management</h2>
+                  <p className="text-gray-500 text-sm">Control your data as promised in our Data Protection policy.</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-5 border border-gray-100 rounded-xl bg-gray-50">
+                  <h4 className="font-bold text-navy-900 mb-1">Profile Visibility</h4>
+                  <p className="text-xs text-gray-500 mb-4">Restrict who can see your profile and uploaded documents.</p>
+                  <select className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                    <option>Only Verified Employers</option>
+                    <option>Public</option>
+                    <option>Private (Hidden)</option>
+                  </select>
+                </div>
+                
+                <div className="p-5 border border-gray-100 rounded-xl bg-gray-50">
+                  <h4 className="font-bold text-navy-900 mb-1">Two-Factor Authentication</h4>
+                  <p className="text-xs text-gray-500 mb-4">Enable MFA for an extra layer of account security.</p>
+                  <button className="px-4 py-2 bg-navy-900 text-white rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-navy-800 transition-colors">
+                    Enable MFA
+                  </button>
+                </div>
+                
+                <div className="p-5 border border-gray-100 rounded-xl bg-gray-50 md:col-span-2 flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h4 className="font-bold text-navy-900 mb-1">Delete Account & Data</h4>
+                    <p className="text-xs text-gray-500 max-w-md">Permanently delete your account and all associated data (CVs, documents) from our servers.</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      if(window.confirm('Are you sure you want to delete all your data? This action is irreversible.')) {
+                        import('react-hot-toast').then(toast => toast.default.success('Data deletion request submitted.'));
+                      }
+                    }}
+                    className="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-red-100 transition-colors whitespace-nowrap"
+                  >
+                    Request Deletion
+                  </button>
+                </div>
+              </div>
+            </div>
+
         </div>
       </div>
     </div>

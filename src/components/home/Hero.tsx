@@ -15,13 +15,14 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-porta
 
   return (
     <>
-      <div ref={containerRef} className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-navy-900 pt-20 border-b-4 border-gold-500">
+      <div id="hero" ref={containerRef} className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-navy-900 pt-20 border-b-4 border-gold-500">
         {/* Abstract Background Elements */}
         <motion.div style={{ y, opacity }} className="absolute inset-0 z-0 overflow-hidden pointer-events-auto">
           {/* 3D Globe Background */}
           <div className="absolute inset-0 w-full h-full opacity-100 flex items-center justify-center">
             {/* Fade white background glow behind the globe */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[800px] md:h-[800px] bg-white/20 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] md:w-[1200px] md:h-[1200px] bg-white/80 blur-[180px] rounded-full pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[800px] md:h-[800px] bg-white blur-[120px] rounded-full pointer-events-none" />
             <Globe />
           </div>
           <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-teal-600 rounded-full blur-[120px] mix-blend-screen opacity-10 pointer-events-none" />

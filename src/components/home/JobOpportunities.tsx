@@ -126,6 +126,7 @@ export function JobOpportunities() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('All');
   const [selectedCountry, setSelectedCountry] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedExperience, setSelectedExperience] = useState<string>('All');
 
   const toggleSkill = (skill: string) => {
@@ -136,18 +137,19 @@ export function JobOpportunities() {
 
   const filteredJobs = useMemo(() => {
     return JOBS.filter(job => {
+      const matchSearch = searchQuery === '' || job.title.toLowerCase().includes(searchQuery.toLowerCase()) || job.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchIndustry = selectedIndustry === 'All' || job.industry === selectedIndustry;
       const matchCountry = selectedCountry === 'All' || job.countries.includes(selectedCountry);
       const matchExperience = selectedExperience === 'All' || job.experience === selectedExperience;
       const matchSkills = selectedSkills.length === 0 || selectedSkills.some(skill => job.skills.includes(skill));
-      return matchIndustry && matchCountry && matchExperience && matchSkills;
+      return matchSearch && matchIndustry && matchCountry && matchExperience && matchSkills;
     });
-  }, [selectedSkills, selectedIndustry, selectedCountry, selectedExperience]);
+  }, [searchQuery, selectedSkills, selectedIndustry, selectedCountry, selectedExperience]);
 
   const whatsappNumber = "+263774629109";
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden" id="opportunities">
+    <section className="py-24 bg-white relative overflow-hidden" id="jobs">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-navy-50 skew-x-12 translate-x-1/2 opacity-50 z-0" />
       
@@ -164,7 +166,21 @@ export function JobOpportunities() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <div className="lg:w-1/4 flex flex-col gap-6">
-            <div className="bg-navy-900 rounded-2xl p-6 text-white shadow-xl">
+            <div className="bg-navy-900 rounded-2xl p-6 text-white shadow-xl sticky top-24 z-30">
+              {/* Search Bar */}
+              <div className="mb-6">
+                <label className="block text-xs font-bold uppercase tracking-widest text-navy-300 mb-2">Search</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Job title or keyword"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-navy-800 border border-navy-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                  />
+                  <Search size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-navy-400 pointer-events-none" />
+                </div>
+              </div>
               <div className="flex items-center gap-2 mb-6 border-b border-navy-700 pb-4">
                 <Filter size={20} className="text-gold-500" />
                 <h3 className="font-display text-xl font-bold">Preferences</h3>
@@ -257,9 +273,7 @@ export function JobOpportunities() {
                   ? 'Recommended Opportunities' 
                   : 'Available Opportunities'}
               </h3>
-              <span className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                {filteredJobs.length} {filteredJobs.length === 1 ? 'Match' : 'Matches'}
-              </span>
+              
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

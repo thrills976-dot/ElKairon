@@ -5,6 +5,7 @@ import { About } from './home/About';
 import { Services } from './home/Services';
 import { JobOpportunities } from './home/JobOpportunities';
 import { WhyGermany } from './home/WhyGermany';
+import { Visas } from './home/Visas';
 import { Pricing } from './home/Pricing';
 import { FAQ } from './home/FAQ';
 import { Testimonials } from './home/Testimonials';
@@ -18,6 +19,7 @@ export function Home({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-porta
       <JobOpportunities />
       <About />
       <Services />
+      <Visas />
       <WhyGermany />
       <Pricing />
       <FAQ />

@@ -27,7 +27,7 @@ const sectors = [
 
 export function Services() {
   return (
-    <section className="py-24 bg-gray-50">
+    <section id="services" className="py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-teal-600 font-bold tracking-widest uppercase text-xs mb-3">What We Do</h2>
@@ -37,7 +37,13 @@ export function Services() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           {services.map((service, idx) => (
             <motion.div
               key={idx}
@@ -45,6 +51,7 @@ export function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.6 }}
+              variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100 } } }}
               className="bg-white p-8 rounded-2xl border-t-4 border-transparent hover:border-gold-500 shadow-lg transition-all group"
             >
               <div className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-navy-900 group-hover:text-gold-500 text-teal-600 transition-colors">
@@ -54,7 +61,7 @@ export function Services() {
               <p className="text-gray-600 text-sm leading-relaxed">{service.desc}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <div className="mt-20 border-t border-gray-200 pt-16">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
