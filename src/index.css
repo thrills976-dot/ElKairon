@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-900: #0B192C;
+  --color-navy-800: #1A365D;
+  --color-gold-500: #D4AF37;
+  --color-gold-600: #C5A017;
+  --color-teal-500: #0D9488;
+  --color-teal-600: #0F766E;
+  
+  --font-display: "Playfair Display", serif;
+  --font-body: "Outfit", sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #FAFAFA;
+  color: var(--color-navy-900);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}

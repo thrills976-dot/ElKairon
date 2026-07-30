@@ -1,0 +1,6 @@
+{
+  "name": "ElKairon Global Connect",
+  "description": "Premium recruitment and relocation agency bridging top African talent with trusted employers in the UAE and EU.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
