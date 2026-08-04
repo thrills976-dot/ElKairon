@@ -1,29 +1,27 @@
 import { Hero } from './home/Hero';
-import { KeyMetrics } from './home/KeyMetrics';
-import { Impact } from './home/Impact';
-import { About } from './home/About';
-import { Services } from './home/Services';
+import { CredibilityStrip } from './home/CredibilityStrip';
+import { TwoJourneys } from './home/TwoJourneys';
+import { WhyElKairon } from './home/WhyElKairon';
+import { HowItWorks } from './home/HowItWorks';
+import { EmployerSection } from './home/EmployerSection';
 import { JobOpportunities } from './home/JobOpportunities';
-import { WhyGermany } from './home/WhyGermany';
-import { Visas } from './home/Visas';
-import { Pricing } from './home/Pricing';
-import { FAQ } from './home/FAQ';
 import { Testimonials } from './home/Testimonials';
+import { AboutStory } from './home/AboutStory';
+import { FinalCTA } from './home/FinalCTA';
 
 export function Home({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-portal' | 'employer-portal') => void }) {
   return (
     <div className="w-full">
       <Hero onNavigate={onNavigate} />
-      <KeyMetrics />
-      <Impact />
+      <CredibilityStrip />
+      <WhyElKairon />
+      <TwoJourneys onNavigate={onNavigate} />
+      <EmployerSection onNavigate={onNavigate} />
+      <HowItWorks />
       <JobOpportunities />
-      <About />
-      <Services />
-      <Visas />
-      <WhyGermany />
-      <Pricing />
-      <FAQ />
       <Testimonials />
+      <AboutStory />
+      <FinalCTA onNavigate={onNavigate} />
     </div>
   );
 }

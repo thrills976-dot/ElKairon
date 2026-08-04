@@ -15,7 +15,7 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-porta
 
   return (
     <>
-      <div id="hero" ref={containerRef} className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-navy-900 pt-20 border-b-4 border-gold-500">
+      <div id="hero" ref={containerRef} className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0DA2E7] to-[#065A8C] pt-20 border-b-4 border-gold-500">
         {/* Abstract Background Elements */}
         <motion.div style={{ y, opacity }} className="absolute inset-0 z-0 overflow-hidden pointer-events-auto">
           {/* 3D Globe Background */}
@@ -31,7 +31,7 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-porta
         <div className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center w-full pb-20 pointer-events-none">
           
           {/* Text Content */}
-          <div className="flex flex-col items-start gap-8 bg-transparent p-8 md:p-10 max-w-2xl relative z-10 pointer-events-auto">
+          <div className="flex flex-col items-start gap-8 bg-black/10 backdrop-blur-[2px] border border-white/10 rounded-3xl p-8 md:p-10 max-w-2xl relative z-10 pointer-events-auto shadow-2xl">
             <div className="absolute inset-0 pointer-events-none" />
             
             <motion.div
@@ -55,7 +55,7 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-porta
               >
                 <ShieldCheck size={16} /> CIPA Registered & Govt Approved
               </motion.span>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold italic text-white leading-[1.1] drop-shadow-lg">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold italic text-white leading-[1.1] drop-shadow-lg ">
                 <motion.div variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } }}>
                   Right Moment.
                 </motion.div>
@@ -72,9 +72,9 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-porta
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
-              className="relative z-10 text-lg md:text-xl text-gray-200 max-w-xl leading-relaxed drop-shadow-md"
+              className="relative z-10 text-lg md:text-xl text-white max-w-xl font-medium leading-relaxed drop-shadow-md "
             >
-              Bridging top <span className="text-teal-400 font-bold">global talent</span> with trusted employers in Europe and the UAE. We deliver moments that stick—with timing, skill, and compliance.
+              Connecting African talent with exceptional opportunities across the globe.
             </motion.p>
 
             <motion.div 
@@ -89,16 +89,16 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-porta
                 onClick={() => onNavigate('candidate-portal')}
                 className="w-full sm:w-auto px-6 py-3 bg-teal-600 text-white rounded-lg font-bold shadow-md hover:bg-teal-500 uppercase text-xs tracking-widest flex items-center justify-center gap-2 transition-colors"
               >
-                Start Application <ArrowRight size={16} />
+                Find Your Opportunity <ArrowRight size={16} />
               </motion.button>
-              <motion.a 
+              <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                href="#pricing"
+                onClick={() => onNavigate('employer-portal')}
                 className="w-full sm:w-auto px-6 py-3 bg-transparent border-2 border-gold-500 text-gold-500 rounded-lg font-bold uppercase text-xs tracking-widest flex items-center justify-center gap-2 hover:bg-gold-500 hover:text-navy-900 transition-colors shadow-sm"
               >
-                View Process
-              </motion.a>
+                Hire Global Talent
+              </motion.button>
             </motion.div>
           </div>
 

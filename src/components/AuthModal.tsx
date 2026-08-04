@@ -1,16 +1,47 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Mail, Lock, User, Briefcase } from 'lucide-react';
+import { X, LogIn, Mail, Lock } from 'lucide-react';
+import { loginWithGoogle, loginWithEmail, registerWithEmail } from '../lib/firebase';
 import toast from 'react-hot-toast';
 
 export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [mode, setMode] = useState<'login' | 'register'>('login');
-  const [role, setRole] = useState<'candidate' | 'employer'>('candidate');
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      toast.success('Successfully logged in!');
+      onClose();
+    } catch (error) {
+      toast.error('Failed to log in with Google');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(mode === 'login' ? 'Successfully logged in!' : 'Account created successfully!');
-    onClose();
+    if (!email || !password) {
+      toast.error('Please enter email and password');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      if (isLogin) {
+        await loginWithEmail(email, password);
+        toast.success('Successfully logged in!');
+      } else {
+        await registerWithEmail(email, password);
+        toast.success('Successfully registered!');
+      }
+      onClose();
+    } catch (error: any) {
+      toast.error(error.message || 'Authentication failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,89 +66,74 @@ export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
               <X size={24} />
             </button>
             
-            <div className="p-8">
+            <div className="p-10 text-center">
               <h2 className="text-3xl font-display italic font-bold text-navy-900 mb-2">
-                {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+                {isLogin ? 'Welcome Back' : 'Create Account'}
               </h2>
-              <p className="text-gray-500 mb-6 text-sm">
-                {mode === 'login' 
-                  ? 'Sign in to access your dashboard and preferences.' 
-                  : 'Join ElKairon Global to find your next opportunity.'}
+              <p className="text-gray-500 mb-8 text-sm">
+                {isLogin ? 'Sign in to access your dashboard.' : 'Sign up to build your custom feed.'}
               </p>
-
-              {mode === 'register' && (
-                <div className="flex bg-gray-100 p-1 rounded-lg mb-6">
-                  <button
-                    type="button"
-                    onClick={() => setRole('candidate')}
-                    className={`flex-1 py-2 text-sm font-bold rounded-md transition-colors ${role === 'candidate' ? 'bg-white shadow-sm text-navy-900' : 'text-gray-500 hover:text-navy-900'}`}
-                  >
-                    Candidate
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setRole('employer')}
-                    className={`flex-1 py-2 text-sm font-bold rounded-md transition-colors ${role === 'employer' ? 'bg-white shadow-sm text-navy-900' : 'text-gray-500 hover:text-navy-900'}`}
-                  >
-                    Employer
-                  </button>
+              
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-6">
+                <div className="relative">
+                  <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input 
+                    type="email" 
+                    placeholder="Email address" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-500 text-sm"
+                    required
+                  />
                 </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {mode === 'register' && (
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-navy-900 mb-1">Full Name / Company</label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        {role === 'candidate' ? <User size={18} className="text-gray-400" /> : <Briefcase size={18} className="text-gray-400" />}
-                      </div>
-                      <input type="text" required className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all" placeholder={role === 'candidate' ? 'John Doe' : 'Acme Corp'} />
-                    </div>
-                  </div>
-                )}
-                
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-navy-900 mb-1">Email Address</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail size={18} className="text-gray-400" />
-                    </div>
-                    <input type="email" required className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all" placeholder="you@example.com" />
-                  </div>
+                <div className="relative">
+                  <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input 
+                    type="password" 
+                    placeholder="Password" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-500 text-sm"
+                    required
+                  />
                 </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-navy-900 mb-1">Password</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Lock size={18} className="text-gray-400" />
-                    </div>
-                    <input type="password" required className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all" placeholder="••••••••" />
-                  </div>
-                </div>
-
-                <button type="submit" className="w-full py-3 bg-teal-600 text-white rounded-lg font-bold uppercase tracking-widest hover:bg-teal-700 transition-colors shadow-lg">
-                  {mode === 'login' ? 'Sign In' : 'Register'}
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-navy-900 text-white py-3 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-navy-800 transition-colors shadow-md disabled:opacity-70"
+                >
+                  {loading ? 'Processing...' : (isLogin ? 'Login' : 'Register')}
                 </button>
               </form>
-
-              <div className="mt-6 text-center text-sm text-gray-500">
-                {mode === 'login' ? (
-                  <p>
-                    Don't have an account?{' '}
-                    <button type="button" onClick={() => setMode('register')} className="text-teal-600 font-bold hover:underline">Register</button>
-                  </p>
-                ) : (
-                  <p>
-                    Already have an account?{' '}
-                    <button type="button" onClick={() => setMode('login')} className="text-teal-600 font-bold hover:underline">Sign In</button>
-                  </p>
-                )}
-              </div>
               
-              <div className="mt-6 text-center text-[10px] text-gray-400 max-w-xs mx-auto">
-                By signing in, you agree to our <button type="button" onClick={() => { onClose(); window.dispatchEvent(new CustomEvent("open-privacy")); }} className="underline hover:text-teal-600">Privacy Policy</button> and <a href="#privacy" onClick={() => onClose()} className="underline hover:text-teal-600">Terms of Service</a>.
+              <div className="flex items-center gap-4 mb-6">
+                <div className="h-px bg-gray-200 flex-1" />
+                <span className="text-xs text-gray-400 font-medium">OR</span>
+                <div className="h-px bg-gray-200 flex-1" />
+              </div>
+
+              <button 
+                onClick={handleGoogleLogin}
+                type="button"
+                className="w-full bg-white border border-gray-200 text-navy-900 py-3 rounded-xl font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors shadow-sm mb-6"
+              >
+                <LogIn size={18} />
+                Continue with Google
+              </button>
+              
+              <div className="text-sm text-gray-600">
+                {isLogin ? "Don't have an account? " : "Already have an account? "}
+                <button 
+                  type="button" 
+                  onClick={() => setIsLogin(!isLogin)} 
+                  className="text-teal-600 font-bold hover:underline"
+                >
+                  {isLogin ? 'Sign up' : 'Log in'}
+                </button>
+              </div>
+
+              <div className="mt-8 text-center text-[10px] text-gray-400 max-w-xs mx-auto">
+                By signing in, you agree to our <button type="button" onClick={() => { onClose(); window.dispatchEvent(new CustomEvent("open-privacy")); }} className="underline hover:text-teal-600">Privacy Policy</button> and Terms of Service.
               </div>
             </div>
           </motion.div>

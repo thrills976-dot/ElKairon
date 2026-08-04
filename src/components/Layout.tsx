@@ -3,13 +3,15 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, LogIn } from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { AuthModal } from './AuthModal';
+import { useAuth } from '../contexts/AuthContext';
+import { logout } from '../lib/firebase';
 import { PrivacyModal } from './PrivacyModal';
 import { Toaster } from 'react-hot-toast';
 
 interface LayoutProps {
   children: ReactNode;
-  currentView: 'home' | 'candidate-portal' | 'employer-portal';
-  onNavigate: (view: 'home' | 'candidate-portal' | 'employer-portal') => void;
+  currentView: 'home' | 'candidate-portal' | 'employer-portal' | 'fees';
+  onNavigate: (view: 'home' | 'candidate-portal' | 'employer-portal' | 'fees') => void;
 }
 
 export function Layout({ children, currentView, onNavigate }: LayoutProps) {
@@ -17,6 +19,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -52,7 +55,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-300 text-white ${
           isScrolled 
-            ? 'bg-navy-900 py-4 border-b-4 border-gold-500 shadow-lg' 
+            ? 'bg-gradient-to-r from-[#0DA2E7] to-[#065A8C] py-4 border-b-4 border-gold-500 shadow-lg' 
             : 'bg-transparent py-6 border-b border-transparent'
         }`}
       >
@@ -85,21 +88,38 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-widest">
             <button onClick={() => handleScrollTo('hero')} className="hover:text-gold-500 transition-colors">Home</button>
-            <button onClick={() => handleScrollTo('visas')} className="hover:text-gold-500 transition-colors">Visas</button>
-            <button onClick={() => handleScrollTo('services')} className="hover:text-gold-500 transition-colors">Services</button>
-            <button onClick={() => handleScrollTo('jobs')} className="hover:text-gold-500 transition-colors">Jobs</button>
-            <button onClick={() => handleScrollTo('partners')} className="hover:text-gold-500 transition-colors">Partners</button>
-            <button onClick={() => handleScrollTo('about')} className="hover:text-gold-500 transition-colors">About Us</button>
-            <button onClick={() => handleScrollTo('contact')} className="hover:text-gold-500 transition-colors">Contact Us</button>
+            <button onClick={() => onNavigate('home')} className="hover:text-gold-500 transition-colors">Opportunities</button>
+            <button onClick={() => onNavigate('candidate-portal')} className="hover:text-gold-500 transition-colors">For Talent</button>
+            <button onClick={() => onNavigate('employer-portal')} className="hover:text-gold-500 transition-colors">For Employers</button>
+            <button onClick={() => onNavigate('fees')} className="hover:text-gold-500 transition-colors">Fees</button>
+            <button onClick={() => handleScrollTo('about')} className="hover:text-gold-500 transition-colors">About</button>
+            <button onClick={() => handleScrollTo('contact')} className="hover:text-gold-500 transition-colors">Insights</button>
             <LanguageSwitcher />
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setAuthOpen(true)}
-              className="bg-teal-600 px-5 py-2 rounded-lg text-white hover:bg-teal-500 transition-colors shadow-md ml-2 border border-teal-500"
-            >
-              Login / Register
-            </motion.button>
+            {user ? (
+              <div className="flex items-center gap-4 ml-2">
+                <button 
+                  onClick={() => onNavigate('candidate-portal')}
+                  className="bg-teal-600 px-5 py-2 rounded-lg text-white hover:bg-teal-500 transition-colors shadow-md border border-teal-500"
+                >
+                  Portal
+                </button>
+                <button 
+                  onClick={logout}
+                  className="bg-red-50 text-red-600 px-5 py-2 rounded-lg hover:bg-red-100 transition-colors shadow-md border border-red-100"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setAuthOpen(true)}
+                className="bg-teal-600 px-5 py-2 rounded-lg text-white hover:bg-teal-500 transition-colors shadow-md ml-2 border border-teal-500"
+              >
+                Login / Register
+              </motion.button>
+            )}
           </nav>
 
           {/* Mobile Menu Toggle */}
@@ -119,26 +139,43 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-0 z-40 bg-navy-900/95 backdrop-blur-xl lg:hidden flex flex-col pt-24 px-8 pb-8"
+              className="fixed inset-0 z-40 bg-[#065A8C]/95 backdrop-blur-xl lg:hidden flex flex-col pt-24 px-8 pb-8"
             >
               <div className="flex flex-col gap-8 flex-1">
                 <button onClick={() => { handleScrollTo('hero'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Home</button>
-                <button onClick={() => { handleScrollTo('visas'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Visas</button>
-                <button onClick={() => { handleScrollTo('services'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Services</button>
-                <button onClick={() => { handleScrollTo('jobs'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Jobs</button>
-                <button onClick={() => { handleScrollTo('partners'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Partners</button>
-                <button onClick={() => { handleScrollTo('about'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">About Us</button>
-                <button onClick={() => { handleScrollTo('contact'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Contact Us</button>
+                <button onClick={() => { onNavigate('home'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Opportunities</button>
+                <button onClick={() => { onNavigate('candidate-portal'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">For Talent</button>
+                <button onClick={() => { onNavigate('employer-portal'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">For Employers</button>
+                <button onClick={() => { onNavigate('fees'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Fees</button>
+                <button onClick={() => { handleScrollTo('about'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">About</button>
+                <button onClick={() => { handleScrollTo('contact'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Insights</button>
                 <LanguageSwitcher isMobile={true} />
               </div>
               <div className="mt-auto pb-12">
-                <button 
-                  onClick={() => { setAuthOpen(true); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-teal-600 text-white rounded-xl text-lg font-bold uppercase tracking-widest shadow-lg"
-                >
-                  <LogIn size={20} />
-                  Sign In
-                </button>
+                {user ? (
+                  <div className="flex flex-col gap-4">
+                    <button 
+                      onClick={() => { onNavigate('candidate-portal'); setMobileMenuOpen(false); }}
+                      className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-teal-600 text-white rounded-xl text-lg font-bold uppercase tracking-widest shadow-lg"
+                    >
+                      Portal
+                    </button>
+                    <button 
+                      onClick={() => { logout(); setMobileMenuOpen(false); }}
+                      className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-red-50 text-red-600 rounded-xl text-lg font-bold uppercase tracking-widest shadow-lg"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => { setAuthOpen(true); setMobileMenuOpen(false); }}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-teal-600 text-white rounded-xl text-lg font-bold uppercase tracking-widest shadow-lg"
+                  >
+                    <LogIn size={20} />
+                    Sign In
+                  </button>
+                )}
               </div>
             </motion.div>
           )}
@@ -151,21 +188,21 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
       </main>
 
       {/* Footer */}
-      <footer id="contact" className="bg-white border-t border-gray-200 mt-auto z-10 relative">
+      <footer id="contact" className="bg-[#044c77] border-t border-white/10 mt-auto z-10 relative text-white">
         <div className="max-w-7xl mx-auto px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="text-center md:text-left">
-            <h4 className="font-display italic text-2xl font-bold text-navy-900 mb-2">Join our Career Updates</h4>
-            <p className="text-gray-500 text-sm mb-4">Stay informed about new job postings and visa updates.</p>
+            <h4 className="font-display italic text-2xl font-bold text-white mb-2">Join our Career Updates</h4>
+            <p className="text-gray-300 text-sm mb-4">Stay informed about new job postings and visa updates.</p>
             <form onSubmit={(e) => { e.preventDefault(); import('react-hot-toast').then(toast => toast.default.success('Successfully subscribed to Career Updates!')); (e.target as HTMLFormElement).reset(); }} className="flex w-full max-w-sm mx-auto md:mx-0">
-              <input type="email" required placeholder="Enter your email" className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:border-teal-500" />
+              <input type="email" required placeholder="Enter your email" className="flex-1 px-4 py-2 border border-white/20 bg-white/10 text-white placeholder-gray-300 rounded-l-lg focus:outline-none focus:border-teal-500" />
               <button type="submit" className="bg-teal-600 text-white px-6 py-2 rounded-r-lg font-bold uppercase tracking-widest text-xs hover:bg-teal-700 transition-colors">Subscribe</button>
             </form>
           </div>
-          <div className="flex flex-col gap-4 text-[10px] text-gray-500 font-medium uppercase tracking-widest text-center md:text-right">
+          <div className="flex flex-col gap-4 text-[10px] text-gray-300 font-medium uppercase tracking-widest text-center md:text-right">
             <div>1464 Mainway Meadows | CIPA Registered: 2026</div>
             <div>hello@elkaironglobalconnect.com</div>
-            <button onClick={() => setPrivacyOpen(true)} className="text-gray-500 hover:text-navy-900 transition-colors uppercase font-bold tracking-widest text-[10px]">Data Protection & Privacy</button>
-            <div className="text-navy-900 font-bold">Follow our Placements on LinkedIn</div>
+            <button onClick={() => setPrivacyOpen(true)} className="text-gray-400 hover:text-white transition-colors uppercase font-bold tracking-widest text-[10px]">Data Protection & Privacy</button>
+            <div className="text-white font-bold">Follow our Placements on LinkedIn</div>
           </div>
         </div>
       </footer>

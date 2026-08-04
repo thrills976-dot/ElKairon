@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
+import { FeesAndPayment } from './components/FeesAndPayment';
 import { Portal } from './components/portal';
 import { ChatWidget } from './components/ChatWidget';
 
@@ -39,10 +40,10 @@ function GlobalLoader({ onComplete }: { onComplete: () => void }) {
 }
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'candidate-portal' | 'employer-portal'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'candidate-portal' | 'employer-portal' | 'fees'>('home');
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleNavigate = (view: 'home' | 'candidate-portal' | 'employer-portal') => {
+  const handleNavigate = (view: 'home' | 'candidate-portal' | 'employer-portal' | 'fees') => {
     setIsLoading(true);
     setCurrentView(view);
   };
@@ -55,6 +56,8 @@ export default function App() {
       <Layout currentView={currentView} onNavigate={handleNavigate}>
         {currentView === 'home' ? (
           <Home onNavigate={handleNavigate} />
+        ) : currentView === 'fees' ? (
+          <FeesAndPayment />
         ) : (
           <Portal initialMode={currentView === 'candidate-portal' ? 'candidate' : 'employer'} />
         )}
