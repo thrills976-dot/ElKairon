@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 
-export function FinalCTA({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-portal' | 'employer-portal') => void }) {
+export function FinalCTA({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
   return (
     <section className="py-24 bg-gradient-to-br from-[#0DA2E7] to-[#065A8C] border-t-4 border-gold-500 relative overflow-hidden text-center">
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2850&q=80')] bg-cover bg-center opacity-10" />

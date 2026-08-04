@@ -60,7 +60,7 @@ export function EmployerDashboard() {
     };
   }, [user]);
 
-  const handlePostJob = async (e: React.FormEvent) => {
+  const handlePostJob = async (e: any) => {
     e.preventDefault();
     if (!user) return;
     

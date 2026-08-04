@@ -1,20 +1,29 @@
 import { motion } from 'motion/react';
-import { ArrowRight, Briefcase, UserPlus } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
-export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-portal' | 'employer-portal') => void }) {
+export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
   return (
     <section className="py-24 bg-[#065A8C] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <h2 className="text-sm font-bold tracking-widest text-teal-200 uppercase mb-4">Your Path Forward</h2>
           <h3 className="text-4xl md:text-5xl font-display font-bold text-white italic">
-            Connecting African potential with global opportunity.
+            Connecting global potential with global opportunity.
           </h3>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* For Talent */}
           <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
             whileHover={{ y: -5 }}
             className="group relative bg-white/10 backdrop-blur-md border border-white/20 text-white p-12 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all"
           >
@@ -26,7 +35,7 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'candidat
               </span>
               <h4 className="text-3xl font-display font-bold text-white mb-4">Find Your Global Opportunity</h4>
               <p className="text-gray-100 mb-8 max-w-sm">
-                Your skills can take you further. We identify ambitious African professionals and match them with forward-thinking employers internationally.
+                Your skills can take you further. We identify ambitious professionals and match them with forward-thinking employers internationally.
               </p>
               
               <ul className="space-y-3 mb-10 text-sm text-gray-100">
@@ -46,6 +55,10 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'candidat
 
           {/* For Employers */}
           <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             whileHover={{ y: -5 }}
             className="group relative bg-gradient-to-br from-[#0DA2E7] to-[#065A8C] p-12 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all"
           >
@@ -57,7 +70,7 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'candidat
               </span>
               <h4 className="text-3xl font-display font-bold text-white mb-4">Find Exceptional Talent</h4>
               <p className="text-gray-300 mb-8 max-w-sm">
-                Exceptional talent shouldn't be limited by geography. Access carefully matched African professionals ready to contribute, grow, and perform.
+                Exceptional talent shouldn't be limited by geography. Access carefully matched professionals ready to contribute, grow, and perform.
               </p>
               
               <ul className="space-y-3 mb-10 text-sm text-gray-300">

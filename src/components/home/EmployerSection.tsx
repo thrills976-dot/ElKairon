@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 
-export function EmployerSection({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-portal' | 'employer-portal') => void }) {
+export function EmployerSection({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
   const benefits = [
     "Talent sourcing from verified pools",
     "Candidate screening & cultural alignment",

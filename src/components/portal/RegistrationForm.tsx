@@ -12,7 +12,7 @@ export function CandidateRegistration({ onSubmit, onBack }: { onSubmit: (data: a
     skills: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     onSubmit({
       ...data,
@@ -75,7 +75,7 @@ export function EmployerRegistration({ onSubmit, onBack }: { onSubmit: (data: an
     size: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     onSubmit(data);
   };

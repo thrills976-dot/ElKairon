@@ -86,13 +86,13 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
             </motion.div>
           ) : selectedRole === 'candidate' ? (
             <CandidateRegistration 
-              key="candidate-form"
+              
               onBack={() => setSelectedRole(null)} 
               onSubmit={async (data) => { await setRole('candidate', data); }} 
             />
           ) : (
             <EmployerRegistration 
-              key="employer-form"
+              
               onBack={() => setSelectedRole(null)} 
               onSubmit={async (data) => { await setRole('employer', data); }} 
             />

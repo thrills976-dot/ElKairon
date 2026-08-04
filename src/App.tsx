@@ -4,6 +4,9 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { FeesAndPayment } from './components/FeesAndPayment';
 import { Portal } from './components/portal';
+import { JobOpportunitiesPage } from './components/pages/JobOpportunitiesPage';
+import { AboutPage } from './components/pages/AboutPage';
+import { InsightsPage } from './components/pages/InsightsPage';
 import { ChatWidget } from './components/ChatWidget';
 
 function GlobalLoader({ onComplete }: { onComplete: () => void }) {
@@ -40,10 +43,10 @@ function GlobalLoader({ onComplete }: { onComplete: () => void }) {
 }
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'candidate-portal' | 'employer-portal' | 'fees'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees'>('home');
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleNavigate = (view: 'home' | 'candidate-portal' | 'employer-portal' | 'fees') => {
+  const handleNavigate = (view: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => {
     setIsLoading(true);
     setCurrentView(view);
   };
@@ -56,6 +59,12 @@ export default function App() {
       <Layout currentView={currentView} onNavigate={handleNavigate}>
         {currentView === 'home' ? (
           <Home onNavigate={handleNavigate} />
+        ) : currentView === 'opportunities' ? (
+          <div className="pt-24 min-h-screen bg-gray-50"><JobOpportunitiesPage /></div>
+        ) : currentView === 'about' ? (
+          <div className="pt-24 min-h-screen"><AboutPage /></div>
+        ) : currentView === 'insights' ? (
+          <div className="pt-24 min-h-screen"><InsightsPage /></div>
         ) : currentView === 'fees' ? (
           <FeesAndPayment />
         ) : (

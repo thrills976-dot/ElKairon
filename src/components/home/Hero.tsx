@@ -3,7 +3,7 @@ import { ArrowRight, PlaneTakeoff, ShieldCheck, Clock, Users, Building, Globe as
 import { useRef } from 'react';
 import { Globe } from './Globe';
 
-export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'candidate-portal' | 'employer-portal') => void }) {
+export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,

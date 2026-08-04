@@ -20,7 +20,7 @@ export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!email || !password) {
       toast.error('Please enter email and password');

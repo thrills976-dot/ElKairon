@@ -1,24 +1,24 @@
 import { motion } from 'motion/react';
 import { CreditCard, FileCheck, Plane, CheckCircle2, ShieldCheck, HelpCircle } from 'lucide-react';
+import ReactCountryFlag from 'react-country-flag';
 
 const feeData = [
-  { country: 'NETHERLANDS', cost: '3000$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'FINLAND', cost: '3120$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'LUXEMBOURG', cost: '2760$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'NORWAY', cost: '2760$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'IRELAND', cost: '3000$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'ROMANIA', cost: '2400$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'CANADA', cost: '8400$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'ITALY', cost: '2880$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'GERMANY', cost: '2880$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'AUSTRALIA', cost: '8400$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
-  { country: 'NEW ZEALAND', cost: '8400$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'NL', country: 'NETHERLANDS', cost: '3000$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'FI', country: 'FINLAND', cost: '3120$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'LU', country: 'LUXEMBOURG', cost: '2760$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'NO', country: 'NORWAY', cost: '2760$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'IE', country: 'IRELAND', cost: '3000$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'RO', country: 'ROMANIA', cost: '2400$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'CA', country: 'CANADA', cost: '8400$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'IT', country: 'ITALY', cost: '2880$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'DE', country: 'GERMANY', cost: '2880$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'AU', country: 'AUSTRALIA', cost: '8400$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
+  { code: 'NZ', country: 'NEW ZEALAND', cost: '8400$', docs: '10%', offer: '20%', permit: '30%', visa: '40%' },
 ];
 
 export function FeesAndPayment() {
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-[#0DA2E7] to-[#065A8C] pt-32 pb-24 relative overflow-hidden text-white">
-      {/* Background Elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl -translate-x-1/3 translate-y-1/3" />
 
@@ -39,13 +39,12 @@ export function FeesAndPayment() {
           </p>
         </motion.div>
 
-        {/* Milestone Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-16">
           {[
-            { title: "With Documents", percent: "10%", icon: <FileCheck />, desc: "Initial document processing" },
-            { title: "After Offer Letter", percent: "20%", icon: <CheckCircle2 />, desc: "Job offer secured" },
-            { title: "After Work Permit", percent: "30%", icon: <ShieldCheck />, desc: "Permit approved" },
-            { title: "After Visa", percent: "40%", icon: <Plane />, desc: "Visa stamped and ready" }
+            { title: "With Documents", percent: "10%", icon: <FileCheck />, desc: "Initial document processing", color: "text-yellow-400" },
+            { title: "After Offer Letter", percent: "20%", icon: <CheckCircle2 />, desc: "Job offer secured", color: "text-blue-400" },
+            { title: "After Work Permit", percent: "30%", icon: <ShieldCheck />, desc: "Permit approved", color: "text-teal-400" },
+            { title: "After Visa", percent: "40%", icon: <Plane />, desc: "Visa stamped and ready", color: "text-green-400" }
           ].map((milestone, i) => (
             <motion.div 
               key={i}
@@ -57,14 +56,13 @@ export function FeesAndPayment() {
               <div className="w-12 h-12 mx-auto bg-white/20 rounded-full flex items-center justify-center text-teal-300 mb-4">
                 {milestone.icon}
               </div>
-              <div className="text-3xl font-display font-bold text-gold-400 mb-1">{milestone.percent}</div>
+              <div className={`text-3xl font-display font-bold mb-1 ${milestone.color}`}>{milestone.percent}</div>
               <h3 className="font-bold text-sm uppercase tracking-wider mb-2">{milestone.title}</h3>
               <p className="text-xs text-white/70">{milestone.desc}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* Pricing Table */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -92,12 +90,15 @@ export function FeesAndPayment() {
                     transition={{ delay: 0.8 + idx * 0.05 }}
                     className="border-b border-white/5 hover:bg-white/5 transition-colors group"
                   >
-                    <td className="p-6 font-bold text-sm tracking-widest">{row.country}</td>
+                    <td className="p-6 font-bold text-sm tracking-widest flex items-center gap-3">
+                      <ReactCountryFlag countryCode={row.code} svg style={{ width: '2em', height: '1.5em', borderRadius: '4px', objectFit: 'cover' }}  />
+                      {row.country}
+                    </td>
                     <td className="p-6 text-center font-bold text-teal-300 bg-white/5 group-hover:bg-transparent transition-colors">{row.cost}</td>
-                    <td className="p-6 text-center text-sm font-medium text-white/80">{row.docs}</td>
-                    <td className="p-6 text-center text-sm font-medium text-white/80">{row.offer}</td>
-                    <td className="p-6 text-center text-sm font-medium text-white/80">{row.permit}</td>
-                    <td className="p-6 text-center text-sm font-medium text-white/80">{row.visa}</td>
+                    <td className="p-6 text-center text-sm font-bold text-yellow-400">{row.docs}</td>
+                    <td className="p-6 text-center text-sm font-bold text-blue-400">{row.offer}</td>
+                    <td className="p-6 text-center text-sm font-bold text-teal-400">{row.permit}</td>
+                    <td className="p-6 text-center text-sm font-bold text-green-400">{row.visa}</td>
                   </motion.tr>
                 ))}
               </tbody>
@@ -105,7 +106,6 @@ export function FeesAndPayment() {
           </div>
         </motion.div>
 
-        {/* Additional Note */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
