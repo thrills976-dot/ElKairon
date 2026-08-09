@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
-import { FeesAndPayment } from './components/FeesAndPayment';
+import { ServicesAndTerms } from './components/ServicesAndTerms';
 import { Portal } from './components/portal';
 import { JobOpportunitiesPage } from './components/pages/JobOpportunitiesPage';
 import { AboutPage } from './components/pages/AboutPage';
@@ -10,7 +10,6 @@ import { InsightsPage } from './components/pages/InsightsPage';
 import { ChatWidget } from './components/ChatWidget';
 
 function GlobalLoader({ onComplete }: { onComplete: () => void }) {
-  
   
   useEffect(() => {
     // Extend loader slightly for a better effect
@@ -43,10 +42,10 @@ function GlobalLoader({ onComplete }: { onComplete: () => void }) {
 }
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees' | 'services-terms'>('home');
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleNavigate = (view: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => {
+  const handleNavigate = (view: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees' | 'services-terms') => {
     setIsLoading(true);
     setCurrentView(view);
   };
@@ -65,8 +64,8 @@ export default function App() {
           <div className="pt-24 min-h-screen"><AboutPage /></div>
         ) : currentView === 'insights' ? (
           <div className="pt-24 min-h-screen"><InsightsPage /></div>
-        ) : currentView === 'fees' ? (
-          <FeesAndPayment />
+        ) : currentView === 'fees' || currentView === 'services-terms' ? (
+          <ServicesAndTerms />
         ) : (
           <Portal initialMode={currentView === 'candidate-portal' ? 'candidate' : 'employer'} />
         )}
@@ -80,3 +79,4 @@ export default function App() {
     </>
   );
 }
+

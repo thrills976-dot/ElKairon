@@ -1,41 +1,220 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
+import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
 import { auth, db, handleFirestoreError, OperationType } from '../lib/firebase';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { CandidateProfile, EmployerProfile } from '../types/recruitment';
+import { computeRecruitmentScores, computePersonalityArchetype } from '../lib/aiRecruitmentEngine';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   role: 'candidate' | 'employer' | null;
+  candidateProfile: CandidateProfile | null;
+  employerProfile: EmployerProfile | null;
+  isGuestUser: boolean;
   setRole: (role: 'candidate' | 'employer', profileData?: any) => Promise<void>;
+  updateCandidateProfile: (updates: Partial<CandidateProfile>) => Promise<void>;
+  updateEmployerProfile: (updates: Partial<EmployerProfile>) => Promise<void>;
+  loginAsGuestCandidate: () => void;
+  loginAsGuestEmployer: () => void;
+  logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, loading: true, role: null, setRole: async () => {} });
+const DEFAULT_SAMPLE_CANDIDATE: CandidateProfile = {
+  role: 'candidate',
+  name: 'Blessing Mukamuri',
+  firstName: 'Blessing',
+  lastName: 'Mukamuri',
+  email: 'blessing.mukamuri@talent.elkairon.com',
+  phone: '+263 77 123 4567',
+  country: 'Zimbabwe',
+  avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
+  dob: '1996-05-14',
+  age: 29,
+  gender: 'Female',
+  nationality: 'Zimbabwean',
+  countryOfResidence: 'Zimbabwe',
+  city: 'Harare',
+  workAuthorization: 'Requires Visa Sponsorship',
+  willingToRelocate: 'Yes, Europe & UK',
+  passportAvailable: 'Valid Passport Available (Ready to Travel)',
+
+  currentJobTitle: 'Senior Cloud Systems & Network Engineer',
+  currentCompany: 'AfriTelecom Solutions',
+  industry: 'Technology',
+  department: 'Cloud Infrastructure & SRE',
+  careerLevel: 'Senior',
+  totalYearsOfExperience: '5+ years',
+  yearsOfExperience: '5 years',
+
+  highestDegree: "Bachelor's Degree",
+  institution: 'University of Zimbabwe',
+  fieldOfStudy: 'Computer Science & Software Engineering',
+  graduationYear: '2019',
+  gpa: '3.8 / 4.0',
+
+  skills: ['Python', 'AWS', 'Azure', 'Docker', 'Kubernetes', 'Cisco CCNA', 'Networking', 'Routing & Switching', 'Linux', 'Terraform'],
+  certifications: ['Microsoft Azure Administrator (AZ-104)', 'Cisco CCNA (200-301)', 'AWS Solutions Architect Associate'],
+  languages: [
+    { language: 'English', proficiency: 'Native' },
+    { language: 'German', proficiency: 'Intermediate' },
+    { language: 'Shona', proficiency: 'Native' }
+  ],
+
+  preferredJobs: ['Cloud Engineer', 'DevOps Engineer', 'Network Engineer', 'Backend Developer'],
+  preferredIndustries: ['Technology', 'Banking & FinTech', 'Telecommunications'],
+  preferredWorkStyle: 'Hybrid',
+  employmentType: ['Permanent', 'Contract'],
+  salaryExpectations: {
+    minSalary: 5500,
+    maxSalary: 8500,
+    currency: 'EUR',
+    period: 'Monthly'
+  },
+  availability: 'One Month',
+  preferredLocations: ['Germany', 'Netherlands', 'United Kingdom', 'UAE', 'Canada'],
+
+  documents: {
+    cvName: 'Blessing_Mukamuri_Cloud_Architect_CV.pdf',
+    coverLetterName: 'Blessing_CoverLetter_International.pdf'
+  },
+
+  skillsAssessment: {
+    categoryRatings: {
+      'Python': 4,
+      'AWS': 5,
+      'Azure': 4,
+      'Docker & K8s': 4,
+      'Cisco CCNA': 5,
+      'SIEM / Security': 3
+    }
+  },
+
+  personalityStyle: {
+    leadTeams: 4,
+    workIndependently: 5,
+    complexProblemSolving: 5,
+    customerInteraction: 4,
+    learnQuickly: 5,
+    adaptToChange: 5,
+    workUnderPressure: 4,
+    archetype: 'Strategic Engineering Leader'
+  },
+
+  careerGoals: {
+    dreamJob: 'Principal Enterprise Cloud Architect & Relocation Lead',
+    desiredCareerPath: 'Cloud Architecture -> VP of Infrastructure',
+    industriesOfInterest: ['Technology', 'Global FinTech', 'Renewable Tech'],
+    targetCompanies: ['NextGen Cloud Systems', 'FinApex', 'Booking.com', 'SAP'],
+    longTermGoals: 'Lead international multi-region cloud migrations and mentor African tech professionals.'
+  },
+
+  matchingPreferences: {
+    salaryImportance: 90,
+    remoteWork: 80,
+    careerGrowth: 95,
+    workLifeBalance: 75,
+    companyCulture: 85,
+    learningOpportunities: 95,
+    jobSecurity: 85,
+    travelOpportunities: 50
+  },
+
+  profileStep: 7,
+  profileCompleted: true
+};
+
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  loading: true,
+  role: null,
+  candidateProfile: null,
+  employerProfile: null,
+  isGuestUser: false,
+  setRole: async () => {},
+  updateCandidateProfile: async () => {},
+  updateEmployerProfile: async () => {},
+  loginAsGuestCandidate: () => {},
+  loginAsGuestEmployer: () => {},
+  logout: async () => {}
+});
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRoleState] = useState<'candidate' | 'employer' | null>(null);
+  const [candidateProfile, setCandidateProfile] = useState<CandidateProfile | null>(null);
+  const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
+  const [isGuestUser, setIsGuestUser] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Initialize cached guest or persistent profile
+  useEffect(() => {
+    const savedRole = localStorage.getItem('elkairon_role') as 'candidate' | 'employer' | null;
+    const savedCandidate = localStorage.getItem('elkairon_candidate_profile');
+    const savedEmployer = localStorage.getItem('elkairon_employer_profile');
+
+    if (savedCandidate) {
+      try {
+        setCandidateProfile(JSON.parse(savedCandidate));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    if (savedEmployer) {
+      try {
+        setEmployerProfile(JSON.parse(savedEmployer));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    if (savedRole) {
+      setRoleState(savedRole);
+    }
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
+        setIsGuestUser(false);
         try {
           const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
           if (userDoc.exists()) {
-            setRoleState(userDoc.data().role as 'candidate' | 'employer');
-          } else {
-            setRoleState(null); // Needs to pick role
+            const data = userDoc.data();
+            const userRole = data.role as 'candidate' | 'employer';
+            setRoleState(userRole);
+            localStorage.setItem('elkairon_role', userRole);
+
+            if (userRole === 'candidate') {
+              const fullProfile: CandidateProfile = {
+                ...DEFAULT_SAMPLE_CANDIDATE,
+                ...data,
+                id: currentUser.uid,
+                email: currentUser.email || data.email,
+                name: data.name || currentUser.displayName || 'Candidate'
+              };
+              fullProfile.aiRecruitmentScore = computeRecruitmentScores(fullProfile);
+              setCandidateProfile(fullProfile);
+              localStorage.setItem('elkairon_candidate_profile', JSON.stringify(fullProfile));
+            } else if (userRole === 'employer') {
+              const empProfile: EmployerProfile = {
+                id: currentUser.uid,
+                role: 'employer',
+                name: data.name || currentUser.displayName || 'Employer',
+                email: currentUser.email || data.email,
+                company: data.company || 'Enterprise Partner',
+                industry: data.industry || 'Technology',
+                size: data.size || '50-200'
+              };
+              setEmployerProfile(empProfile);
+              localStorage.setItem('elkairon_employer_profile', JSON.stringify(empProfile));
+            }
           }
         } catch (error) {
-          console.error(error);
-          setRoleState(null);
+          console.error('Firestore user load error:', error);
         }
-      } else {
-        setRoleState(null);
       }
       setLoading(false);
     });
@@ -44,25 +223,159 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const setRole = async (newRole: 'candidate' | 'employer', profileData: any = {}) => {
-    if (!user) return;
-    try {
-      const userRef = doc(db, 'users', user.uid);
-      await setDoc(userRef, {
+    setRoleState(newRole);
+    localStorage.setItem('elkairon_role', newRole);
+
+    if (newRole === 'candidate') {
+      const mergedProfile: CandidateProfile = {
+        ...DEFAULT_SAMPLE_CANDIDATE,
         ...profileData,
-        role: newRole,
-        name: user.displayName || profileData.name || 'Unknown',
-        email: user.email || profileData.email || '',
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      });
-      setRoleState(newRole);
-    } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, 'users');
+        id: user ? user.uid : 'guest-cand-1',
+        role: 'candidate',
+        name: profileData.name || user?.displayName || 'Blessing Mukamuri',
+        email: profileData.email || user?.email || 'candidate@talent.elkairon.com'
+      };
+      mergedProfile.aiRecruitmentScore = computeRecruitmentScores(mergedProfile);
+      setCandidateProfile(mergedProfile);
+      localStorage.setItem('elkairon_candidate_profile', JSON.stringify(mergedProfile));
+    } else {
+      const empData: EmployerProfile = {
+        id: user ? user.uid : 'guest-emp-1',
+        role: 'employer',
+        name: profileData.name || 'Global Recruiter',
+        email: profileData.email || 'recruiter@enterprise.com',
+        company: profileData.company || 'Global Tech Partners',
+        industry: profileData.industry || 'Technology',
+        size: profileData.size || '50-200'
+      };
+      setEmployerProfile(empData);
+      localStorage.setItem('elkairon_employer_profile', JSON.stringify(empData));
+    }
+
+    if (user) {
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        await setDoc(userRef, {
+          ...profileData,
+          role: newRole,
+          name: profileData.name || user.displayName || 'User',
+          email: profileData.email || user.email || '',
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      } catch (error) {
+        console.warn('Firestore setRole error:', error);
+      }
     }
   };
 
+  const updateCandidateProfile = async (updates: Partial<CandidateProfile>) => {
+    setCandidateProfile(prev => {
+      const updated: CandidateProfile = {
+        ...(prev || DEFAULT_SAMPLE_CANDIDATE),
+        ...updates
+      };
+      // Recalculate AI scores and personality archetype if relevant fields change
+      updated.aiRecruitmentScore = computeRecruitmentScores(updated);
+      if (updated.personalityStyle) {
+        const { archetype } = computePersonalityArchetype(updated.personalityStyle as any);
+        updated.personalityStyle.archetype = archetype;
+      }
+      localStorage.setItem('elkairon_candidate_profile', JSON.stringify(updated));
+      return updated;
+    });
+
+    if (user) {
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, {
+          ...updates,
+          updatedAt: serverTimestamp()
+        });
+      } catch (err) {
+        console.warn('Firestore updateCandidateProfile error:', err);
+      }
+    }
+  };
+
+  const updateEmployerProfile = async (updates: Partial<EmployerProfile>) => {
+    setEmployerProfile(prev => {
+      const updated = { ...(prev as EmployerProfile), ...updates };
+      localStorage.setItem('elkairon_employer_profile', JSON.stringify(updated));
+      return updated;
+    });
+    if (user) {
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, {
+          ...updates,
+          updatedAt: serverTimestamp()
+        });
+      } catch (err) {
+        console.warn('Firestore updateEmployerProfile error:', err);
+      }
+    }
+  };
+
+  const loginAsGuestCandidate = () => {
+    setIsGuestUser(true);
+    setRoleState('candidate');
+    const profile = { ...DEFAULT_SAMPLE_CANDIDATE };
+    profile.aiRecruitmentScore = computeRecruitmentScores(profile);
+    setCandidateProfile(profile);
+    localStorage.setItem('elkairon_role', 'candidate');
+    localStorage.setItem('elkairon_candidate_profile', JSON.stringify(profile));
+  };
+
+  const loginAsGuestEmployer = () => {
+    setIsGuestUser(true);
+    setRoleState('employer');
+    const profile: EmployerProfile = {
+      id: 'guest-emp-1',
+      role: 'employer',
+      name: 'Elena Rostova',
+      email: 'elena@nextgencloud.nl',
+      company: 'NextGen Cloud Systems',
+      industry: 'Technology',
+      size: '250-500 employees',
+      phone: '+31 20 555 0192',
+      country: 'Netherlands'
+    };
+    setEmployerProfile(profile);
+    localStorage.setItem('elkairon_role', 'employer');
+    localStorage.setItem('elkairon_employer_profile', JSON.stringify(profile));
+  };
+
+  const logout = async () => {
+    try {
+      if (auth.currentUser) {
+        await firebaseSignOut(auth);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    setUser(null);
+    setRoleState(null);
+    setIsGuestUser(false);
+    localStorage.removeItem('elkairon_role');
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, role, setRole }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        role,
+        candidateProfile,
+        employerProfile,
+        isGuestUser,
+        setRole,
+        updateCandidateProfile,
+        updateEmployerProfile,
+        loginAsGuestCandidate,
+        loginAsGuestEmployer,
+        logout
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

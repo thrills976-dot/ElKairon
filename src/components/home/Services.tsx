@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Building2, Users, FileCheck, Stethoscope, HardHat, Coffee, Globe } from 'lucide-react';
+import { SpringCard } from '../common/SpringCard';
 
 const services = [
   {
@@ -27,56 +28,49 @@ const sectors = [
 
 export function Services() {
   return (
-    <section id="services" className="py-24 bg-gray-50">
+    <section id="services" className="py-24 bg-navy-900/60 backdrop-blur-md border-y border-white/10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-teal-600 font-bold tracking-widest uppercase text-xs mb-3">What We Do</h2>
-          <h3 className="font-display italic text-4xl font-bold text-navy-900 mb-6">Comprehensive Recruitment & Relocation</h3>
-          <p className="text-gray-600 text-lg">
+          <h2 className="text-gold-400 font-bold tracking-widest uppercase text-xs mb-3">What We Do</h2>
+          <h3 className="font-display italic text-4xl font-bold text-white mb-6">Comprehensive Recruitment & Relocation</h3>
+          <p className="text-sky-100 text-lg">
             We provide seamless end-to-end solutions for both global employers seeking talent and candidates looking for their next career move.
           </p>
         </div>
 
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {services.map((service, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, duration: 0.6 }}
-              variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100 } } }}
-              className="bg-white p-8 rounded-2xl border-t-4 border-transparent hover:border-gold-500 shadow-lg transition-all group"
-            >
-              <div className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-navy-900 group-hover:text-gold-500 text-teal-600 transition-colors">
-                <service.icon size={28} />
+            <SpringCard key={idx} className="h-full">
+              <div className="bg-navy-950/90 p-8 rounded-2xl border-t-4 border-gold-400 hover:border-teal-400 shadow-2xl transition-all h-full flex flex-col justify-between group border border-white/10">
+                <div>
+                  <div className="w-14 h-14 bg-navy-900 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gold-500 group-hover:text-navy-950 text-gold-400 transition-colors">
+                    <service.icon size={28} />
+                  </div>
+                  <h4 className="font-display text-xl font-bold italic text-white mb-3">{service.title}</h4>
+                  <p className="text-sky-200 text-sm leading-relaxed">{service.desc}</p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-white/10 text-xs font-bold text-teal-300">
+                  Guaranteed Process
+                </div>
               </div>
-              <h4 className="font-display text-xl font-bold italic text-navy-900 mb-3">{service.title}</h4>
-              <p className="text-gray-600 text-sm leading-relaxed">{service.desc}</p>
-            </motion.div>
+            </SpringCard>
           ))}
-        </motion.div>
+        </div>
 
-        <div className="mt-20 border-t border-gray-200 pt-16">
+        <div className="mt-20 border-t border-white/10 pt-16">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
-              <h4 className="font-display italic text-2xl font-bold text-navy-900 mb-2">Key Sectors We Serve</h4>
-              <p className="text-gray-500">Specialized talent pools ready for deployment.</p>
+              <h4 className="font-display italic text-2xl font-bold text-white mb-2">Key Sectors We Serve</h4>
+              <p className="text-sky-200">Specialized talent pools ready for deployment.</p>
             </div>
             <div className="flex flex-wrap gap-4">
               {sectors.map((sector, idx) => (
-                <div key={idx} className="flex items-center gap-2 bg-white px-5 py-3 rounded-full border border-gray-200 shadow-sm text-navy-900 font-bold uppercase tracking-wider text-[10px]">
-                  <sector.icon size={16} className="text-teal-600" />
+                <div key={idx} className="flex items-center gap-2 bg-navy-950 px-5 py-3 rounded-full border border-white/15 shadow-sm text-gold-400 font-bold uppercase tracking-wider text-[10px]">
+                  <sector.icon size={16} className="text-teal-400" />
                   {sector.name}
                 </div>
               ))}
-              <div className="flex items-center gap-2 bg-navy-900 px-5 py-3 rounded-full border border-navy-800 shadow-sm text-white font-bold uppercase tracking-wider text-[10px]">
+              <div className="flex items-center gap-2 bg-gold-500 text-navy-950 px-5 py-3 rounded-full border border-gold-400 shadow-sm font-bold uppercase tracking-wider text-[10px]">
                 + Logistics & Domestic
               </div>
             </div>
@@ -86,3 +80,4 @@ export function Services() {
     </section>
   );
 }
+

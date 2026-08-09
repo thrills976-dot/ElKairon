@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Briefcase, Filter, Search, ArrowRight, ChevronDown, Check, Columns, X } from 'lucide-react';
-import { useEffect } from 'react';
+import { MapPin, Briefcase, Filter, Search, ArrowRight, ChevronDown, Check } from 'lucide-react';
 
 type Job = {
   id: string;
@@ -124,25 +123,6 @@ const allCountries = Array.from(new Set(JOBS.flatMap(j => j.countries))).sort();
 const allExperienceLevels = Array.from(new Set(JOBS.map(j => j.experience))).sort();
 
 export function JobOpportunities() {
-  const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
-  const [showCompareModal, setShowCompareModal] = useState(false);
-  
-  useEffect(() => {
-    const handleGlobalSearch = (e: any) => {
-      if (e.detail) {
-        setSearchQuery(e.detail);
-      }
-    };
-    window.addEventListener('globalSearch', handleGlobalSearch);
-    return () => window.removeEventListener('globalSearch', handleGlobalSearch);
-  }, []);
-  
-  const toggleCompare = (jobId: string) => {
-    setSelectedJobs(prev => 
-      prev.includes(jobId) ? prev.filter(id => id !== jobId) : [...prev, jobId]
-    );
-  };
-
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('All');
   const [selectedCountry, setSelectedCountry] = useState<string>('All');
@@ -161,9 +141,7 @@ export function JobOpportunities() {
       const matchIndustry = selectedIndustry === 'All' || job.industry === selectedIndustry;
       const matchCountry = selectedCountry === 'All' || job.countries.includes(selectedCountry);
       const matchExperience = selectedExperience === 'All' || job.experience === selectedExperience;
-      
       const matchSkills = selectedSkills.length === 0 || selectedSkills.some(skill => job.skills.includes(skill));
-
       return matchSearch && matchIndustry && matchCountry && matchExperience && matchSkills;
     });
   }, [searchQuery, selectedSkills, selectedIndustry, selectedCountry, selectedExperience]);
@@ -173,14 +151,13 @@ export function JobOpportunities() {
   return (
     <section className="py-24 bg-[#0DA2E7] relative overflow-hidden" id="jobs">
       {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-white/5 skew-x-12 translate-x-1/2 z-0" />
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-navy-50 skew-x-12 translate-x-1/2 opacity-50 z-0" />
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-sm font-bold tracking-widest text-teal-200 uppercase mb-4">Global Opportunities</h2>
-          <h3 className="text-4xl md:text-5xl font-display font-bold text-white italic mb-6">
-            Featured Roles Across the Globe
-          </h3>
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+            Smart Job <span className="text-teal-600 italic">Matching</span>
+          </h2>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">
             Don't just search for titles. Select your skills and preferences below, and our advanced matching system will recommend the best global opportunities for you.
           </p>
@@ -204,7 +181,6 @@ export function JobOpportunities() {
                   <Search size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-navy-400 pointer-events-none" />
                 </div>
               </div>
-
               <div className="flex items-center gap-2 mb-6 border-b border-navy-700 pb-4">
                 <Filter size={20} className="text-gold-500" />
                 <h3 className="font-display text-xl font-bold">Preferences</h3>
@@ -312,22 +288,22 @@ export function JobOpportunities() {
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
                     key={job.id}
-                    className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full relative"
+                    className="bg-[#0DA2E7]/20/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full relative"
                   >
                     {/* Top badging */}
                     <div className="flex justify-between items-start mb-4">
                       <span className="bg-teal-50 text-teal-700 text-xs font-bold px-3 py-1 rounded-full border border-teal-100">
                         {job.industry}
                       </span>
-                      <span className="text-xs font-bold text-navy-900 bg-white px-2 py-1 rounded border border-white/20">
+                      <span className="text-xs font-bold text-navy-400 bg-[#0DA2E7]/20/5 px-2 py-1 rounded border border-white/10">
                         {job.type}
                       </span>
                     </div>
 
-                    <h4 className="font-display text-xl font-bold text-white mb-2 leading-tight group-hover:text-teal-300 transition-colors">
+                    <h4 className="font-display text-xl font-bold text-white mb-2 leading-tight group-hover:text-teal-600 transition-colors">
                       {job.title}
                     </h4>
-                    
+
                     <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-gray-200 mb-4">
                       <div className="flex items-center gap-1">
                         <MapPin size={16} className="text-gold-500" />
@@ -335,7 +311,7 @@ export function JobOpportunities() {
                       </div>
                       <div className="flex items-center gap-1">
                         <Briefcase size={16} className="text-gold-500" />
-                        <span className="font-medium text-teal-300">{job.salary}</span>
+                        <span className="font-medium text-teal-700">{job.salary}</span>
                       </div>
                     </div>
 
@@ -343,15 +319,15 @@ export function JobOpportunities() {
                       {job.description}
                     </p>
 
-                    <div className="mt-auto pt-4 border-t border-white/20">
+                    <div className="mt-auto pt-4 border-t border-white/10">
                       <div className="flex flex-wrap gap-1.5 mb-6">
                         {job.skills.slice(0, 3).map(skill => (
-                          <span key={skill} className="text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white px-2 py-1 rounded">
+                          <span key={skill} className="text-[10px] font-bold uppercase tracking-wider bg-[#0DA2E7]/20/10 text-gray-200 px-2 py-1 rounded">
                             {skill}
                           </span>
                         ))}
                         {job.skills.length > 3 && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white px-2 py-1 rounded">
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-[#0DA2E7]/20/10 text-gray-200 px-2 py-1 rounded">
                             +{job.skills.length - 3} more
                           </span>
                         )}
@@ -374,7 +350,7 @@ export function JobOpportunities() {
               </AnimatePresence>
 
               {filteredJobs.length === 0 && (
-                <div className="col-span-full py-12 text-center bg-white/5 rounded-2xl border border-dashed border-white/20">
+                <div className="col-span-full py-12 text-center bg-[#0DA2E7]/20/5 rounded-2xl border border-dashed border-white/30">
                   <Search className="mx-auto text-gray-300 mb-4" size={48} />
                   <h4 className="text-lg font-bold text-white mb-2">No matching jobs found</h4>
                   <p className="text-gray-300 text-sm">Try adjusting your filters or clearing your skill selections to see more opportunities.</p>
@@ -385,7 +361,7 @@ export function JobOpportunities() {
                       setSelectedIndustry('All');
                       setSelectedExperience('All');
                     }}
-                    className="mt-4 px-6 py-2 bg-white/10 border border-white/20 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-white/20"
+                    className="mt-4 px-6 py-2 bg-[#0DA2E7]/20 border border-white/20 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-[#0DA2E7]/20/5"
                   >
                     Reset Filters
                   </button>
@@ -395,119 +371,6 @@ export function JobOpportunities() {
           </div>
         </div>
       </div>
-
-      {/* Floating Compare Bar */}
-      <AnimatePresence>
-        {selectedJobs.length > 0 && !showCompareModal && (
-          <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-navy-900 text-white px-6 py-4 rounded-full shadow-2xl flex items-center gap-6"
-          >
-            <span className="font-bold text-sm uppercase tracking-widest">{selectedJobs.length} Jobs Selected</span>
-            <div className="flex items-center gap-3">
-              {selectedJobs.length > 1 && (
-                <button 
-                  onClick={() => setShowCompareModal(true)}
-                  className="bg-teal-600 hover:bg-teal-500 transition-colors px-4 py-2 rounded-full font-bold uppercase tracking-widest text-xs flex items-center gap-2"
-                >
-                  <Columns size={14} /> Compare
-                </button>
-              )}
-              <button 
-                onClick={() => setSelectedJobs([])}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      {/* Compare Modal */}
-      <AnimatePresence>
-        {showCompareModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-navy-900/80 backdrop-blur-sm">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl"
-            >
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 className="font-display text-2xl font-bold text-navy-900 italic">Compare Opportunities</h3>
-                <button 
-                  onClick={() => setShowCompareModal(false)}
-                  className="p-2 hover:bg-gray-200 rounded-full transition-colors"
-                >
-                  <X size={24} className="text-gray-500" />
-                </button>
-              </div>
-              
-              <div className="p-6 overflow-auto flex-1">
-                <div className="flex gap-6 min-w-max">
-                  {selectedJobs.map(jobId => {
-                    const job = JOBS.find(j => j.id === jobId);
-                    if (!job) return null;
-                    return (
-                      <div key={job.id} className="w-80 border border-gray-200 rounded-2xl p-6 relative">
-                        <button 
-                          onClick={() => toggleCompare(job.id)}
-                          className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
-                        >
-                          <X size={16} />
-                        </button>
-                        <h4 className="font-bold text-navy-900 text-lg mb-4 pr-6">{job.title}</h4>
-                        
-                        <div className="space-y-4 text-sm text-gray-600">
-                          <div>
-                            <span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Industry</span>
-                            {job.industry}
-                          </div>
-                          <div>
-                            <span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Locations</span>
-                            {job.countries.join(', ')}
-                          </div>
-                          <div>
-                            <span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Salary</span>
-                            {job.salary}
-                          </div>
-                          <div>
-                            <span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Experience</span>
-                            {job.experience}
-                          </div>
-                          <div>
-                            <span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Key Skills</span>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                              {job.skills.map(skill => (
-                                <span key={skill} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                                  {skill}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <a 
-                          href={`https://wa.me/${whatsappNumber}?text=I am interested in the ${job.title} position.`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="mt-6 w-full flex items-center justify-center gap-2 bg-teal-600 text-white py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-teal-700 transition-colors"
-                        >
-                          Apply Now
-                        </a>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
     </section>
   );
 }

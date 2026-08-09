@@ -31,7 +31,7 @@ function Counter({ end, suffix = "", duration = 2 }: { end: number, suffix?: str
   }, [end, duration, isInView]);
 
   return (
-    <span ref={ref} className="text-4xl md:text-5xl font-display font-bold text-teal-600">
+    <span ref={ref} className="text-4xl md:text-5xl font-display font-bold text-teal-400 drop-shadow-[0_0_12px_rgba(45,212,191,0.3)]">
       {count}{suffix}
     </span>
   );
@@ -63,15 +63,15 @@ export function KeyMetrics() {
   ];
 
   return (
-    <section className="py-20 bg-white border-y border-gray-100">
+    <section className="py-20 bg-navy-950/80 backdrop-blur-md border-y border-white/10 text-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
           <div>
             <div className="mb-12">
-              <h2 className="text-teal-600 font-bold tracking-widest uppercase text-xs mb-3">Our Impact</h2>
-              <h3 className="font-display italic text-4xl font-bold text-navy-900 mb-6">Proven Success & Trust</h3>
-              <p className="text-gray-600 text-lg">
+              <h2 className="text-gold-400 font-bold tracking-widest uppercase text-xs mb-3">Our Impact</h2>
+              <h3 className="font-display italic text-4xl font-bold text-white mb-6">Proven Success & Trust</h3>
+              <p className="text-sky-100 text-lg">
                 We've been consistently matching top global talent with premium employers, expanding our network every year.
               </p>
             </div>
@@ -86,16 +86,16 @@ export function KeyMetrics() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.6, delay: idx * 0.2 }}
-                    className="flex flex-col items-start"
+                    className="flex flex-col items-start bg-navy-900/60 p-6 rounded-2xl border border-white/10"
                   >
-                    <div className="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-navy-950 flex items-center justify-center text-teal-400 mb-4 border border-white/10">
                       <Icon size={24} />
                     </div>
                     <div className="mb-1">
                       <Counter end={metric.value} suffix={metric.suffix} />
                     </div>
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-navy-900 mb-1">{metric.label}</h4>
-                    <p className="text-gray-500 text-xs">{metric.description}</p>
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-white mb-1">{metric.label}</h4>
+                    <p className="text-sky-200 text-xs">{metric.description}</p>
                   </motion.div>
                 );
               })}
@@ -107,7 +107,7 @@ export function KeyMetrics() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="w-full h-full min-h-[400px] flex"
+            className="w-full h-full min-h-[400px] flex rounded-2xl overflow-hidden border border-white/10 bg-navy-900/60 p-2"
           >
             <InteractiveMap />
           </motion.div>

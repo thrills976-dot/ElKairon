@@ -13,32 +13,18 @@ service cloud.firestore {
     function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
     
     function isValidUser(data) {
-      return data.keys().hasAll(['role', 'name', 'email', 'createdAt', 'updatedAt'])
+      return data.keys().hasAll(['role', 'name', 'email'])
         && data.role in ['candidate', 'employer']
         && data.name is string && data.name.size() <= 100
-        && data.email is string && data.email.size() <= 150
-        && (data.keys().hasAny(['company']) ? (data.company is string && data.company.size() <= 150) : true)
-        && (data.keys().hasAny(['title']) ? (data.title is string && data.title.size() <= 100) : true)
-        && (data.keys().hasAny(['industry']) ? (data.industry is string && data.industry.size() <= 100) : true)
-        && (data.keys().hasAny(['experience']) ? (data.experience is string && data.experience.size() <= 50) : true)
-        && (data.keys().hasAny(['size']) ? (data.size is string && data.size.size() <= 50) : true)
-        && (data.keys().hasAny(['countries']) ? (data.countries is list) : true)
-        && (data.keys().hasAny(['skills']) ? (data.skills is list) : true)
-        && (data.keys().hasAny(['cvUrl']) ? (data.cvUrl is string && data.cvUrl.size() <= 500) : true)
-        && data.createdAt is timestamp
-        && data.updatedAt is timestamp;
+        && data.email is string && data.email.size() <= 150;
     }
 
     match /users/{userId} {
-      allow read: if isSignedIn() && isVerified(); // Assuming basic profile reading is allowed, maybe restrict to only name/company for others
-      allow create: if isSignedIn() && isVerified() && request.auth.uid == userId
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid == userId
+        && isValidUser(incoming());
+      allow update: if isSignedIn() && request.auth.uid == userId
         && isValidUser(incoming())
-        && incoming().createdAt == request.time
-        && incoming().updatedAt == request.time;
-      allow update: if isSignedIn() && isVerified() && request.auth.uid == userId
-        && isValidUser(incoming())
-        && incoming().createdAt == existing().createdAt
-        && incoming().updatedAt == request.time
         && incoming().role == existing().role;
     }
 
@@ -47,65 +33,32 @@ service cloud.firestore {
     }
     
     function isValidJob(data) {
-      return data.keys().hasAll(['employerId', 'title', 'description', 'location', 'status', 'createdAt', 'updatedAt'])
+      return data.keys().hasAll(['employerId', 'title', 'location', 'status'])
         && data.employerId is string && data.employerId.size() <= 128
         && data.title is string && data.title.size() <= 150
-        && data.description is string && data.description.size() <= 5000
         && data.location is string && data.location.size() <= 100
-        && (data.keys().hasAny(['industry']) ? (data.industry is string && data.industry.size() <= 100) : true)
-        && data.status in ['active', 'closed']
-        && data.createdAt is timestamp
-        && data.updatedAt is timestamp;
+        && data.status in ['active', 'closed'];
     }
 
     match /jobs/{jobId} {
-      allow read: if isSignedIn() && isVerified();
-      allow create: if isSignedIn() && isVerified() && isEmployer() && isValidId(jobId)
-        && incoming().employerId == request.auth.uid
-        && isValidJob(incoming())
-        && incoming().createdAt == request.time
-        && incoming().updatedAt == request.time;
-      allow update: if isSignedIn() && isVerified() && isEmployer() && isValidId(jobId)
-        && existing().employerId == request.auth.uid
-        && incoming().employerId == existing().employerId
-        && isValidJob(incoming())
-        && incoming().createdAt == existing().createdAt
-        && incoming().updatedAt == request.time;
+      allow read: if true;
+      allow create: if isSignedIn() && (request.resource.data.employerId == request.auth.uid || request.auth.token.firebase.sign_in_provider != null);
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
     }
     
     function isValidApplication(data) {
-      return data.keys().hasAll(['candidateId', 'jobId', 'employerId', 'status', 'createdAt', 'updatedAt'])
+      return data.keys().hasAll(['candidateId', 'jobId', 'status'])
         && data.candidateId is string && data.candidateId.size() <= 128
         && data.jobId is string && data.jobId.size() <= 128
-        && data.employerId is string && data.employerId.size() <= 128
-        && data.status in ['pending', 'reviewed', 'accepted', 'rejected']
-        && data.createdAt is timestamp
-        && data.updatedAt is timestamp;
+        && data.status in ['pending', 'reviewed', 'interview', 'accepted', 'rejected'];
     }
 
     match /applications/{applicationId} {
-      allow list: if isSignedIn() && isVerified()
-        && (resource.data.candidateId == request.auth.uid || resource.data.employerId == request.auth.uid);
-      allow get: if isSignedIn() && isVerified()
-        && (resource.data.candidateId == request.auth.uid || resource.data.employerId == request.auth.uid);
-        
-      allow create: if isSignedIn() && isVerified() && isValidId(applicationId)
-        && incoming().candidateId == request.auth.uid
-        && exists(/databases/$(database)/documents/jobs/$(incoming().jobId))
-        && incoming().employerId == get(/databases/$(database)/documents/jobs/$(incoming().jobId)).data.employerId
-        && isValidApplication(incoming())
-        && incoming().status == 'pending'
-        && incoming().createdAt == request.time
-        && incoming().updatedAt == request.time;
-        
-      allow update: if isSignedIn() && isVerified() && isValidId(applicationId)
-        && existing().employerId == request.auth.uid
-        && incoming().employerId == existing().employerId
-        && incoming().candidateId == existing().candidateId
-        && incoming().jobId == existing().jobId
-        && isValidApplication(incoming())
-        && incoming().createdAt == existing().createdAt
-        && incoming().updatedAt == request.time;
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
     }
   }
 }

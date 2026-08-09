@@ -1,6 +1,6 @@
 {
   "name": "ElKairon Global Connect",
-  "description": "Premium recruitment and relocation agency bridging top African talent with trusted employers in the UAE and EU.",
+  "description": "AI-powered global recruitment and relocation platform combining LinkedIn and Indeed capabilities with intelligent candidate-job matching, ATS resume optimization, and automated skills assessment.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

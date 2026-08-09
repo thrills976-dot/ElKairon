@@ -1,23 +1,53 @@
-import { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, LogIn, Search } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { 
+  Menu, 
+  X, 
+  LogIn, 
+  Search, 
+  Calendar, 
+  Sparkles, 
+  Globe, 
+  ShieldCheck, 
+  Phone, 
+  Mail, 
+  MapPin, 
+  ArrowRight,
+  Send,
+  Building2,
+  BookOpen
+} from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { AuthModal } from './AuthModal';
 import { useAuth } from '../contexts/AuthContext';
 import { logout } from '../lib/firebase';
 import { PrivacyModal } from './PrivacyModal';
+import { ConsultationModal } from './ConsultationModal';
 import { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import { RecruitmentJourneyCanvas } from './3d/RecruitmentJourneyCanvas';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface LayoutProps {
   children: ReactNode;
-  currentView: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees';
-  onNavigate: (view: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void;
+  currentView: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees' | 'services-terms';
+  onNavigate: (view: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees' | 'services-terms') => void;
 }
 
 export function Layout({ children, currentView, onNavigate }: LayoutProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [authOpen, setAuthOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const [consultationType, setConsultationType] = useState<'candidate' | 'employer'>('candidate');
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const { user } = useAuth();
 
   const handleGlobalSearch = (e: any) => {
     e.preventDefault();
@@ -29,18 +59,29 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
     setSearchQuery('');
   };
 
-  const [authOpen, setAuthOpen] = useState(false);
-  const [privacyOpen, setPrivacyOpen] = useState(false);
-  const { user } = useAuth();
-
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        setScrollProgress(window.scrollY / totalHeight);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     const handlePrivacyOpen = () => setPrivacyOpen(true);
     window.addEventListener('open-privacy', handlePrivacyOpen);
+    const handleOpenConsultation = (e: any) => {
+      if (e.detail?.type) {
+        setConsultationType(e.detail.type);
+      }
+      setConsultationModalOpen(true);
+    };
+    window.addEventListener('open-consultation', handleOpenConsultation);
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('open-privacy', handlePrivacyOpen);
+      window.removeEventListener('open-consultation', handleOpenConsultation);
     };
   }, []);
 
@@ -49,163 +90,263 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
       onNavigate('home');
       setTimeout(() => {
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-      }, 500);
+      }, 350);
     } else {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleOpenConsultModal = (type: 'candidate' | 'employer' = 'candidate') => {
+    setConsultationType(type);
+    setConsultationModalOpen(true);
+  };
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+    toast.success('Thank you for subscribing to ElKairon Global Relocation Bulletins!');
+    setNewsletterEmail('');
   };
 
   const whatsappNumber = "+263774629109";
   const whatsappUrl = `https://wa.me/${whatsappNumber.replace('+', '')}`;
 
   return (
-    <div className="min-h-screen flex flex-col font-body relative">
+    <div className="min-h-screen flex flex-col font-body relative bg-navy-950 text-white overflow-x-hidden w-full max-w-full">
+      {/* 3D Interactive Global Recruitment Background Canvas */}
+      <RecruitmentJourneyCanvas scrollProgress={scrollProgress} />
+
+      {/* Ambient Floating Motion Background Orbs across entire website */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <motion.div
+          animate={{
+            x: [0, 40, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.12, 1],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-32 -left-32 w-80 sm:w-96 h-80 sm:h-96 bg-teal-500/10 rounded-full blur-[140px]"
+        />
+        <motion.div
+          animate={{
+            x: [0, -50, 0],
+            y: [0, 40, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-1/3 -right-32 w-96 sm:w-[450px] h-96 sm:h-[450px] bg-gold-500/10 rounded-full blur-[160px]"
+        />
+        <motion.div
+          animate={{
+            x: [0, 30, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute bottom-1/4 left-1/4 w-[400px] sm:w-[500px] h-[400px] sm:h-[500px] bg-navy-800/20 rounded-full blur-[180px]"
+        />
+      </div>
+
       <Toaster position="top-center" />
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
       <PrivacyModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} />
-      {/* Navbar */}
+      <ConsultationModal 
+        isOpen={consultationModalOpen} 
+        onClose={() => setConsultationModalOpen(false)} 
+        defaultType={consultationType} 
+      />
+
+      {/* Top Banner (Full-Width Accreditation info) */}
+      <div className="w-full bg-navy-950 border-b border-white/10 py-1.5 px-4 text-[11px] text-sky-200 hidden md:block z-10 relative">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={13} className="text-gold-400 shrink-0" />
+            <span>CIPA Registered • Govt Approved Global Recruitment • Reg: 2026/GBL-4821</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <span className="text-sky-200">Harare • London • Berlin • Dubai</span>
+            <a href="tel:+263774629109" className="text-gold-300 hover:underline font-bold">+263 77 462 9109</a>
+          </div>
+        </div>
+      </div>
+
+      {/* Primary Solid Header (Crisp Midnight Navy) */}
       <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 text-white ${
+        className={`sticky top-0 w-full z-50 transition-all duration-200 text-white bg-navy-950 ${
           isScrolled 
-            ? 'bg-gradient-to-r from-[#0DA2E7] to-[#065A8C] py-4 border-b-4 border-gold-500 shadow-lg' 
-            : 'bg-transparent py-6 border-b border-transparent'
+            ? 'border-b-2 border-gold-500 shadow-2xl py-2.5' 
+            : 'border-b border-white/10 py-3 sm:py-4'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 flex items-center justify-between w-full overflow-hidden">
+          
           {/* Logo */}
           <div 
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group bg-navy-950 rounded-xl p-1 min-w-0"
             onClick={() => onNavigate('home')}
           >
-            <div className="relative flex items-center justify-center">
+            <div className="relative flex items-center justify-center bg-navy-950 rounded-lg p-0.5 shrink-0">
               <img 
                 src="/ellogo.png" 
                 alt="ElKairon Global Connect Logo" 
-                className="h-16 w-auto object-contain transition-transform group-hover:scale-105"
+                className="h-9 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
               />
-              <div id="logo-fallback-icon" className="hidden w-12 h-12 rounded-full bg-teal-500 items-center justify-center border-2 border-gold-500 transition-transform group-hover:scale-105">
-                <span className="font-display text-2xl font-bold italic text-gold-500">K</span>
-              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[13px] sm:text-lg md:text-xl font-bold tracking-tight uppercase leading-none whitespace-nowrap">
-                ElKairon <span className="text-gold-500">Global Connect</span>
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs sm:text-base md:text-lg font-bold tracking-tight uppercase leading-none whitespace-nowrap text-white truncate">
+                ElKairon <span className="text-gold-400">Global Connect</span>
               </span>
-              <span className="text-[10px] tracking-widest uppercase text-teal-500 font-semibold mt-1 hidden sm:block">
+              <span className="text-[9px] sm:text-[10px] tracking-widest uppercase text-teal-300 font-bold mt-1 hidden sm:block truncate">
                 Right Moment. Right Career. Anywhere.
               </span>
             </div>
           </div>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-widest">
-            <form onSubmit={handleGlobalSearch} className="relative flex items-center mr-2">
-              <Search size={16} className="absolute left-3 text-teal-400" />
+          <nav className="hidden xl:flex items-center gap-5 text-xs font-bold uppercase tracking-wider">
+            <button onClick={() => handleScrollTo('hero')} className="hover:text-gold-400 transition-colors">Home</button>
+            <button onClick={() => onNavigate('opportunities')} className="hover:text-gold-400 transition-colors">Jobs</button>
+            <button onClick={() => onNavigate('services-terms')} className="text-gold-400 hover:text-white transition-colors underline decoration-gold-400 underline-offset-4 font-extrabold">Services & Terms</button>
+            <button onClick={() => handleScrollTo('how-it-works')} className="hover:text-gold-400 transition-colors">How It Works</button>
+            <button onClick={() => handleScrollTo('visas')} className="hover:text-gold-400 transition-colors">Visas</button>
+            <button onClick={() => handleScrollTo('germany')} className="hover:text-gold-400 transition-colors">Why Germany</button>
+            <button onClick={() => handleScrollTo('pricing')} className="hover:text-gold-400 transition-colors">Pricing</button>
+            <button onClick={() => onNavigate('about')} className="hover:text-gold-400 transition-colors">About</button>
+            
+            {/* Quick Search */}
+            <form onSubmit={handleGlobalSearch} className="relative flex items-center">
+              <Search size={14} className="absolute left-3 text-teal-400" />
               <input 
                 type="text" 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search jobs..." 
-                className="pl-9 pr-4 py-1.5 bg-white/10 border border-teal-500/30 rounded-full text-white placeholder:text-gray-300 focus:outline-none focus:border-gold-500 focus:bg-white/20 transition-all w-48 text-[10px]"
+                className="pl-8 pr-3 py-1.5 bg-navy-900 border border-white/20 rounded-full text-white placeholder:text-sky-300 focus:outline-none focus:border-gold-400 w-32 focus:w-44 transition-all text-[11px]"
               />
             </form>
-            <button onClick={() => handleScrollTo('hero')} className="hover:text-gold-500 transition-colors">Home</button>
-            <button onClick={() => onNavigate('opportunities')} className="hover:text-gold-500 transition-colors">Opportunities</button>
-            <button onClick={() => onNavigate('candidate-portal')} className="hover:text-gold-500 transition-colors">For Talent</button>
-            <button onClick={() => onNavigate('employer-portal')} className="hover:text-gold-500 transition-colors">For Employers</button>
-            <button onClick={() => onNavigate('fees')} className="hover:text-gold-500 transition-colors">Fees</button>
-            <button onClick={() => onNavigate('about')} className="hover:text-gold-500 transition-colors">About</button>
-            <button onClick={() => onNavigate('insights')} className="hover:text-gold-500 transition-colors">Insights</button>
+
             <LanguageSwitcher />
+
+            {/* Assessment / Consultation Action */}
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => handleOpenConsultModal('candidate')}
+              className="bg-gold-500 hover:bg-gold-400 text-navy-950 px-4 py-2 rounded-xl text-xs font-extrabold uppercase tracking-wider shadow-lg flex items-center gap-1.5 border border-gold-400"
+            >
+              <Calendar size={14} className="text-navy-950" />
+              <span>Assessment</span>
+            </motion.button>
+
             {user ? (
-              <div className="flex items-center gap-4 ml-2">
+              <div className="flex items-center gap-2">
                 <button 
                   onClick={() => onNavigate('candidate-portal')}
-                  className="bg-teal-600 px-5 py-2 rounded-lg text-white hover:bg-teal-500 transition-colors shadow-md border border-teal-500"
+                  className="bg-teal-600 px-3.5 py-2 rounded-xl text-white hover:bg-teal-500 transition-colors shadow-md border border-teal-500 text-xs font-bold"
                 >
                   Portal
                 </button>
                 <button 
                   onClick={logout}
-                  className="bg-red-50 text-red-600 px-5 py-2 rounded-lg hover:bg-red-100 transition-colors shadow-md border border-red-100"
+                  className="bg-navy-900 text-sky-200 px-3 py-2 rounded-xl hover:text-red-400 transition-colors border border-white/10 text-xs"
                 >
                   Logout
                 </button>
               </div>
             ) : (
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button 
                 onClick={() => setAuthOpen(true)}
-                className="bg-teal-600 px-5 py-2 rounded-lg text-white hover:bg-teal-500 transition-colors shadow-md ml-2 border border-teal-500"
+                className="bg-navy-900 px-3.5 py-2 rounded-xl text-sky-100 hover:text-white transition-colors border border-white/15 text-xs font-bold"
               >
-                Login / Register
-              </motion.button>
+                Sign In
+              </button>
             )}
           </nav>
 
-          {/* Mobile Menu Toggle */}
-          <button 
-            className="lg:hidden text-white hover:text-gold-500 transition-colors"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+          {/* Medium/Mobile Nav Button */}
+          <div className="flex items-center gap-2 sm:gap-3 xl:hidden shrink-0">
+            <button
+              onClick={() => handleOpenConsultModal('candidate')}
+              className="bg-gold-500 text-navy-950 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-extrabold uppercase shadow-md flex items-center gap-1 shrink-0"
+            >
+              <Calendar size={12} />
+              <span>Consult</span>
+            </button>
+            <button 
+              className="text-white hover:text-gold-400 transition-colors p-1"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Nav */}
+        {/* Mobile Navigation Drawer */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div 
-              initial={{ opacity: 0, x: '100%' }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-0 z-40 bg-[#065A8C]/95 backdrop-blur-xl lg:hidden flex flex-col pt-24 px-8 pb-24 overflow-y-auto"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="xl:hidden bg-navy-950 border-b border-white/15 px-4 sm:px-6 py-6 overflow-hidden"
             >
-              <div className="flex flex-col gap-6 flex-1 my-4">
-              <form onSubmit={(e) => { handleGlobalSearch(e); setMobileMenuOpen(false); }} className="relative flex items-center mb-4">
-                <Search size={20} className="absolute left-4 text-teal-400" />
+              <div className="flex flex-col gap-3.5 text-sm font-bold uppercase tracking-wider mb-6">
+                <button onClick={() => { handleScrollTo('hero'); setMobileMenuOpen(false); }} className="text-left text-white hover:text-gold-400 py-1">Home</button>
+                <button onClick={() => { onNavigate('opportunities'); setMobileMenuOpen(false); }} className="text-left text-white hover:text-gold-400 py-1">Job Opportunities</button>
+                <button onClick={() => { onNavigate('services-terms'); setMobileMenuOpen(false); }} className="text-left text-gold-400 hover:text-white py-1 font-extrabold">Services & Terms</button>
+                <button onClick={() => { handleScrollTo('how-it-works'); setMobileMenuOpen(false); }} className="text-left text-white hover:text-gold-400 py-1">How It Works</button>
+                <button onClick={() => { handleScrollTo('visas'); setMobileMenuOpen(false); }} className="text-left text-white hover:text-gold-400 py-1">Visas</button>
+                <button onClick={() => { handleScrollTo('germany'); setMobileMenuOpen(false); }} className="text-left text-white hover:text-gold-400 py-1">Why Germany</button>
+                <button onClick={() => { handleScrollTo('pricing'); setMobileMenuOpen(false); }} className="text-left text-white hover:text-gold-400 py-1">Pricing & Benefits</button>
+                <button onClick={() => { onNavigate('about'); setMobileMenuOpen(false); }} className="text-left text-white hover:text-gold-400 py-1">About ElKairon</button>
+              </div>
+
+              {/* Mobile Quick Search */}
+              <form onSubmit={(e) => { handleGlobalSearch(e); setMobileMenuOpen(false); }} className="relative mb-4 flex items-center">
+                <Search size={14} className="absolute left-3 text-teal-400" />
                 <input 
                   type="text" 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search jobs by location, role..." 
-                  className="w-full pl-12 pr-4 py-3 bg-white/10 border border-teal-500/30 rounded-xl text-white placeholder:text-gray-300 focus:outline-none focus:border-gold-500 transition-all text-sm font-bold"
+                  placeholder="Search jobs..." 
+                  className="w-full pl-8 pr-3 py-2 bg-navy-900 border border-white/20 rounded-xl text-white placeholder:text-sky-300 text-xs focus:outline-none focus:border-gold-400"
                 />
               </form>
-                <button onClick={() => { handleScrollTo('hero'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Home</button>
-                <button onClick={() => { onNavigate('opportunities'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Opportunities</button>
-                <button onClick={() => { onNavigate('candidate-portal'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">For Talent</button>
-                <button onClick={() => { onNavigate('employer-portal'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">For Employers</button>
-                <button onClick={() => { onNavigate('fees'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Fees</button>
-                <button onClick={() => { onNavigate('about'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">About</button>
-                <button onClick={() => { onNavigate('insights'); setMobileMenuOpen(false); }} className="text-left text-2xl font-display italic font-bold tracking-wider hover:text-gold-500 text-white">Insights</button>
-                <LanguageSwitcher isMobile={true} />
-              </div>
-              <div className="mt-auto pb-12">
+
+              <div className="space-y-3 pt-4 border-t border-white/10">
+                <button
+                  onClick={() => { handleOpenConsultModal('candidate'); setMobileMenuOpen(false); }}
+                  className="w-full py-3 bg-gold-500 text-navy-950 font-extrabold uppercase text-xs rounded-xl shadow-lg flex items-center justify-center gap-2"
+                >
+                  <Calendar size={15} />
+                  <span>Book Consultation Call</span>
+                </button>
                 {user ? (
-                  <div className="flex flex-col gap-4">
-                    <button 
-                      onClick={() => { onNavigate('candidate-portal'); setMobileMenuOpen(false); }}
-                      className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-teal-600 text-white rounded-xl text-lg font-bold uppercase tracking-widest shadow-lg"
-                    >
-                      Portal
-                    </button>
-                    <button 
-                      onClick={() => { logout(); setMobileMenuOpen(false); }}
-                      className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-red-50 text-red-600 rounded-xl text-lg font-bold uppercase tracking-widest shadow-lg"
-                    >
-                      Logout
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => { onNavigate('candidate-portal'); setMobileMenuOpen(false); }}
+                    className="w-full py-3 bg-teal-600 text-white font-bold uppercase text-xs rounded-xl"
+                  >
+                    Candidate Portal
+                  </button>
                 ) : (
                   <button 
                     onClick={() => { setAuthOpen(true); setMobileMenuOpen(false); }}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-teal-600 text-white rounded-xl text-lg font-bold uppercase tracking-widest shadow-lg"
+                    className="w-full py-3 bg-navy-900 border border-white/20 text-white font-bold uppercase text-xs rounded-xl"
                   >
-                    <LogIn size={20} />
-                    Sign In
+                    Sign In / Register
                   </button>
                 )}
               </div>
@@ -219,122 +360,120 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
         {children}
       </main>
 
-      {/* Footer */}
-      <footer id="contact" className="bg-[#044c77] border-t border-white/10 mt-auto z-10 relative text-white">
-        <div className="max-w-7xl mx-auto px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+      {/* Premium Solid Footer */}
+      <footer className="bg-navy-950 border-t-2 border-gold-500/80 mt-auto z-10 relative text-white">
+        <div className="max-w-7xl mx-auto px-6 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-16">
             
-            {/* Brand & Description */}
-            <div className="space-y-6">
+            {/* Col 1: Brand & CIPA */}
+            <div className="lg:col-span-2 space-y-5">
               <div className="flex items-center gap-3">
-                <img src="/ellogo.png" alt="ElKairon Global Connect Logo" className="h-10 w-auto" />
+                <img src="/ellogo.png" alt="ElKairon Global Connect Logo" className="h-12 w-auto" />
+                <div>
+                  <span className="font-bold text-lg text-white block">ElKairon Global Connect</span>
+                  <span className="text-[10px] text-teal-300 font-bold uppercase tracking-widest">Govt Approved Global Recruitment</span>
+                </div>
               </div>
-              <p className="text-sm text-gray-300 leading-relaxed">
-                Connecting talented professionals from Africa and the UAE with top-tier employers in Europe and other global destinations.
+              <p className="text-xs text-sky-100/90 leading-relaxed max-w-sm">
+                Connecting skilled African talent with certified employers across the UK, Germany, Netherlands, Canada, and the UAE with 100% verified visa sponsorship and comprehensive relocation assistance.
               </p>
-              <div className="flex items-center gap-4">
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-teal-600 transition-colors text-white">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-                  </svg>
-                </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-teal-600 transition-colors text-white">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                  </svg>
-                </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-teal-600 transition-colors text-white">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
-                  </svg>
-                </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-teal-600 transition-colors text-white">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clipRule="evenodd" />
-                  </svg>
-                </a>
+              
+              <div className="p-3 bg-navy-900 border border-gold-500/30 rounded-xl space-y-1 text-xs">
+                <span className="text-gold-400 font-bold block">Accreditation: CIPA Registered 2026</span>
+                <span className="text-gray-300 text-[11px] block">UK Home Office Sponsor Standards • German FEG Skilled Mobility Partner</span>
               </div>
             </div>
 
-            {/* Quick Links */}
+            {/* Col 2: Global Destinations */}
             <div>
-              <h4 className="font-bold text-lg mb-6 text-white uppercase tracking-widest text-xs">Navigation</h4>
-              <ul className="space-y-3">
-                <li><button onClick={() => onNavigate('home')} className="text-gray-300 hover:text-gold-400 transition-colors text-sm">Home</button></li>
-                <li><button onClick={() => onNavigate('opportunities')} className="text-gray-300 hover:text-gold-400 transition-colors text-sm">Opportunities</button></li>
-                <li><button onClick={() => onNavigate('candidate-portal')} className="text-gray-300 hover:text-gold-400 transition-colors text-sm">For Talent</button></li>
-                <li><button onClick={() => onNavigate('employer-portal')} className="text-gray-300 hover:text-gold-400 transition-colors text-sm">For Employers</button></li>
-                <li><button onClick={() => onNavigate('fees')} className="text-gray-300 hover:text-gold-400 transition-colors text-sm">Fees</button></li>
-                <li><button onClick={() => onNavigate('about')} className="text-gray-300 hover:text-gold-400 transition-colors text-sm">About Us</button></li>
-                <li><button onClick={() => onNavigate('insights')} className="text-gray-300 hover:text-gold-400 transition-colors text-sm">Insights</button></li>
+              <h4 className="font-bold text-xs uppercase tracking-widest text-gold-400 mb-4">Quick Navigation</h4>
+              <ul className="space-y-2 text-xs text-gray-300">
+                <li><button onClick={() => handleScrollTo('hero')} className="hover:text-white transition-colors">Home</button></li>
+                <li><button onClick={() => onNavigate('opportunities')} className="hover:text-white transition-colors">Job Opportunities</button></li>
+                <li><button onClick={() => handleScrollTo('services')} className="hover:text-white transition-colors">Recruitment Services</button></li>
+                <li><button onClick={() => handleScrollTo('how-it-works')} className="hover:text-white transition-colors">How It Works</button></li>
+                <li><button onClick={() => handleScrollTo('visas')} className="hover:text-white transition-colors">Visa & Work Permits</button></li>
+                <li><button onClick={() => handleScrollTo('germany')} className="hover:text-white transition-colors">Why Relocate to Germany</button></li>
+                <li><button onClick={() => handleScrollTo('pricing')} className="hover:text-white transition-colors">Guaranteed Benefits</button></li>
               </ul>
             </div>
 
-            {/* Services */}
+            {/* Col 3: Resource & Transparency */}
             <div>
-              <h4 className="font-bold text-lg mb-6 text-white uppercase tracking-widest text-xs">Services</h4>
-              <ul className="space-y-3">
-                <li className="text-gray-300 text-sm">International Recruitment</li>
-                <li className="text-gray-300 text-sm">Visa & Work Permit Assistance</li>
-                <li className="text-gray-300 text-sm">Relocation Support</li>
-                <li className="text-gray-300 text-sm">Interview Preparation</li>
-                <li className="text-gray-300 text-sm">Employer Matching</li>
+              <h4 className="font-bold text-xs uppercase tracking-widest text-gold-400 mb-4">Transparency</h4>
+              <ul className="space-y-2 text-xs text-gray-300">
+                <li><button onClick={() => onNavigate('fees')} className="hover:text-white transition-colors">Fee Structure & Milestones</button></li>
+                <li><button onClick={() => onNavigate('about')} className="hover:text-white transition-colors">About ElKairon Global</button></li>
+                <li><button onClick={() => onNavigate('insights')} className="hover:text-white transition-colors">Relocation Insights & News</button></li>
+                <li><button onClick={() => handleScrollTo('faq')} className="hover:text-white transition-colors">Frequently Asked Questions</button></li>
+                <li><button onClick={() => handleScrollTo('contact')} className="hover:text-white transition-colors">Contact & Headquarters</button></li>
               </ul>
             </div>
 
-            {/* Contact */}
+            {/* Col 4: Verified Global Offices */}
             <div>
-              <h4 className="font-bold text-lg mb-6 text-white uppercase tracking-widest text-xs">Contact Us</h4>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3 text-gray-300 text-sm">
-                  <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span>1464 Mainway Meadows<br />CIPA Registered: 2026</span>
+              <h4 className="font-bold text-xs uppercase tracking-widest text-gold-400 mb-4">Global Offices</h4>
+              <ul className="space-y-3 text-xs text-gray-300">
+                <li className="flex items-start gap-2">
+                  <MapPin size={14} className="text-teal-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white block">Harare HQ:</strong>
+                    <span>1464 Mainway Meadows</span>
+                  </div>
                 </li>
-                <li className="flex items-center gap-3 text-gray-300 text-sm">
-                  <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <a href="mailto:hello@elkaironglobalconnect.com" className="hover:text-gold-400 transition-colors">hello@elkaironglobalconnect.com</a>
+                <li className="flex items-start gap-2">
+                  <MapPin size={14} className="text-teal-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white block">London Liaison:</strong>
+                    <span>30 St Mary Axe, City of London</span>
+                  </div>
                 </li>
-                <li className="flex items-center gap-3 text-gray-300 text-sm">
-                  <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <a href="tel:+263774629109" className="hover:text-gold-400 transition-colors">+263 77 462 9109</a>
+                <li className="flex items-start gap-2">
+                  <Phone size={14} className="text-gold-400 shrink-0 mt-0.5" />
+                  <a href="tel:+263774629109" className="hover:text-gold-400 transition-colors font-bold text-white">
+                    +263 77 462 9109
+                  </a>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Mail size={14} className="text-gold-400 shrink-0 mt-0.5" />
+                  <a href="mailto:hello@elkaironglobalconnect.com" className="hover:text-gold-400 transition-colors text-[11px]">
+                    hello@elkaironglobalconnect.com
+                  </a>
                 </li>
               </ul>
             </div>
 
           </div>
 
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-xs text-center md:text-left">
-              &copy; {new Date().getFullYear()} ElKairon Global Connect. All rights reserved.
+          {/* Bottom Copyright & Legal */}
+          <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-400">
+            <p>
+              &copy; {new Date().getFullYear()} ElKairon Global Connect. All rights reserved. Registered under CIPA & international recruitment protocols.
             </p>
-            <div className="flex items-center gap-6 text-xs text-gray-400">
-              <button onClick={() => setPrivacyOpen(true)} className="hover:text-white transition-colors uppercase font-bold tracking-widest">Privacy Policy</button>
-              <button onClick={() => onNavigate('fees')} className="hover:text-white transition-colors uppercase font-bold tracking-widest">Terms of Service</button>
+            <div className="flex items-center gap-6">
+              <button onClick={() => setPrivacyOpen(true)} className="hover:text-white transition-colors">Privacy Policy</button>
+              <button onClick={() => onNavigate('fees')} className="hover:text-white transition-colors">Terms & Fee Guarantees</button>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline font-bold">
+                WhatsApp Support
+              </a>
             </div>
           </div>
         </div>
       </footer>
 
-      {/* Floating WhatsApp Button */}
+      {/* Floating WhatsApp Quick Action Button */}
       <a 
         href={whatsappUrl} 
         target="_blank" 
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center justify-center group"
+        className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-3.5 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center justify-center group"
       >
-        <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="opacity-100">
+        <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
           <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
         </svg>
-        <span className="absolute right-full mr-4 bg-white text-navy-900 px-3 py-1 rounded-md text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-          Chat with us!
+        <span className="absolute right-full mr-3 bg-navy-950 text-white border border-teal-400/50 px-3 py-1 rounded-lg text-xs font-bold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+          Chat with an Advisor
         </span>
       </a>
     </div>
