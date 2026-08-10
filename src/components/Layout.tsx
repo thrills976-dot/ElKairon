@@ -422,13 +422,6 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
                   </div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <MapPin size={14} className="text-teal-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-white block">London Liaison:</strong>
-                    <span>30 St Mary Axe, City of London</span>
-                  </div>
-                </li>
-                <li className="flex items-start gap-2">
                   <Phone size={14} className="text-gold-400 shrink-0 mt-0.5" />
                   <a href="tel:+263774629109" className="hover:text-gold-400 transition-colors font-bold text-white">
                     +263 77 462 9109

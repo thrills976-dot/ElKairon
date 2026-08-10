@@ -25,7 +25,7 @@ export function SpringCard({ children, className = '', onClick }: SpringCardProp
 
   return (
     <animated.div
-      className={`cursor-pointer ${className}`}
+      className={`cursor-pointer transform-gpu ${className}`}
       onClick={onClick}
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -36,6 +36,7 @@ export function SpringCard({ children, className = '', onClick }: SpringCardProp
         api.start({ xys: [0, 0, 1] });
       }}
       style={{
+        willChange: 'transform',
         transform: props.xys.to((x, y, s) => trans(x, y, s)),
       }}
     >

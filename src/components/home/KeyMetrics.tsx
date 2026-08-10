@@ -41,24 +41,24 @@ export function KeyMetrics() {
   const metrics = [
     {
       icon: Users,
-      value: 15000,
+      value: 426,
       suffix: "+",
-      label: "Talent Network",
-      description: "Pre-screened professionals ready to deploy"
+      label: "Talent Passed",
+      description: "Candidates passed stringent technical assessment & vetting"
     },
     {
       icon: Building2,
-      value: 200,
+      value: 45,
       suffix: "+",
       label: "Partner Companies",
-      description: "Trusted employers across various sectors"
+      description: "Trusted employers across Germany, UK & UAE"
     },
     {
       icon: Globe,
-      value: 3000,
+      value: 15,
       suffix: "+",
-      label: "Jobs Filled",
-      description: "Successful global career transitions"
+      label: "Global Corridors",
+      description: "Direct relocation routes with visa sponsorship"
     }
   ];
 
@@ -70,13 +70,13 @@ export function KeyMetrics() {
           <div>
             <div className="mb-12">
               <h2 className="text-gold-400 font-bold tracking-widest uppercase text-xs mb-3">Our Impact</h2>
-              <h3 className="font-display italic text-4xl font-bold text-white mb-6">Proven Success & Trust</h3>
+              <h3 className="font-display italic text-4xl font-bold text-white mb-6">Proven Success &amp; Trust</h3>
               <p className="text-sky-100 text-lg">
-                We've been consistently matching top global talent with premium employers, expanding our network every year.
+                We've been consistently matching top global talent with premium employers, expanding our verified network every year.
               </p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {metrics.map((metric, idx) => {
                 const Icon = metric.icon;
                 return (
@@ -85,17 +85,22 @@ export function KeyMetrics() {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.6, delay: idx * 0.2 }}
-                    className="flex flex-col items-start bg-navy-900/60 p-6 rounded-2xl border border-white/10"
+                    transition={{ duration: 0.6, delay: idx * 0.15 }}
+                    whileHover={{ 
+                      scale: 1.04, 
+                      y: -4,
+                      borderColor: 'rgba(234, 179, 8, 0.6)' 
+                    }}
+                    className="flex flex-col items-start bg-navy-900/80 p-6 rounded-2xl border border-white/10 transition-all duration-300 shadow-lg hover:shadow-teal-500/10 cursor-default"
                   >
-                    <div className="w-12 h-12 rounded-full bg-navy-950 flex items-center justify-center text-teal-400 mb-4 border border-white/10">
+                    <div className="w-12 h-12 rounded-full bg-navy-950 flex items-center justify-center text-teal-400 mb-4 border border-white/10 group-hover:rotate-6 transition-transform">
                       <Icon size={24} />
                     </div>
                     <div className="mb-1">
                       <Counter end={metric.value} suffix={metric.suffix} />
                     </div>
                     <h4 className="text-sm font-bold uppercase tracking-wider text-white mb-1">{metric.label}</h4>
-                    <p className="text-sky-200 text-xs">{metric.description}</p>
+                    <p className="text-sky-200 text-xs leading-relaxed">{metric.description}</p>
                   </motion.div>
                 );
               })}

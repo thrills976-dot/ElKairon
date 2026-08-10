@@ -3,20 +3,88 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
 
-// Security Headers Middleware
-app.use((_req: Request, res: Response, next: NextFunction) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
-  next();
-});
+// Configure Helmet Security Headers (including Content-Security-Policy, HSTS, X-Content-Type-Options)
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          "https://apis.google.com",
+          "https://*.googleapis.com",
+          "https://*.firebaseapp.com",
+          "https://accounts.google.com"
+        ],
+        connectSrc: [
+          "'self'",
+          "https://*.googleapis.com",
+          "https://*.firebaseio.com",
+          "https://identitytoolkit.googleapis.com",
+          "https://securetoken.googleapis.com",
+          "https://firestore.googleapis.com",
+          "https://accounts.google.com",
+          "https://*.run.app",
+          "ws:",
+          "wss:"
+        ],
+        imgSrc: [
+          "'self'",
+          "data:",
+          "blob:",
+          "https:",
+          "https://*.googleusercontent.com",
+          "https://images.unsplash.com",
+          "https://flagcdn.com",
+          "https://purecatamphetamine.github.io"
+        ],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://fonts.googleapis.com"
+        ],
+        fontSrc: [
+          "'self'",
+          "data:",
+          "https://fonts.gstatic.com"
+        ],
+        frameSrc: [
+          "'self'",
+          "https://*.firebaseapp.com",
+          "https://accounts.google.com",
+          "https://*.google.com"
+        ],
+        frameAncestors: [
+          "'self'",
+          "https://*.google.com",
+          "https://ai.studio",
+          "https://*.aistudio.google.com",
+          "https://*.run.app"
+        ],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+    xContentTypeOptions: true,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  })
+);
 
 // Enforce strict payload body limit (prevent memory exhaustion / denial of service)
 app.use(express.json({ limit: '250kb' }));

@@ -159,200 +159,233 @@ export function JobOpportunities() {
   const whatsappNumber = "+263774629109";
 
   return (
-    <section className="py-24 bg-[#0DA2E7] relative overflow-hidden" id="jobs">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-navy-50 skew-x-12 translate-x-1/2 opacity-50 z-0" />
+    <section className="py-24 bg-gradient-to-b from-[#065A8C] via-[#044c77] to-navy-950 relative overflow-hidden text-white" id="jobs">
+      {/* Background parallax and ambient glow */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-teal-400/10 rounded-full blur-[140px] pointer-events-none transform-gpu" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold-400/10 rounded-full blur-[140px] pointer-events-none transform-gpu" />
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-            Smart Job <span className="text-teal-600 italic">Matching</span>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-16"
+        >
+          <span className="text-xs font-bold tracking-widest text-gold-400 uppercase mb-3 block">
+            Direct Global Placement
+          </span>
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight italic">
+            Smart Job <span className="text-teal-300">Matching</span>
           </h2>
-          <p className="text-lg text-white/80 max-w-2xl mx-auto">
-            Don't just search for titles. Select your skills and preferences below, and our advanced matching system will recommend the best global opportunities for you.
+          <p className="text-base sm:text-lg text-sky-100 max-w-2xl mx-auto leading-relaxed">
+            Don't just search for titles. Select your skills and preferences below, and our verified matching system will recommend the best international opportunities for you.
           </p>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
-          <div className="lg:w-1/4 flex flex-col gap-6">
-            <div className="bg-navy-900 rounded-2xl p-6 text-white shadow-xl sticky top-24 z-30">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:w-1/4 flex flex-col gap-6"
+          >
+            <div className="bg-navy-900/90 backdrop-blur-md rounded-2xl p-6 text-white shadow-2xl border border-white/15 sticky top-24 z-30">
               {/* Search Bar */}
               <div className="mb-6">
-                <label className="block text-xs font-bold uppercase tracking-widest text-navy-300 mb-2">Search</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-sky-200 mb-2">Search</label>
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Job title or keyword"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-navy-800 border border-navy-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                    className="w-full bg-navy-950 border border-white/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-teal-400 transition-colors text-white placeholder-sky-200/50"
                   />
-                  <Search size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-navy-400 pointer-events-none" />
+                  <Search size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-sky-300 pointer-events-none" />
                 </div>
               </div>
-              <div className="flex items-center gap-2 mb-6 border-b border-navy-700 pb-4">
-                <Filter size={20} className="text-gold-500" />
-                <h3 className="font-display text-xl font-bold">Preferences</h3>
+              <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-4">
+                <Filter size={20} className="text-gold-400" />
+                <h3 className="font-display text-xl font-bold text-white">Preferences</h3>
               </div>
               
               {/* Country Filter */}
               <div className="mb-6">
-                <label className="block text-xs font-bold uppercase tracking-widest text-navy-300 mb-2">Location</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-sky-200 mb-2">Location</label>
                 <div className="relative">
                   <select 
                     value={selectedCountry}
                     onChange={(e) => setSelectedCountry(e.target.value)}
-                    className="w-full appearance-none bg-navy-800 border border-navy-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500 transition-colors cursor-pointer"
+                    className="w-full appearance-none bg-navy-950 border border-white/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-teal-400 transition-colors cursor-pointer text-white"
                   >
                     <option value="All">Anywhere</option>
                     {allCountries.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
-                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-navy-400 pointer-events-none" />
+                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-sky-300 pointer-events-none" />
                 </div>
               </div>
 
               {/* Industry Filter */}
               <div className="mb-6">
-                <label className="block text-xs font-bold uppercase tracking-widest text-navy-300 mb-2">Industry</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-sky-200 mb-2">Industry</label>
                 <div className="relative">
                   <select 
                     value={selectedIndustry}
                     onChange={(e) => setSelectedIndustry(e.target.value)}
-                    className="w-full appearance-none bg-navy-800 border border-navy-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500 transition-colors cursor-pointer"
+                    className="w-full appearance-none bg-navy-950 border border-white/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-teal-400 transition-colors cursor-pointer text-white"
                   >
                     <option value="All">All Industries</option>
                     {allIndustries.map(i => <option key={i} value={i}>{i}</option>)}
                   </select>
-                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-navy-400 pointer-events-none" />
+                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-sky-300 pointer-events-none" />
                 </div>
               </div>
 
               {/* Experience Filter */}
               <div className="mb-6">
-                <label className="block text-xs font-bold uppercase tracking-widest text-navy-300 mb-2">Experience</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-sky-200 mb-2">Experience</label>
                 <div className="relative">
                   <select 
                     value={selectedExperience}
                     onChange={(e) => setSelectedExperience(e.target.value)}
-                    className="w-full appearance-none bg-navy-800 border border-navy-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500 transition-colors cursor-pointer"
+                    className="w-full appearance-none bg-navy-950 border border-white/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-teal-400 transition-colors cursor-pointer text-white"
                   >
                     <option value="All">Any Experience Level</option>
                     {allExperienceLevels.map(e => <option key={e} value={e}>{e}</option>)}
                   </select>
-                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-navy-400 pointer-events-none" />
+                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-sky-300 pointer-events-none" />
                 </div>
               </div>
 
               {/* Skills Filter */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-navy-300 mb-3">Your Skills</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-sky-200 mb-3">Your Skills</label>
                 <div className="flex flex-wrap gap-2">
                   {allSkills.map(skill => (
-                    <button
+                    <motion.button
                       key={skill}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => toggleSkill(skill)}
-                      className={`text-xs px-3 py-1.5 rounded-full border transition-all flex items-center gap-1 ${
+                      className={`text-xs px-3 py-1.5 rounded-full border transition-all flex items-center gap-1 font-medium ${
                         selectedSkills.includes(skill) 
-                          ? 'bg-teal-600 border-teal-600 text-white' 
-                          : 'border-navy-700 text-navy-200 hover:border-navy-500'
+                          ? 'bg-teal-500 border-teal-400 text-navy-950 font-bold shadow-md' 
+                          : 'border-white/20 text-sky-100 hover:border-teal-400/60 bg-navy-950/60'
                       }`}
                     >
                       {selectedSkills.includes(skill) && <Check size={12} />}
                       {skill}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
                 {selectedSkills.length > 0 && (
-                  <button 
+                  <motion.button 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => setSelectedSkills([])}
-                    className="text-xs text-gold-500 hover:text-gold-400 mt-3 underline decoration-dotted underline-offset-2"
+                    className="text-xs text-gold-400 hover:text-gold-300 mt-3 underline decoration-dotted underline-offset-2 font-semibold block"
                   >
-                    Clear Skills
-                  </button>
+                    Clear All Skills
+                  </motion.button>
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Job List */}
           <div className="lg:w-3/4">
-            <div className="mb-4 flex justify-between items-end">
-              <h3 className="text-xl font-bold text-white">
-                {selectedSkills.length > 0 || selectedIndustry !== 'All' || selectedCountry !== 'All' || selectedExperience !== 'All' 
-                  ? 'Recommended Opportunities' 
-                  : 'Available Opportunities'}
+            <div className="mb-6 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                <span>
+                  {selectedSkills.length > 0 || selectedIndustry !== 'All' || selectedCountry !== 'All' || selectedExperience !== 'All' 
+                    ? 'Recommended Opportunities' 
+                    : 'Available Verified Opportunities'}
+                </span>
+                <span className="text-xs bg-teal-400/20 text-teal-300 px-2.5 py-0.5 rounded-full font-mono font-bold border border-teal-400/30">
+                  {filteredJobs.length} Roles
+                </span>
               </h3>
-              
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <AnimatePresence mode="popLayout">
-                {filteredJobs.map(job => {
+                {filteredJobs.map((job, idx) => {
                   const message = encodeURIComponent(`Hi, I am interested in the ${job.title} position in ${job.countries.join('/')}. Could you provide more details?`);
                   return (
                   <motion.div
                     layout
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
+                    initial={{ opacity: 0, scale: 0.94, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.92, y: -10 }}
+                    transition={{ duration: 0.4, delay: idx * 0.05, ease: [0.22, 1, 0.36, 1] }}
+                    whileHover={{ 
+                      y: -6,
+                      scale: 1.015,
+                      boxShadow: "0 20px 30px -10px rgba(10, 77, 104, 0.4)" 
+                    }}
                     key={job.id}
-                    className="bg-[#0DA2E7]/20/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full relative"
+                    className="bg-navy-900/90 backdrop-blur-md border border-white/15 hover:border-teal-400/80 rounded-2xl p-6 shadow-xl transition-all duration-300 group flex flex-col h-full relative cursor-default transform-gpu"
                   >
                     {/* Top badging */}
                     <div className="flex justify-between items-start mb-4">
-                      <span className="bg-teal-50 text-teal-700 text-xs font-bold px-3 py-1 rounded-full border border-teal-100">
+                      <span className="bg-teal-950 text-teal-300 text-xs font-bold px-3 py-1 rounded-full border border-teal-400/40">
                         {job.industry}
                       </span>
-                      <span className="text-xs font-bold text-navy-400 bg-[#0DA2E7]/20/5 px-2 py-1 rounded border border-white/10">
+                      <span className="text-xs font-semibold text-gold-300 bg-gold-950/60 px-2.5 py-1 rounded-full border border-gold-400/30">
                         {job.type}
                       </span>
                     </div>
 
-                    <h4 className="font-display text-xl font-bold text-white mb-2 leading-tight group-hover:text-teal-600 transition-colors">
+                    <h4 className="font-display text-xl font-bold text-white mb-2 leading-tight group-hover:text-gold-300 transition-colors">
                       {job.title}
                     </h4>
 
-                    <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-gray-200 mb-4">
-                      <div className="flex items-center gap-1">
-                        <MapPin size={16} className="text-gold-500" />
-                        <span>{job.countries.join(', ')}</span>
+                    <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-sky-100 mb-4">
+                      <div className="flex items-center gap-1.5">
+                        <MapPin size={16} className="text-gold-400 shrink-0" />
+                        <span className="font-medium">{job.countries.join(', ')}</span>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Briefcase size={16} className="text-gold-500" />
-                        <span className="font-medium text-teal-700">{job.salary}</span>
+                      <div className="flex items-center gap-1.5">
+                        <Briefcase size={16} className="text-teal-400 shrink-0" />
+                        <span className="font-bold text-teal-300">{job.salary}</span>
                       </div>
                     </div>
 
-                    <p className="text-sm text-gray-200 mb-6 line-clamp-2">
+                    <p className="text-sm text-sky-100/90 mb-6 line-clamp-2 leading-relaxed">
                       {job.description}
                     </p>
 
                     <div className="mt-auto pt-4 border-t border-white/10">
                       <div className="flex flex-wrap gap-1.5 mb-6">
                         {job.skills.slice(0, 3).map(skill => (
-                          <span key={skill} className="text-[10px] font-bold uppercase tracking-wider bg-[#0DA2E7]/20/10 text-gray-200 px-2 py-1 rounded">
+                          <span key={skill} className="text-[10px] font-bold uppercase tracking-wider bg-navy-950 text-sky-200 px-2.5 py-1 rounded border border-white/10">
                             {skill}
                           </span>
                         ))}
                         {job.skills.length > 3 && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider bg-[#0DA2E7]/20/10 text-gray-200 px-2 py-1 rounded">
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-navy-950 text-sky-200 px-2.5 py-1 rounded border border-white/10">
                             +{job.skills.length - 3} more
                           </span>
                         )}
                       </div>
                       
                       <motion.a
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ 
+                          scale: 1.03, 
+                          boxShadow: "0 10px 20px -5px rgba(13, 148, 136, 0.4)" 
+                        }}
+                        whileTap={{ scale: 0.97 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
                         href={`https://wa.me/${whatsappNumber.replace('+', '')}?text=${message}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full bg-navy-900 text-white flex items-center justify-center gap-2 py-3 rounded-lg font-bold text-sm hover:bg-teal-600 transition-colors group-hover:shadow-md"
+                        className="w-full bg-teal-600 hover:bg-teal-500 text-white flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-colors border border-teal-400/30 group-hover:border-teal-300 shadow-md transform-gpu"
                       >
-                        Apply via WhatsApp
-                        <ArrowRight size={16} />
+                        <span>Apply via WhatsApp</span>
+                        <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
                       </motion.a>
                     </div>
                   </motion.div>
@@ -360,22 +393,31 @@ export function JobOpportunities() {
               </AnimatePresence>
 
               {filteredJobs.length === 0 && (
-                <div className="col-span-full py-12 text-center bg-[#0DA2E7]/20/5 rounded-2xl border border-dashed border-white/30">
-                  <Search className="mx-auto text-gray-300 mb-4" size={48} />
+                <motion.div 
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="col-span-full py-16 text-center bg-navy-900/80 rounded-2xl border border-dashed border-white/30 p-8"
+                >
+                  <Search className="mx-auto text-sky-300 mb-4" size={48} />
                   <h4 className="text-lg font-bold text-white mb-2">No matching jobs found</h4>
-                  <p className="text-gray-300 text-sm">Try adjusting your filters or clearing your skill selections to see more opportunities.</p>
-                  <button 
+                  <p className="text-sky-200 text-sm max-w-md mx-auto mb-6">
+                    Try adjusting your filters or clearing your skill selections to see more global opportunities.
+                  </p>
+                  <motion.button 
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
                     onClick={() => {
                       setSelectedSkills([]);
                       setSelectedCountry('All');
                       setSelectedIndustry('All');
                       setSelectedExperience('All');
+                      setSearchQuery('');
                     }}
-                    className="mt-4 px-6 py-2 bg-[#0DA2E7]/20 border border-white/20 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-[#0DA2E7]/20/5"
+                    className="px-6 py-2.5 bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold rounded-xl text-sm shadow-md transition-colors"
                   >
-                    Reset Filters
-                  </button>
-                </div>
+                    Reset All Filters
+                  </motion.button>
+                </motion.div>
               )}
             </div>
           </div>

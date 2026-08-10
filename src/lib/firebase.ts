@@ -35,13 +35,20 @@ googleProvider.setCustomParameters({
   prompt: 'select_account' 
 });
 
+export const isDomainUnauthorized = (error: any): boolean => {
+  if (!error) return false;
+  const code = error.code || '';
+  const message = String(error.message || error);
+  return code === 'auth/unauthorized-domain' || message.includes('auth/unauthorized-domain') || message.includes('unauthorized domain') || message.includes('authorized in Firebase Console');
+};
+
 export const formatAuthError = (error: any): string => {
   if (!error) return 'An unexpected authentication error occurred.';
   const code = error.code || '';
   const message = error.message || String(error);
 
-  if (code === 'auth/unauthorized-domain' || message.includes('auth/unauthorized-domain')) {
-    return 'This domain is not yet authorized in Firebase Console. You can sign in using email/password, or add this domain under Firebase Authentication > Settings > Authorized Domains.';
+  if (isDomainUnauthorized(error)) {
+    return 'This preview domain is not yet whitelisted for Google Sign-In in Firebase Console. Add this domain under Firebase Console > Authentication > Settings > Authorized Domains, or sign in with your email and password below.';
   }
   if (code === 'auth/popup-blocked' || message.includes('popup-blocked')) {
     return 'The Google sign-in popup was blocked by your browser. Please allow popups for this site or open in a new window.';
@@ -53,7 +60,7 @@ export const formatAuthError = (error: any): string => {
     return 'Another sign-in window is already in progress.';
   }
   if (code === 'auth/operation-not-allowed' || message.includes('auth/operation-not-allowed')) {
-    return 'This authentication method is currently being configured. Please use email registration or sign in with your credentials.';
+    return 'Google Sign-In is not enabled yet in your Firebase Console. Please enable Google under Firebase Console > Authentication > Sign-in method, or sign in / register with your email and password below.';
   }
   if (code === 'auth/email-already-in-use') {
     return 'An account with this email already exists. Please log in instead or use Password Reset.';

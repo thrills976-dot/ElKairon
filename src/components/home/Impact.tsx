@@ -57,9 +57,9 @@ export function Impact() {
           {[
             { 
               icon: Users, 
-              value: 1200, 
+              value: 426, 
               suffix: '+', 
-              label: "Successful Placements",
+              label: "Talent Passed & Placed",
               color: "text-teal-400"
             },
             { 
@@ -89,7 +89,12 @@ export function Impact() {
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
               animate={isInView ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.8, y: 20 }}
               transition={{ duration: 0.5, delay: index * 0.15 + 0.2, type: "spring", stiffness: 100 }}
-              className="bg-navy-800 border border-navy-700 p-8 rounded-2xl flex flex-col items-center justify-center text-center group hover:bg-navy-700 hover:border-gold-500 transition-colors"
+              whileHover={{ 
+                scale: 1.05, 
+                y: -6,
+                boxShadow: "0 25px 30px -10px rgba(10, 77, 104, 0.4)" 
+              }}
+              className="bg-navy-800/90 backdrop-blur-md border border-navy-700 p-8 rounded-2xl flex flex-col items-center justify-center text-center group hover:bg-navy-700 hover:border-gold-500 transition-all duration-300 transform-gpu cursor-default"
             >
               <stat.icon className={`${stat.color} mb-6 group-hover:scale-110 transition-transform duration-500`} size={48} />
               <div className="flex items-baseline justify-center mb-2">
