@@ -87,11 +87,23 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
 
   // Resume ATS Text review state
   const [resumeReviewText, setResumeReviewText] = useState(
-    `${candidateProfile?.name || 'Blessing Mukamuri'} | Senior Cloud Systems Engineer\n` +
-    `Skills: ${candidateProfile?.skills?.join(', ') || 'Python, AWS, Azure, Cisco CCNA, Docker, Linux'}\n` +
-    `Education: ${candidateProfile?.highestDegree || "Bachelor's Degree"} in ${candidateProfile?.fieldOfStudy || 'Computer Science'}\n` +
-    `Experience: 5+ years building and deploying scalable enterprise cloud systems.`
+    `${candidateProfile?.name || user?.displayName || 'Accredited Candidate'} | ${candidateProfile?.currentJobTitle || 'International Specialist'}\n` +
+    `Skills: ${candidateProfile?.skills?.length ? candidateProfile.skills.join(', ') : 'Professional Skills'}\n` +
+    `Education: ${candidateProfile?.highestDegree || "Bachelor's Degree"} in ${candidateProfile?.fieldOfStudy || 'Higher Education'}\n` +
+    `Experience: ${candidateProfile?.totalYearsOfExperience || '3+ years'} professional experience in verified industry practice.`
   );
+
+  // Update resume text when candidate profile changes
+  useEffect(() => {
+    if (candidateProfile) {
+      setResumeReviewText(
+        `${candidateProfile.name || user?.displayName || 'Accredited Candidate'} | ${candidateProfile.currentJobTitle || 'International Specialist'}\n` +
+        `Skills: ${candidateProfile.skills?.length ? candidateProfile.skills.join(', ') : 'Professional Skills'}\n` +
+        `Education: ${candidateProfile.highestDegree || "Bachelor's Degree"} in ${candidateProfile.fieldOfStudy || 'Higher Education'}\n` +
+        `Experience: ${candidateProfile.totalYearsOfExperience || '3+ years'} professional experience in verified industry practice.`
+      );
+    }
+  }, [candidateProfile, user]);
   const [atsReviewResult, setAtsReviewResult] = useState<any>(null);
   const [loadingAts, setLoadingAts] = useState(false);
 
@@ -102,7 +114,24 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
       const q = query(collection(db, 'applications'), where('candidateId', '==', user.uid));
       const unsubscribe = onSnapshot(q, (snapshot) => {
         if (!snapshot.empty) {
-          const fetched = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as JobApplication));
+          const fetched = snapshot.docs.map(d => {
+            const data = d.data();
+            let appliedAtFormatted = 'Recently';
+            if (typeof data.appliedAt === 'string') {
+              appliedAtFormatted = data.appliedAt;
+            } else if (data.createdAt?.toDate) {
+              appliedAtFormatted = data.createdAt.toDate().toLocaleDateString();
+            } else if (data.appliedAt?.toDate) {
+              appliedAtFormatted = data.appliedAt.toDate().toLocaleDateString();
+            } else if (data.createdAt?.seconds) {
+              appliedAtFormatted = new Date(data.createdAt.seconds * 1000).toLocaleDateString();
+            }
+            return {
+              id: d.id,
+              ...data,
+              appliedAt: appliedAtFormatted
+            } as JobApplication;
+          });
           setApplications(prev => {
             const combined = [...fetched];
             // Keep unique
@@ -951,7 +980,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
                     <div>
                       <h4 className="text-base font-bold text-navy-900">{app.jobTitle}</h4>
                       <p className="text-xs text-gray-600 font-medium">
-                        {app.companyName} • {app.location} • Applied {app.appliedAt}
+                        {app.companyName} • {app.location} • Applied {typeof app.appliedAt === 'string' ? app.appliedAt : 'Recently'}
                       </p>
                     </div>
                     <span className={`px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider self-start md:self-auto ${

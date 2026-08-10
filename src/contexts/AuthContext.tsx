@@ -17,6 +17,7 @@ interface AuthContextType {
   updateEmployerProfile: (updates: Partial<EmployerProfile>) => Promise<void>;
   loginAsGuestCandidate: () => void;
   loginAsGuestEmployer: () => void;
+  loginWithCustomEmail: (email: string, name?: string, chosenRole?: 'candidate' | 'employer') => void;
   logout: () => Promise<void>;
 }
 
@@ -136,6 +137,7 @@ const AuthContext = createContext<AuthContextType>({
   updateEmployerProfile: async () => {},
   loginAsGuestCandidate: () => {},
   loginAsGuestEmployer: () => {},
+  loginWithCustomEmail: () => {},
   logout: async () => {}
 });
 
@@ -226,30 +228,56 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setRoleState(newRole);
     localStorage.setItem('elkairon_role', newRole);
 
+    const activeUid = user ? user.uid : `user-${Date.now()}`;
+    const userDisplayName = profileData.name || user?.displayName || (newRole === 'candidate' ? 'Candidate Applicant' : 'Global Enterprise Recruiter');
+    const userEmail = profileData.email || user?.email || '';
+
     if (newRole === 'candidate') {
       const mergedProfile: CandidateProfile = {
         ...DEFAULT_SAMPLE_CANDIDATE,
         ...profileData,
-        id: user ? user.uid : 'guest-cand-1',
+        id: activeUid,
         role: 'candidate',
-        name: profileData.name || user?.displayName || 'Blessing Mukamuri',
-        email: profileData.email || user?.email || 'candidate@talent.elkairon.com'
+        name: userDisplayName,
+        email: userEmail
       };
       mergedProfile.aiRecruitmentScore = computeRecruitmentScores(mergedProfile);
       setCandidateProfile(mergedProfile);
       localStorage.setItem('elkairon_candidate_profile', JSON.stringify(mergedProfile));
+
+      if (user) {
+        try {
+          await setDoc(doc(db, 'candidates', user.uid), {
+            ...mergedProfile,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        } catch (err) {
+          console.warn('Firestore candidate save warning:', err);
+        }
+      }
     } else {
       const empData: EmployerProfile = {
-        id: user ? user.uid : 'guest-emp-1',
+        id: activeUid,
         role: 'employer',
-        name: profileData.name || 'Global Recruiter',
-        email: profileData.email || 'recruiter@enterprise.com',
+        name: userDisplayName,
+        email: userEmail,
         company: profileData.company || 'Global Tech Partners',
         industry: profileData.industry || 'Technology',
         size: profileData.size || '50-200'
       };
       setEmployerProfile(empData);
       localStorage.setItem('elkairon_employer_profile', JSON.stringify(empData));
+
+      if (user) {
+        try {
+          await setDoc(doc(db, 'employers', user.uid), {
+            ...empData,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        } catch (err) {
+          console.warn('Firestore employer save warning:', err);
+        }
+      }
     }
 
     if (user) {
@@ -258,8 +286,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await setDoc(userRef, {
           ...profileData,
           role: newRole,
-          name: profileData.name || user.displayName || 'User',
-          email: profileData.email || user.email || '',
+          name: userDisplayName,
+          email: userEmail,
           updatedAt: serverTimestamp()
         }, { merge: true });
       } catch (error) {
@@ -291,6 +319,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ...updates,
           updatedAt: serverTimestamp()
         });
+        const candRef = doc(db, 'candidates', user.uid);
+        await setDoc(candRef, {
+          ...updates,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
       } catch (err) {
         console.warn('Firestore updateCandidateProfile error:', err);
       }
@@ -310,6 +343,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ...updates,
           updatedAt: serverTimestamp()
         });
+        const empRef = doc(db, 'employers', user.uid);
+        await setDoc(empRef, {
+          ...updates,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
       } catch (err) {
         console.warn('Firestore updateEmployerProfile error:', err);
       }
@@ -345,6 +383,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('elkairon_employer_profile', JSON.stringify(profile));
   };
 
+  const loginWithCustomEmail = (customEmail: string, customName?: string, chosenRole: 'candidate' | 'employer' = 'candidate') => {
+    setIsGuestUser(true);
+    setRoleState(chosenRole);
+    localStorage.setItem('elkairon_role', chosenRole);
+
+    const displayName = customName || (customEmail ? customEmail.split('@')[0] : 'User');
+
+    if (chosenRole === 'candidate') {
+      const profile: CandidateProfile = {
+        ...DEFAULT_SAMPLE_CANDIDATE,
+        id: `email-user-${Date.now()}`,
+        name: displayName,
+        email: customEmail,
+        firstName: displayName.split(' ')[0] || 'Candidate',
+        lastName: displayName.split(' ').slice(1).join(' ') || 'User',
+      };
+      profile.aiRecruitmentScore = computeRecruitmentScores(profile);
+      setCandidateProfile(profile);
+      localStorage.setItem('elkairon_candidate_profile', JSON.stringify(profile));
+    } else {
+      const profile: EmployerProfile = {
+        id: `email-emp-${Date.now()}`,
+        role: 'employer',
+        name: displayName,
+        email: customEmail,
+        company: 'Global Enterprise Partner',
+        industry: 'Technology',
+        size: '100-500 employees'
+      };
+      setEmployerProfile(profile);
+      localStorage.setItem('elkairon_employer_profile', JSON.stringify(profile));
+    }
+  };
+
   const logout = async () => {
     try {
       if (auth.currentUser) {
@@ -373,6 +445,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateEmployerProfile,
         loginAsGuestCandidate,
         loginAsGuestEmployer,
+        loginWithCustomEmail,
         logout
       }}
     >

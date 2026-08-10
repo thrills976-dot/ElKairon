@@ -74,10 +74,11 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
                     </button>
                     <button
                       type="button"
-                      onClick={loginAsGuestCandidate}
-                      className="w-full py-2.5 bg-white hover:bg-gray-50 text-teal-800 border border-teal-200 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
+                      onClick={() => setAuthOpen(true)}
+                      className="w-full py-2.5 bg-white hover:bg-teal-50 text-teal-800 border border-teal-200 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5"
                     >
-                      Instant Candidate Demo Dashboard
+                      <LogIn size={14} />
+                      <span>Sign In to Candidate Portal</span>
                     </button>
                   </div>
                 </div>
@@ -105,10 +106,11 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
                     </button>
                     <button
                       type="button"
-                      onClick={loginAsGuestEmployer}
-                      className="w-full py-2.5 bg-white hover:bg-gray-50 text-navy-900 border border-gray-200 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
+                      onClick={() => setAuthOpen(true)}
+                      className="w-full py-2.5 bg-white hover:bg-gray-50 text-navy-900 border border-gray-200 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5"
                     >
-                      Instant Employer Demo Portal
+                      <LogIn size={14} />
+                      <span>Sign In to Employer Portal</span>
                     </button>
                   </div>
                 </div>

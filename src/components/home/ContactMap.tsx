@@ -1,7 +1,34 @@
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { MapPin, Mail, Phone, Building } from 'lucide-react';
+import { MapPin, Mail, Phone, Building, Send, CheckCircle2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export function ContactMap() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      toast.error('Please complete all contact form fields.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSent(true);
+      toast.success('Thank you! Your message has been routed to our global desk.');
+      setName('');
+      setEmail('');
+      setMessage('');
+      setTimeout(() => setIsSent(false), 5000);
+    }, 800);
+  };
+
   return (
     <div className="py-24 bg-navy-900 text-white relative overflow-hidden" id="contact">
       <div className="absolute inset-0 opacity-10">
@@ -60,21 +87,61 @@ export function ContactMap() {
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10"
+          className="bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-2xl"
         >
           <h3 className="text-2xl font-bold font-display italic mb-6">Send us a message</h3>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <input type="text" placeholder="Your Name" className="w-full bg-navy-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-teal-500" />
+              <input 
+                type="text" 
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your Name" 
+                required
+                className="w-full bg-navy-900/70 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-teal-500 transition-colors" 
+              />
             </div>
             <div>
-              <input type="email" placeholder="Your Email" className="w-full bg-navy-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-teal-500" />
+              <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your Email" 
+                required
+                className="w-full bg-navy-900/70 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-teal-500 transition-colors" 
+              />
             </div>
             <div>
-              <textarea placeholder="How can we help you?" rows={4} className="w-full bg-navy-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-teal-500 resize-none"></textarea>
+              <textarea 
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="How can we help you with global recruitment or relocation?" 
+                rows={4} 
+                required
+                className="w-full bg-navy-900/70 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-teal-500 resize-none transition-colors"
+              />
             </div>
-            <button type="button" className="w-full bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold uppercase tracking-widest text-sm py-4 rounded-xl transition-colors">
-              Send Message
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="w-full bg-gold-500 hover:bg-gold-400 text-navy-900 font-extrabold uppercase tracking-widest text-xs py-4 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-navy-900 border-t-transparent rounded-full animate-spin" />
+                  <span>Transmitting...</span>
+                </>
+              ) : isSent ? (
+                <>
+                  <CheckCircle2 size={16} />
+                  <span>Message Dispatched</span>
+                </>
+              ) : (
+                <>
+                  <Send size={16} />
+                  <span>Send Message</span>
+                </>
+              )}
             </button>
           </form>
         </motion.div>

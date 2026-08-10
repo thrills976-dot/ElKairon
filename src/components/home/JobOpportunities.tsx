@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Briefcase, Filter, Search, ArrowRight, ChevronDown, Check } from 'lucide-react';
 
@@ -128,6 +128,16 @@ export function JobOpportunities() {
   const [selectedCountry, setSelectedCountry] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedExperience, setSelectedExperience] = useState<string>('All');
+
+  useEffect(() => {
+    const handleGlobalSearch = (e: any) => {
+      if (e.detail && typeof e.detail === 'string') {
+        setSearchQuery(e.detail);
+      }
+    };
+    window.addEventListener('globalSearch', handleGlobalSearch);
+    return () => window.removeEventListener('globalSearch', handleGlobalSearch);
+  }, []);
 
   const toggleSkill = (skill: string) => {
     setSelectedSkills(prev => 

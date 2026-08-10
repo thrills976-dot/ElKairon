@@ -299,3 +299,65 @@ export interface RecommendedCourse {
   level: string;
   enrolled?: boolean;
 }
+
+export interface PreVettedCandidate {
+  id: string;
+  name: string;
+  title: string;
+  sector: 'Healthcare' | 'Construction' | 'Hospitality' | 'Technology' | 'Logistics';
+  subSector: string;
+  location: string;
+  targetRelocation: string;
+  experienceYears: number;
+  germanLevel: string;
+  englishLevel: string;
+  education: string;
+  credentialsStatus: string;
+  fastTrackEligible: boolean;
+  availability: string;
+  avatar: string;
+  skills: string[];
+  bio: string;
+  rating: number;
+  salaryExpectation: string;
+  visaStatus: string;
+  documentsReady: string[];
+  badge?: string;
+  videoIntroUrl?: string;
+}
+
+export interface ComplianceDocument {
+  id: string;
+  title: string;
+  type: 'contract' | 'work_permit' | 'certification' | 'visa_file' | 'equivalence';
+  category: string;
+  candidateName: string;
+  candidateId: string;
+  jobTitle: string;
+  status: 'Verified by ElKairon Legal' | 'Pending Employer Signature' | 'Approved by Ausländerbehörde' | 'Draft' | 'Submitted';
+  uploadDate: string;
+  fileSize: string;
+  fileUrl: string;
+  description: string;
+  isMandatoryForVisa?: boolean;
+}
+
+export interface MessageEntry {
+  sender: 'employer' | 'candidate' | 'system' | 'compliance_officer';
+  text: string;
+  time: string;
+  attachments?: string[];
+}
+
+export interface EmployerMessage {
+  id: string;
+  candidateId: string;
+  candidateName: string;
+  candidateAvatar: string;
+  subject: string;
+  lastMessage: string;
+  timestamp: string;
+  unread: boolean;
+  messages: MessageEntry[];
+}
+
