@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { CandidateDashboard } from './CandidateDashboard';
 import { EmployerDashboard } from './EmployerDashboard';
 import { useAuth } from '../../contexts/AuthContext';
-import { logout } from '../../lib/firebase';
-import { LogIn, LogOut, Briefcase, User as UserIcon, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
+import { LogIn, LogOut, Briefcase, User as UserIcon, Sparkles, CheckCircle2, ArrowRight, Key, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CandidateRegistration, EmployerRegistration } from './RegistrationForm';
 import { AuthModal } from '../AuthModal';
 
 export function Portal({ initialMode }: { initialMode?: "candidate" | "employer" }) {
-  const { user, loading, role, setRole, loginAsGuestCandidate, loginAsGuestEmployer } = useAuth();
+  const { user, loading, role, setRole, loginAsGuestCandidate, loginAsGuestEmployer, logout } = useAuth();
   const [selectedRole, setSelectedRole] = useState<'candidate' | 'employer' | null>(initialMode || null);
   const [authOpen, setAuthOpen] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -23,7 +22,7 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
   }
 
   // If no user is logged in, show an inviting gateway with options to Sign In, Start 7-Step Registration, or Test Live Candidate Demo
-  if (!user) {
+  if (!user && !role) {
     return (
       <div className="min-h-screen bg-gray-50 pt-28 pb-16 px-4 flex flex-col items-center justify-center">
         <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
@@ -48,6 +47,35 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
                 <p className="text-sm text-gray-500 max-w-lg mx-auto">
                   Experience intelligent AI candidate-job matching, ATS resume scoring, and direct international placements.
                 </p>
+              </div>
+
+              {/* Instant 1-Click Demo Bar */}
+              <div className="p-4 bg-gradient-to-r from-teal-50/80 via-white to-gold-50/80 rounded-2xl border border-teal-200/70 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <Key size={16} className="text-gold-600 shrink-0" />
+                  <div>
+                    <div className="text-xs font-bold text-navy-950">1-Click Live Interactive Demo</div>
+                    <div className="text-[11px] text-gray-500">Explore complete dossiers, verified jobs & ATS tools instantly</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <button
+                    type="button"
+                    onClick={loginAsGuestCandidate}
+                    className="flex-1 sm:flex-initial px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5"
+                  >
+                    <UserIcon size={13} />
+                    <span>Candidate Demo</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={loginAsGuestEmployer}
+                    className="flex-1 sm:flex-initial px-3.5 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5"
+                  >
+                    <Briefcase size={13} className="text-gold-400" />
+                    <span>Employer Demo</span>
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

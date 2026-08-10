@@ -159,14 +159,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (savedCandidate) {
       try {
-        setCandidateProfile(JSON.parse(savedCandidate));
+        const parsed = JSON.parse(savedCandidate);
+        setCandidateProfile(parsed);
+        if (!user && savedRole === 'candidate') {
+          setIsGuestUser(true);
+          setUser({
+            uid: parsed.id || 'candidate-session',
+            email: parsed.email || 'candidate@talent.elkairon.com',
+            displayName: parsed.name || 'Accredited Candidate'
+          } as any);
+        }
       } catch (e) {
         console.error(e);
       }
     }
     if (savedEmployer) {
       try {
-        setEmployerProfile(JSON.parse(savedEmployer));
+        const parsed = JSON.parse(savedEmployer);
+        setEmployerProfile(parsed);
+        if (!user && savedRole === 'employer') {
+          setIsGuestUser(true);
+          setUser({
+            uid: parsed.id || 'employer-session',
+            email: parsed.email || 'elena@nextgencloud.nl',
+            displayName: parsed.name || 'Enterprise Recruiter'
+          } as any);
+        }
       } catch (e) {
         console.error(e);
       }
@@ -215,7 +233,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
           }
         } catch (error) {
-          console.error('Firestore user load error:', error);
+          // Gracefully fall back to cached local storage data if network is temporarily offline
+          console.warn('Firestore user fetch notice (using cached local session):', error);
+          const savedRole = localStorage.getItem('elkairon_role') as 'candidate' | 'employer' | null;
+          const savedCandidate = localStorage.getItem('elkairon_candidate_profile');
+          const savedEmployer = localStorage.getItem('elkairon_employer_profile');
+          if (savedRole) setRoleState(savedRole);
+          if (savedCandidate) {
+            try { setCandidateProfile(JSON.parse(savedCandidate)); } catch {}
+          }
+          if (savedEmployer) {
+            try { setEmployerProfile(JSON.parse(savedEmployer)); } catch {}
+          }
         }
       }
       setLoading(false);
@@ -360,6 +389,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const profile = { ...DEFAULT_SAMPLE_CANDIDATE };
     profile.aiRecruitmentScore = computeRecruitmentScores(profile);
     setCandidateProfile(profile);
+    setUser({
+      uid: profile.id || 'candidate-guest-1',
+      email: profile.email || 'blessing.mukamuri@talent.elkairon.com',
+      displayName: profile.name || 'Blessing Mukamuri'
+    } as any);
     localStorage.setItem('elkairon_role', 'candidate');
     localStorage.setItem('elkairon_candidate_profile', JSON.stringify(profile));
   };
@@ -372,13 +406,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       role: 'employer',
       name: 'Elena Rostova',
       email: 'elena@nextgencloud.nl',
-      company: 'NextGen Cloud Systems',
+      company: 'NextGen Cloud Systems B.V.',
       industry: 'Technology',
       size: '250-500 employees',
       phone: '+31 20 555 0192',
       country: 'Netherlands'
     };
     setEmployerProfile(profile);
+    setUser({
+      uid: profile.id || 'employer-guest-1',
+      email: profile.email || 'elena@nextgencloud.nl',
+      displayName: 'Elena Rostova'
+    } as any);
     localStorage.setItem('elkairon_role', 'employer');
     localStorage.setItem('elkairon_employer_profile', JSON.stringify(profile));
   };
@@ -389,11 +428,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('elkairon_role', chosenRole);
 
     const displayName = customName || (customEmail ? customEmail.split('@')[0] : 'User');
+    const newUid = `user-${Date.now()}`;
+
+    setUser({
+      uid: newUid,
+      email: customEmail,
+      displayName: displayName
+    } as any);
 
     if (chosenRole === 'candidate') {
       const profile: CandidateProfile = {
         ...DEFAULT_SAMPLE_CANDIDATE,
-        id: `email-user-${Date.now()}`,
+        id: newUid,
         name: displayName,
         email: customEmail,
         firstName: displayName.split(' ')[0] || 'Candidate',
@@ -404,7 +450,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('elkairon_candidate_profile', JSON.stringify(profile));
     } else {
       const profile: EmployerProfile = {
-        id: `email-emp-${Date.now()}`,
+        id: newUid,
         role: 'employer',
         name: displayName,
         email: customEmail,
@@ -427,8 +473,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     setUser(null);
     setRoleState(null);
+    setCandidateProfile(null);
+    setEmployerProfile(null);
     setIsGuestUser(false);
     localStorage.removeItem('elkairon_role');
+    localStorage.removeItem('elkairon_candidate_profile');
+    localStorage.removeItem('elkairon_employer_profile');
   };
 
   return (

@@ -9,11 +9,24 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { 
+  initializeFirestore, 
+  getFirestore, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  serverTimestamp 
+} from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+
+// Initialize Firestore with robust connection options for cloud sandbox and browser environments
+export const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true,
+  ignoreUndefinedProperties: true,
+}, firebaseConfig.firestoreDatabaseId);
+
 export const storage = getStorage(app);
 export const auth = getAuth(app);
 
