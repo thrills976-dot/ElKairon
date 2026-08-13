@@ -6,9 +6,27 @@ import { AuthProvider } from './contexts/AuthContext.tsx';
 
 // Suppress benign Vite HMR websocket disconnect noise in sandboxed dev container
 if (typeof window !== 'undefined') {
+  const isWsNoise = (err: any) => {
+    const reasonStr = String(err?.message || err?.reason || err || '');
+    return (
+      reasonStr.includes('WebSocket') ||
+      reasonStr.includes('websocket') ||
+      reasonStr.includes('[vite]') ||
+      reasonStr.includes('ws://') ||
+      reasonStr.includes('wss://')
+    );
+  };
+
   window.addEventListener('unhandledrejection', (event) => {
-    const reasonStr = String(event?.reason?.message || event?.reason || '');
-    if (reasonStr.includes('WebSocket') || reasonStr.includes('ws://') || reasonStr.includes('wss://')) {
+    if (isWsNoise(event?.reason)) {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+    }
+  });
+
+  window.addEventListener('error', (event) => {
+    if (isWsNoise(event?.message) || isWsNoise(event?.error)) {
+      event.stopImmediatePropagation();
       event.preventDefault();
     }
   });

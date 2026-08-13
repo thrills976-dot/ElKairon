@@ -1,6 +1,8 @@
+import { BACKGROUND_IMAGES } from '../../data/imageMap';
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Briefcase, Filter, Search, ArrowRight, ChevronDown, Check } from 'lucide-react';
+import { LazyImage } from '../ui/LazyImage';
 
 type Job = {
   id: string;
@@ -12,6 +14,7 @@ type Job = {
   experience: string;
   skills: string[];
   description: string;
+  image?: string;
 };
 
 const JOBS: Job[] = [
@@ -24,7 +27,8 @@ const JOBS: Job[] = [
     type: "Full-time",
     experience: "Senior (5+ years)",
     skills: ["Programming", "Networking", "Systems", "English"],
-    description: "Leading IT companies and tech firms in Ireland and the Netherlands are actively hiring skilled international professionals."
+    description: "Leading IT companies and tech firms in Ireland and the Netherlands are actively hiring skilled international professionals.",
+    image: BACKGROUND_IMAGES.softwareDeveloper
   },
   {
     id: "j2",
@@ -35,7 +39,8 @@ const JOBS: Job[] = [
     type: "Full-time",
     experience: "Mid-level (2-5 years)",
     skills: ["Nursing", "Patient Care", "Healthcare Qualification", "English"],
-    description: "Hospitals, clinics, and healthcare facilities across Canada and Europe are urgently hiring international healthcare workers."
+    description: "Hospitals, clinics, and healthcare facilities across Canada and Europe are urgently hiring international healthcare workers.",
+    image: BACKGROUND_IMAGES.healthcareNursing
   },
   {
     id: "j3",
@@ -46,7 +51,8 @@ const JOBS: Job[] = [
     type: "Full-time",
     experience: "Entry-level (0-2 years)",
     skills: ["Driving License", "Logistics", "Physical Fitness"],
-    description: "Leading logistics and delivery companies are urgently hiring Truck Drivers and Bike Delivery Riders."
+    description: "Leading logistics and delivery companies are urgently hiring Truck Drivers and Bike Delivery Riders.",
+    image: BACKGROUND_IMAGES.truckDriver
   },
   {
     id: "j4",
@@ -57,7 +63,8 @@ const JOBS: Job[] = [
     type: "Full-time",
     experience: "Entry-level (0-2 years)",
     skills: ["Inventory", "Physical Fitness", "Sorting", "Loading"],
-    description: "Fast processing work permits for warehouse workers, packing staff, loaders, and inventory assistants."
+    description: "Fast processing work permits for warehouse workers, packing staff, loaders, and inventory assistants.",
+    image: BACKGROUND_IMAGES.logisticsWarehouse
   },
   {
     id: "j5",
@@ -68,7 +75,8 @@ const JOBS: Job[] = [
     type: "Full-time",
     experience: "Mid-level (2-5 years)",
     skills: ["Cooking", "Food Prep", "Hospitality", "English"],
-    description: "Urgent hiring for hotel industry: Chefs, Cooks, Assistant cooks, kitchen helpers, and waiters."
+    description: "Urgent hiring for hotel industry: Chefs, Cooks, Assistant cooks, kitchen helpers, and waiters.",
+    image: BACKGROUND_IMAGES.hotelChef
   },
   {
     id: "j6",
@@ -79,7 +87,8 @@ const JOBS: Job[] = [
     type: "Full-time",
     experience: "Senior (5+ years)",
     skills: ["Engineering Degree", "Project Management", "AutoCAD"],
-    description: "In-demand roles for engineers and technicians with stable career growth and strong future prospects."
+    description: "In-demand roles for engineers and technicians with stable career growth and strong future prospects.",
+    image: BACKGROUND_IMAGES.centralEuropeHub
   },
   {
     id: "j7",
@@ -90,7 +99,8 @@ const JOBS: Job[] = [
     type: "Full-time",
     experience: "Entry-level (0-2 years)",
     skills: ["Quality Check", "Packing", "Physical Fitness"],
-    description: "Norway seafood processing companies are urgently hiring workers for packing and factory operations."
+    description: "Norway seafood processing companies are urgently hiring workers for packing and factory operations.",
+    image: BACKGROUND_IMAGES.seafoodProcessing
   },
   {
     id: "j8",
@@ -101,7 +111,8 @@ const JOBS: Job[] = [
     type: "Full-time",
     experience: "Mid-level (2-5 years)",
     skills: ["Accounting", "Finance", "Management"],
-    description: "Diverse job opportunities in sectors like finance, retail, and manufacturing with average 40-hour work weeks."
+    description: "Diverse job opportunities in sectors like finance, retail, and manufacturing with average 40-hour work weeks.",
+    image: BACKGROUND_IMAGES.corporateHandshake
   },
   {
     id: "j9",
@@ -112,7 +123,8 @@ const JOBS: Job[] = [
     type: "Full-time",
     experience: "Entry-level (0-2 years)",
     skills: ["Manual Labor", "Maintenance", "Physical Fitness"],
-    description: "Construction and maintenance workers wanted for immediate placement. Work permits processed in 4 to 5 weeks."
+    description: "Construction and maintenance workers wanted for immediate placement. Work permits processed in 4 to 5 weeks.",
+    image: BACKGROUND_IMAGES.constructionEngineering
   }
 ];
 
@@ -327,50 +339,59 @@ export function JobOpportunities() {
                       boxShadow: "0 20px 30px -10px rgba(10, 77, 104, 0.4)" 
                     }}
                     key={job.id}
-                    className="bg-navy-900/90 backdrop-blur-md border border-white/15 hover:border-teal-400/80 rounded-2xl p-6 shadow-xl transition-all duration-300 group flex flex-col h-full relative cursor-default transform-gpu"
+                    className="bg-navy-900/90 backdrop-blur-md border border-white/15 hover:border-teal-400/80 rounded-2xl overflow-hidden shadow-xl transition-all duration-300 group flex flex-col h-full relative cursor-default transform-gpu p-0"
                   >
-                    {/* Top badging */}
-                    <div className="flex justify-between items-start mb-4">
-                      <span className="bg-teal-950 text-teal-300 text-xs font-bold px-3 py-1 rounded-full border border-teal-400/40">
-                        {job.industry}
-                      </span>
-                      <span className="text-xs font-semibold text-gold-300 bg-gold-950/60 px-2.5 py-1 rounded-full border border-gold-400/30">
-                        {job.type}
-                      </span>
-                    </div>
-
-                    <h4 className="font-display text-xl font-bold text-white mb-2 leading-tight group-hover:text-gold-300 transition-colors">
-                      {job.title}
-                    </h4>
-
-                    <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-sky-100 mb-4">
-                      <div className="flex items-center gap-1.5">
-                        <MapPin size={16} className="text-gold-400 shrink-0" />
-                        <span className="font-medium">{job.countries.join(', ')}</span>
+                    {/* Top Image if provided */}
+                    {job.image && (
+                      <div className="w-full h-40 overflow-hidden relative">
+                        <LazyImage src={job.image} alt={job.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-navy-900/90 via-navy-900/20 to-transparent pointer-events-none" />
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <Briefcase size={16} className="text-teal-400 shrink-0" />
-                        <span className="font-bold text-teal-300">{job.salary}</span>
+                    )}
+                    
+                    <div className="p-6 flex flex-col h-full flex-grow">
+                      {/* Top badging */}
+                      <div className="flex justify-between items-start mb-4">
+                        <span className="bg-teal-950 text-teal-300 text-xs font-bold px-3 py-1 rounded-full border border-teal-400/40">
+                          {job.industry}
+                        </span>
+                        <span className="text-xs font-semibold text-gold-300 bg-gold-950/60 px-2.5 py-1 rounded-full border border-gold-400/30">
+                          {job.type}
+                        </span>
                       </div>
-                    </div>
 
-                    <p className="text-sm text-sky-100/90 mb-6 line-clamp-2 leading-relaxed">
-                      {job.description}
-                    </p>
+                      <h4 className="font-display text-xl font-bold text-white mb-2 leading-tight group-hover:text-gold-300 transition-colors">
+                        {job.title}
+                      </h4>
 
-                    <div className="mt-auto pt-4 border-t border-white/10">
-                      <div className="flex flex-wrap gap-1.5 mb-6">
-                        {job.skills.slice(0, 3).map(skill => (
-                          <span key={skill} className="text-[10px] font-bold uppercase tracking-wider bg-navy-950 text-sky-200 px-2.5 py-1 rounded border border-white/10">
-                            {skill}
-                          </span>
-                        ))}
-                        {job.skills.length > 3 && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider bg-navy-950 text-sky-200 px-2.5 py-1 rounded border border-white/10">
-                            +{job.skills.length - 3} more
-                          </span>
-                        )}
+                      <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-sky-100 mb-4">
+                        <div className="flex items-center gap-1.5">
+                          <MapPin size={16} className="text-gold-400 shrink-0" />
+                          <span className="font-medium">{job.countries.join(', ')}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Briefcase size={16} className="text-teal-400 shrink-0" />
+                          <span className="font-bold text-teal-300">{job.salary}</span>
+                        </div>
                       </div>
+
+                      <p className="text-sm text-sky-100/90 mb-6 line-clamp-2 leading-relaxed">
+                        {job.description}
+                      </p>
+
+                      <div className="mt-auto pt-4 border-t border-white/10">
+                        <div className="flex flex-wrap gap-1.5 mb-6">
+                          {job.skills.slice(0, 3).map(skill => (
+                            <span key={skill} className="text-[10px] font-bold uppercase tracking-wider bg-navy-950 text-sky-200 px-2.5 py-1 rounded border border-white/10">
+                              {skill}
+                            </span>
+                          ))}
+                          {job.skills.length > 3 && (
+                            <span className="text-[10px] font-bold uppercase tracking-wider bg-navy-950 text-sky-200 px-2.5 py-1 rounded border border-white/10">
+                              +{job.skills.length - 3} more
+                            </span>
+                          )}
+                        </div>
                       
                       <motion.a
                         whileHover={{ 
@@ -387,6 +408,7 @@ export function JobOpportunities() {
                         <span>Apply via WhatsApp</span>
                         <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
                       </motion.a>
+                      </div>
                     </div>
                   </motion.div>
                 )})}

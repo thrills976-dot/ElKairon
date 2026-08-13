@@ -6,6 +6,7 @@ import {
   ExternalLink, ArrowRight, UserCheck, Languages, GraduationCap 
 } from 'lucide-react';
 import { PreVettedCandidate } from '../../../types/recruitment';
+import { GenericAvatar } from '../../common/GenericAvatar';
 import toast from 'react-hot-toast';
 
 interface CandidateDetailModalProps {
@@ -57,10 +58,12 @@ export function CandidateDetailModal({
 
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             <div className="relative">
-              <img
+              <GenericAvatar
                 src={candidate.avatar}
-                alt={candidate.name}
-                className="w-24 h-24 rounded-2xl object-cover border-2 border-teal-400 shadow-xl"
+                name={candidate.name}
+                role="candidate"
+                size="lg"
+                className="w-24 h-24 rounded-2xl border-2 border-teal-400 shadow-xl"
               />
               <div className="absolute -bottom-2 -right-2 p-1.5 bg-teal-500 text-white rounded-lg shadow-md">
                 <ShieldCheck size={16} />
@@ -160,27 +163,27 @@ export function CandidateDetailModal({
               {/* Key Metrics Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                  <div className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Experience</div>
+                  <div className="text-[10px] uppercase font-bold text-gray-600 tracking-wider">Experience</div>
                   <div className="text-lg font-bold text-navy-900 mt-0.5">{candidate.experienceYears} Years</div>
-                  <div className="text-[11px] text-teal-600 font-medium">Verified Records</div>
+                  <div className="text-[11px] text-teal-700 font-bold">Verified Records</div>
                 </div>
 
                 <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                  <div className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">German Level</div>
+                  <div className="text-[10px] uppercase font-bold text-gray-600 tracking-wider">German Level</div>
                   <div className="text-sm font-bold text-navy-900 mt-0.5">{candidate.germanLevel}</div>
-                  <div className="text-[11px] text-emerald-600 font-medium">Certificate on file</div>
+                  <div className="text-[11px] text-emerald-800 font-bold">Certificate on file</div>
                 </div>
 
                 <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                  <div className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Availability</div>
+                  <div className="text-[10px] uppercase font-bold text-gray-600 tracking-wider">Availability</div>
                   <div className="text-sm font-bold text-navy-900 mt-0.5">{candidate.availability}</div>
-                  <div className="text-[11px] text-teal-600 font-medium">Fast-Track Ready</div>
+                  <div className="text-[11px] text-teal-700 font-bold">Fast-Track Ready</div>
                 </div>
 
                 <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                  <div className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Target Salary</div>
+                  <div className="text-[10px] uppercase font-bold text-gray-600 tracking-wider">Target Salary</div>
                   <div className="text-sm font-bold text-navy-900 mt-0.5">{candidate.salaryExpectation}</div>
-                  <div className="text-[11px] text-gray-500 font-medium">Standard Tariff</div>
+                  <div className="text-[11px] text-gray-700 font-bold">Standard Tariff</div>
                 </div>
               </div>
 

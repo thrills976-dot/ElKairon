@@ -491,14 +491,14 @@ export function ComplianceDocumentVault() {
                 <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center hover:border-teal-500 transition-colors bg-gray-50/50 cursor-pointer">
                   <Upload size={28} className="text-teal-600 mx-auto mb-2" />
                   <p className="text-xs font-bold text-navy-900">Drag and drop file here, or click to browse</p>
-                  <p className="text-[10px] text-gray-400 mt-1">Supports PDF, DOCX, JPG up to 25MB (Encrypted storage)</p>
+                  <p className="text-[10px] text-gray-600 mt-1">Supports PDF, DOCX, JPG up to 25MB (Encrypted storage)</p>
                 </div>
 
                 <div className="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
                   <button
                     type="button"
                     onClick={() => setIsUploadModalOpen(false)}
-                    className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500"
+                    className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-navy-900"
                   >
                     Cancel
                   </button>

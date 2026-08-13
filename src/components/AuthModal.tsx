@@ -312,7 +312,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'candidate' }: AuthMo
 
                     <div className="flex items-center gap-3 mb-4">
                       <div className="h-px bg-gray-200 flex-1" />
-                      <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">or continue with email</span>
+                      <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">or continue with email</span>
                       <div className="h-px bg-gray-200 flex-1" />
                     </div>
 
@@ -435,7 +435,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'candidate' }: AuthMo
                           <button
                             type="button"
                             onClick={() => setShowDomainNotice(!showDomainNotice)}
-                            className="text-gray-400 hover:text-navy-900 flex items-center gap-1"
+                            className="text-gray-600 hover:text-navy-900 font-medium flex items-center gap-1"
                           >
                             <HelpCircle size={12} />
                             <span>OAuth Settings</span>
@@ -462,7 +462,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'candidate' }: AuthMo
                     </form>
                     
                     {/* Toggle Login / Register */}
-                    <div className="text-center text-xs text-gray-500">
+                    <div className="text-center text-xs text-gray-600">
                       {isLogin ? "Don't have an account yet? " : "Already registered? "}
                       <button 
                         id="toggle-auth-mode-btn"
@@ -480,7 +480,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'candidate' }: AuthMo
                   </>
                 )}
 
-                <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-[10px] text-gray-400">
+                <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-[10px] text-gray-500 font-medium">
                   <div className="flex items-center gap-1">
                     <ShieldCheck size={13} className="text-teal-600" />
                     <span>ISO 27001 Secure Portal</span>

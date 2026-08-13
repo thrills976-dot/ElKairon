@@ -22,6 +22,7 @@ import {
 } from '../../lib/aiRecruitmentEngine';
 import { db } from '../../lib/firebase';
 import { collection, addDoc, query, where, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { GenericAvatar } from '../common/GenericAvatar';
 
 interface CandidateDashboardProps {
   onOpenProfileEditor?: () => void;
@@ -47,37 +48,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
   const [detailedAiAnalysis, setDetailedAiAnalysis] = useState<any>(null);
 
   // Active User Applications state
-  const [applications, setApplications] = useState<JobApplication[]>([
-    {
-      id: 'app-sample-1',
-      candidateId: candidateProfile?.id || 'candidate-1',
-      jobId: 'j-cloud-architect',
-      jobTitle: 'Cloud Solutions Architect (AWS / Azure)',
-      companyName: 'NextGen Cloud Systems',
-      location: 'Amsterdam, Netherlands',
-      salary: '€5,800 - €8,200 / mo',
-      status: 'interview',
-      stage: 'Interview Scheduled',
-      matchScore: 96,
-      appliedAt: '3 days ago',
-      interviewDate: 'August 12, 2026 at 14:00 CET (Technical Panel)',
-      notes: 'Initial profile screened. Technical architectural discussion confirmed with hiring director.'
-    },
-    {
-      id: 'app-sample-2',
-      candidateId: candidateProfile?.id || 'candidate-1',
-      jobId: 'j-sr-fullstack',
-      jobTitle: 'Senior Full Stack Software Engineer',
-      companyName: 'FinApex Global Digital',
-      location: 'Dubai, UAE',
-      salary: 'AED 24,000 - 32,000 / mo',
-      status: 'reviewed',
-      stage: 'Under Review',
-      matchScore: 92,
-      appliedAt: '5 days ago',
-      notes: 'Visa sponsorship verification in progress with Dubai DIFC HR.'
-    }
-  ]);
+  const [applications, setApplications] = useState<JobApplication[]>([]);
 
   // Recruiter Views State
   const [recruiterViews, setRecruiterViews] = useState<RecruiterProfileView[]>(MOCK_RECRUITER_VIEWS);
@@ -305,11 +276,13 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-gray-100">
           {/* Candidate Identity */}
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <img
-                src={candidateProfile?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
-                alt={candidateProfile?.name || 'Candidate'}
-                className="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover border-2 border-teal-600 shadow-md"
+            <div className="relative shrink-0">
+              <GenericAvatar
+                src={candidateProfile?.avatarUrl || user?.photoURL}
+                name={candidateProfile?.name || user?.displayName || user?.email || 'Candidate'}
+                role="candidate"
+                size="lg"
+                className="w-16 h-16 md:w-20 md:h-20 rounded-2xl shadow-md border-2 border-teal-600"
               />
               <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-teal-500 border-2 border-white rounded-full flex items-center justify-center text-[10px] text-white font-bold" title="AI Verified">
                 ✓
@@ -319,26 +292,30 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
             <div>
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <h1 className="text-2xl md:text-3xl font-display font-bold text-navy-900">
-                  {candidateProfile?.name || 'Blessing Mukamuri'}
+                  {candidateProfile?.name || user?.displayName || (user?.email ? user.email.split('@')[0] : 'Candidate')}
                 </h1>
                 <span className="px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 text-xs font-bold border border-teal-200">
-                  Verified Candidate
+                  {candidateProfile?.skills?.length ? 'Verified Candidate' : 'Candidate Profile'}
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-navy-900 text-white text-xs font-bold">
-                  {candidateProfile?.personalityStyle?.archetype || 'Strategic Engineering Leader'}
+                  {candidateProfile?.personalityStyle?.archetype || 'International Talent Candidate'}
                 </span>
               </div>
               <p className="text-sm font-semibold text-gray-600 mb-1">
-                {candidateProfile?.currentJobTitle || 'Senior Cloud Systems & Network Engineer'} • {candidateProfile?.totalYearsOfExperience || '5+ years'} exp
+                {candidateProfile?.currentJobTitle 
+                  ? `${candidateProfile.currentJobTitle}${candidateProfile?.totalYearsOfExperience ? ` • ${candidateProfile.totalYearsOfExperience} exp` : ''}`
+                  : 'Complete your profile to showcase job title & experience'}
               </p>
               <div className="flex items-center gap-3 text-xs text-gray-500 flex-wrap">
                 <span className="flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5 text-teal-600" />
-                  {candidateProfile?.city || 'Harare'}, {candidateProfile?.countryOfResidence || 'Zimbabwe'}
+                  {candidateProfile?.city || candidateProfile?.countryOfResidence 
+                    ? `${candidateProfile?.city ? candidateProfile.city + ', ' : ''}${candidateProfile?.countryOfResidence || ''}`
+                    : 'Location not set'}
                 </span>
                 <span>•</span>
                 <span className="text-teal-700 font-medium">
-                  ✈ Relocation: {candidateProfile?.willingToRelocate || 'Europe & UK'}
+                  ✈ Relocation: {candidateProfile?.willingToRelocate || 'Open to Relocation'}
                 </span>
                 <span>•</span>
                 <span className="text-navy-900 font-medium">
@@ -417,7 +394,9 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
             <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Skills Confidence</p>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-extrabold text-navy-900">{scores.skillsConfidence}%</span>
-              <span className="text-[10px] text-teal-600 font-bold">11 Skills</span>
+              <span className="text-[10px] text-teal-700 font-bold">
+                {candidateProfile?.skills?.length ? `${candidateProfile.skills.length} Skills` : 'Verified Pool'}
+              </span>
             </div>
             <div className="w-full bg-gray-200 h-1.5 rounded-full mt-2 overflow-hidden">
               <div className="bg-teal-600 h-full rounded-full" style={{ width: `${scores.skillsConfidence}%` }} />
@@ -429,9 +408,11 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
             <p className="text-[11px] font-bold text-gray-300 uppercase tracking-wider">Recruiter Visibility</p>
             <div className="flex items-baseline justify-between mt-1">
               <span className="text-xl font-extrabold text-gold-400">{scores.recruiterVisibility}</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-white/10 text-teal-300 font-bold">Top 5%</span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-white/10 text-teal-300 font-bold">Verified</span>
             </div>
-            <p className="text-[10px] text-gray-300 mt-1">4 Active Employers Looking</p>
+            <p className="text-[10px] text-gray-300 mt-1">
+              {recruiterViews.length > 0 ? `${recruiterViews.length} Active Employers Reviewing` : 'Active in Global Employer Pool'}
+            </p>
           </div>
         </div>
       </div>
@@ -594,7 +575,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
 
                       {/* Matched Skills Chips */}
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mr-1">Skills:</span>
+                        <span className="text-[11px] font-bold text-gray-600 uppercase tracking-wider mr-1">Skills:</span>
                         {job.skills.map((skill) => {
                           const isCandidateSkill = candidateProfile?.skills?.some(cs => cs.toLowerCase().includes(skill.toLowerCase()) || skill.toLowerCase().includes(cs.toLowerCase()));
                           return (
@@ -603,7 +584,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
                               className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold ${
                                 isCandidateSkill
                                   ? 'bg-teal-50 text-teal-800 border border-teal-200 font-bold'
-                                  : 'bg-gray-100 text-gray-500'
+                                  : 'bg-gray-100 text-gray-700'
                               }`}
                             >
                               {isCandidateSkill ? '✓ ' : ''}{skill}
@@ -974,60 +955,78 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
             </div>
 
             <div className="space-y-4">
-              {applications.map((app) => (
-                <div key={app.id} className="p-5 bg-gray-50 rounded-2xl border border-gray-100 space-y-3">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                    <div>
-                      <h4 className="text-base font-bold text-navy-900">{app.jobTitle}</h4>
-                      <p className="text-xs text-gray-600 font-medium">
-                        {app.companyName} • {app.location} • Applied {typeof app.appliedAt === 'string' ? app.appliedAt : 'Recently'}
-                      </p>
-                    </div>
-                    <span className={`px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider self-start md:self-auto ${
-                      app.stage === 'Interview Scheduled'
-                        ? 'bg-gold-500 text-navy-900 animate-pulse'
-                        : app.stage === 'Under Review'
-                        ? 'bg-teal-600 text-white'
-                        : 'bg-navy-900 text-white'
-                    }`}>
-                      {app.stage}
-                    </span>
-                  </div>
-
-                  {/* Stage Progress Visualizer */}
-                  <div className="grid grid-cols-4 gap-2 pt-2">
-                    {['Submitted', 'Under Review', 'Interview', 'Final Offer'].map((stageName, idx) => {
-                      const stages = ['Submitted', 'Under Review', 'Interview Scheduled', 'Final Offer'];
-                      const currentIdx = stages.indexOf(app.stage || 'Submitted');
-                      const isComplete = idx <= currentIdx;
-                      return (
-                        <div key={stageName} className="space-y-1">
-                          <div className={`h-2 rounded-full ${isComplete ? 'bg-teal-600' : 'bg-gray-200'}`} />
-                          <span className={`text-[10px] font-bold block text-center ${isComplete ? 'text-teal-900' : 'text-gray-400'}`}>
-                            {stageName}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {app.interviewDate && (
-                    <div className="p-3 bg-white rounded-xl border border-gold-300 flex items-center gap-3 text-xs text-navy-900">
-                      <Calendar className="w-4 h-4 text-gold-600 flex-shrink-0" />
-                      <div>
-                        <span className="font-bold">Next Interview: </span>
-                        <span>{app.interviewDate}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {app.notes && (
-                    <p className="text-xs text-gray-500 italic">
-                      Note: {app.notes}
-                    </p>
-                  )}
+              {applications.length === 0 ? (
+                <div className="p-10 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200 space-y-3">
+                  <FileText className="w-10 h-10 text-gray-400 mx-auto" />
+                  <h4 className="text-base font-bold text-navy-900">No Applications Submitted Yet</h4>
+                  <p className="text-xs text-gray-500 max-w-md mx-auto">
+                    You haven't submitted any job applications yet. Browse your top AI-matched roles and apply with 1 click.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('matches')}
+                    className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all inline-flex items-center gap-1.5 shadow-xs"
+                  >
+                    <span>Browse AI Matches</span>
+                    <ArrowUpRight size={14} />
+                  </button>
                 </div>
-              ))}
+              ) : (
+                applications.map((app) => (
+                  <div key={app.id} className="p-5 bg-gray-50 rounded-2xl border border-gray-100 space-y-3">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                      <div>
+                        <h4 className="text-base font-bold text-navy-900">{app.jobTitle}</h4>
+                        <p className="text-xs text-gray-600 font-medium">
+                          {app.companyName} • {app.location} • Applied {typeof app.appliedAt === 'string' ? app.appliedAt : 'Recently'}
+                        </p>
+                      </div>
+                      <span className={`px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider self-start md:self-auto ${
+                        app.stage === 'Interview Scheduled'
+                          ? 'bg-gold-500 text-navy-900 animate-pulse'
+                          : app.stage === 'Under Review'
+                          ? 'bg-teal-600 text-white'
+                          : 'bg-navy-900 text-white'
+                      }`}>
+                        {app.stage}
+                      </span>
+                    </div>
+
+                    {/* Stage Progress Visualizer */}
+                    <div className="grid grid-cols-4 gap-2 pt-2">
+                      {['Submitted', 'Under Review', 'Interview', 'Final Offer'].map((stageName, idx) => {
+                        const stages = ['Submitted', 'Under Review', 'Interview Scheduled', 'Final Offer'];
+                        const currentIdx = stages.indexOf(app.stage || 'Submitted');
+                        const isComplete = idx <= currentIdx;
+                        return (
+                          <div key={stageName} className="space-y-1">
+                            <div className={`h-2 rounded-full ${isComplete ? 'bg-teal-600' : 'bg-gray-200'}`} />
+                            <span className={`text-[10px] font-bold block text-center ${isComplete ? 'text-teal-900' : 'text-gray-600'}`}>
+                              {stageName}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {app.interviewDate && (
+                      <div className="p-3 bg-white rounded-xl border border-gold-300 flex items-center gap-3 text-xs text-navy-900">
+                        <Calendar className="w-4 h-4 text-gold-600 flex-shrink-0" />
+                        <div>
+                          <span className="font-bold">Next Interview: </span>
+                          <span>{app.interviewDate}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {app.notes && (
+                      <p className="text-xs text-gray-600 italic">
+                        Note: {app.notes}
+                      </p>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -1061,7 +1060,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-100 text-teal-800">
                       {view.interestScore}% Interest Match
                     </span>
-                    <p className="text-[11px] text-gray-400 mt-1">{view.viewedAt}</p>
+                    <p className="text-[11px] text-gray-600 mt-1">{view.viewedAt}</p>
                   </div>
                 </div>
               ))}
@@ -1094,15 +1093,15 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
               {/* Personal & Career */}
               <div className="p-5 bg-gray-50 rounded-2xl space-y-3 text-xs">
                 <p className="font-bold text-navy-900 text-sm uppercase tracking-wider border-b pb-2">Core Identification</p>
-                <p><strong>Full Name:</strong> {candidateProfile?.name}</p>
-                <p><strong>Email:</strong> {candidateProfile?.email}</p>
-                <p><strong>Phone:</strong> {candidateProfile?.phone}</p>
-                <p><strong>Age:</strong> {candidateProfile?.age || 29} years old</p>
-                <p><strong>Nationality:</strong> {candidateProfile?.nationality || 'Zimbabwean'}</p>
-                <p><strong>Residence:</strong> {candidateProfile?.city}, {candidateProfile?.countryOfResidence}</p>
-                <p><strong>Authorization:</strong> {candidateProfile?.workAuthorization}</p>
-                <p><strong>Relocation:</strong> {candidateProfile?.willingToRelocate}</p>
-                <p><strong>Passport:</strong> {candidateProfile?.passportAvailable}</p>
+                <p><strong>Full Name:</strong> {candidateProfile?.name || user?.displayName || 'Not specified'}</p>
+                <p><strong>Email:</strong> {candidateProfile?.email || user?.email || 'Not specified'}</p>
+                <p><strong>Phone:</strong> {candidateProfile?.phone || 'Not specified'}</p>
+                <p><strong>Age:</strong> {candidateProfile?.age ? `${candidateProfile.age} years old` : 'Not specified'}</p>
+                <p><strong>Nationality:</strong> {candidateProfile?.nationality || 'Not specified'}</p>
+                <p><strong>Residence:</strong> {candidateProfile?.city || candidateProfile?.countryOfResidence ? `${candidateProfile?.city ? candidateProfile.city + ', ' : ''}${candidateProfile?.countryOfResidence || ''}` : 'Not specified'}</p>
+                <p><strong>Authorization:</strong> {candidateProfile?.workAuthorization || 'Requires Visa Sponsorship'}</p>
+                <p><strong>Relocation:</strong> {candidateProfile?.willingToRelocate || 'Open to Relocation'}</p>
+                <p><strong>Passport:</strong> {candidateProfile?.passportAvailable || 'Passport Ready'}</p>
               </div>
 
               {/* Skills & Certs */}
@@ -1111,24 +1110,32 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
                 <div>
                   <strong>Active Skill Chips:</strong>
                   <div className="flex flex-wrap gap-1.5 mt-1.5">
-                    {candidateProfile?.skills?.map(s => (
-                      <span key={s} className="px-2 py-0.5 bg-navy-900 text-white rounded text-[11px] font-semibold">{s}</span>
-                    ))}
+                    {candidateProfile?.skills && candidateProfile.skills.length > 0 ? (
+                      candidateProfile.skills.map(s => (
+                        <span key={s} className="px-2 py-0.5 bg-navy-900 text-white rounded text-[11px] font-semibold">{s}</span>
+                      ))
+                    ) : (
+                      <span className="text-gray-600 italic">No skills listed yet</span>
+                    )}
                   </div>
                 </div>
 
                 <div className="pt-2">
                   <strong>Certifications:</strong>
                   <div className="flex flex-wrap gap-1.5 mt-1.5">
-                    {candidateProfile?.certifications?.map(c => (
-                      <span key={c} className="px-2 py-0.5 bg-teal-100 text-teal-900 rounded text-[11px] font-semibold">{c}</span>
-                    ))}
+                    {candidateProfile?.certifications && candidateProfile.certifications.length > 0 ? (
+                      candidateProfile.certifications.map(c => (
+                        <span key={c} className="px-2 py-0.5 bg-teal-100 text-teal-900 rounded text-[11px] font-semibold">{c}</span>
+                      ))
+                    ) : (
+                      <span className="text-gray-600 italic">No certifications listed yet</span>
+                    )}
                   </div>
                 </div>
 
                 <div className="pt-2">
                   <strong>Preferred Roles:</strong>
-                  <p className="mt-1">{candidateProfile?.preferredJobs?.join(', ')}</p>
+                  <p className="mt-1">{candidateProfile?.preferredJobs && candidateProfile.preferredJobs.length > 0 ? candidateProfile.preferredJobs.join(', ') : 'Open to International Opportunities'}</p>
                 </div>
               </div>
             </div>

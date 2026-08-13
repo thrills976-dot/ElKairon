@@ -6,6 +6,7 @@ import {
   Plus, MessageSquare, FileText, Check, Award, AlertCircle 
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { GenericAvatar } from '../../common/GenericAvatar';
 
 export interface PipelineCandidate {
   id: string;
@@ -180,7 +181,7 @@ export function HiringPipeline({ onScheduleInterview, onOpenCompliance, onSendMe
                   <h3 className="font-extrabold text-xs uppercase tracking-wider text-navy-900">
                     {stage.title}
                   </h3>
-                  <div className="text-[10px] text-gray-400 font-medium">{stage.desc}</div>
+                  <div className="text-[10px] text-gray-600 font-semibold">{stage.desc}</div>
                 </div>
                 <span className="w-6 h-6 rounded-full bg-navy-900 text-white text-xs font-bold flex items-center justify-center">
                   {stageCandidates.length}
@@ -199,10 +200,12 @@ export function HiringPipeline({ onScheduleInterview, onOpenCompliance, onSendMe
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <img
+                        <GenericAvatar
                           src={c.avatar}
-                          alt={c.name}
-                          className="w-10 h-10 rounded-xl object-cover border border-gray-100"
+                          name={c.name}
+                          role="candidate"
+                          size="sm"
+                          className="w-10 h-10 rounded-xl"
                         />
                         <div>
                           <div className="font-bold text-xs text-navy-900">{c.name}</div>
@@ -307,7 +310,7 @@ export function HiringPipeline({ onScheduleInterview, onOpenCompliance, onSendMe
 
                 {stageCandidates.length === 0 && (
                   <div className="h-32 border-2 border-dashed border-gray-200 rounded-2xl flex items-center justify-center text-center p-4">
-                    <span className="text-xs text-gray-400">No candidates in this stage</span>
+                    <span className="text-xs text-gray-600 font-medium">No candidates in this stage</span>
                   </div>
                 )}
               </div>

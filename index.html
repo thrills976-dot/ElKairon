@@ -8,6 +8,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        function isWsNoise(err) {
+          if (!err) return false;
+          var s = String(err.message || err.reason || err || '');
+          return s.indexOf('WebSocket') !== -1 || s.indexOf('websocket') !== -1 || s.indexOf('[vite]') !== -1 || s.indexOf('ws://') !== -1 || s.indexOf('wss://') !== -1;
+        }
+        window.addEventListener('unhandledrejection', function(e) {
+          if (isWsNoise(e.reason)) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
+        }, true);
+        window.addEventListener('error', function(e) {
+          if (isWsNoise(e.message) || isWsNoise(e.error)) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
+        }, true);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

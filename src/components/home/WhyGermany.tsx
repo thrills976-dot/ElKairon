@@ -1,15 +1,20 @@
+import { BACKGROUND_IMAGES } from '../../data/imageMap';
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { CheckCircle2, TrendingUp, HeartPulse, GraduationCap, Plane, MapPin, Sparkles } from 'lucide-react';
 import { SpringCard } from '../common/SpringCard';
+import { BACKGROUND_IMAGES } from '../../data/imageMap';
+import { LazyImage } from '../ui/LazyImage';
+
+import { LazyImage } from '../ui/LazyImage';
 
 const reasons = [
-  { icon: TrendingUp, title: "Strong Economy", desc: "High demand for skilled workers in IT, engineering, healthcare, and business." },
-  { icon: HeartPulse, title: "Quality Healthcare", desc: "Mandatory and accessible world-class healthcare system for all residents." },
-  { icon: GraduationCap, title: "Tuition-Free Education", desc: "Free or low-cost education at top public universities, even for international dependents." },
-  { icon: CheckCircle2, title: "Work-Life Balance", desc: "20–30+ days paid vacation, 38-hour average work weeks, and strict employee protections." },
-  { icon: MapPin, title: "Quality of Life", desc: "Clean, safe, highly organized environment with punctual public transit and green infrastructure." },
-  { icon: Plane, title: "Central European Hub", desc: "Located at the heart of Europe making travel across the Schengen zone effortless and borderless." },
+  { icon: TrendingUp, title: "Strong Economy", desc: "High demand for skilled workers in IT, engineering, healthcare, and business.", image: BACKGROUND_IMAGES.strongEconomy },
+  { icon: HeartPulse, title: "Quality Healthcare", desc: "Mandatory and accessible world-class healthcare system for all residents.", image: BACKGROUND_IMAGES.healthcareNursing },
+  { icon: GraduationCap, title: "Tuition-Free Education", desc: "Free or low-cost education at top public universities, even for international dependents.", image: BACKGROUND_IMAGES.universityCampus },
+  { icon: CheckCircle2, title: "Work-Life Balance", desc: "20–30+ days paid vacation, 38-hour average work weeks, and strict employee protections.", image: BACKGROUND_IMAGES.workLifeBalance },
+  { icon: MapPin, title: "Quality of Life", desc: "Clean, safe, highly organized environment with punctual public transit and green infrastructure.", image: BACKGROUND_IMAGES.qualityOfLife },
+  { icon: Plane, title: "Central European Hub", desc: "Located at the heart of Europe making travel across the Schengen zone effortless and borderless.", image: BACKGROUND_IMAGES.centralEuropeHub },
 ];
 
 export function WhyGermany() {
@@ -20,9 +25,26 @@ export function WhyGermany() {
   });
 
   const glowY = useTransform(scrollYProgress, [0, 1], [-80, 80]);
+  const bgParallax = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   return (
-    <section ref={sectionRef} id="germany" className="py-24 bg-navy-900/90 text-white relative overflow-hidden border-y border-white/10">
+    <section ref={sectionRef} id="germany" className="py-24 bg-navy-950 text-white relative overflow-hidden border-y border-white/10">
+      {/* Background Image Overlay with Parallax and Blur Load */}
+      <motion.div 
+        style={{ y: bgParallax }}
+        className="absolute inset-0 pointer-events-none transform-gpu origin-center"
+      >
+        <motion.div
+          initial={{ filter: 'blur(20px)', opacity: 0 }}
+          whileInView={{ filter: 'blur(0px)', opacity: 0.15 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center mix-blend-luminosity"
+          style={{ backgroundImage: `url('${BACKGROUND_IMAGES.berlinCityscape}')` }}
+        />
+      </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-r from-navy-950/80 via-navy-950/90 to-navy-950 pointer-events-none" />
+
       <motion.div 
         style={{ y: glowY }}
         className="absolute top-0 right-0 w-1/2 h-full bg-teal-500/10 blur-[180px] rounded-full translate-x-1/3 -translate-y-1/4 pointer-events-none transform-gpu" 
@@ -71,17 +93,26 @@ export function WhyGermany() {
                   className="h-full"
                 >
                   <SpringCard className="h-full">
-                    <div className="bg-navy-950/90 p-6 rounded-2xl border border-white/15 hover:border-gold-400 transition-all shadow-2xl h-full flex flex-col justify-between group cursor-default">
-                      <div>
-                        <div className="w-12 h-12 rounded-xl bg-navy-900 flex items-center justify-center mb-4 group-hover:bg-gold-500 group-hover:text-navy-950 text-teal-400 transition-all duration-300 border border-white/10 shadow-md">
-                          <reason.icon size={24} className="group-hover:scale-110 transition-transform duration-300" />
+                    <div className=" rounded-2xl border border-white/15 hover:border-gold-400 transition-all shadow-2xl h-full flex flex-col justify-between group cursor-default relative overflow-hidden">
+                      <LazyImage 
+                        src={reason.image} 
+                        alt={reason.title} 
+                        containerClassName="absolute inset-0 z-0 opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/80 via-navy-950/20 to-transparent pointer-events-none" />
+                      <div className="relative z-20 p-6 flex flex-col h-full justify-between">
+                        <div>
+                          <div className="w-12 h-12 rounded-xl bg-navy-900 flex items-center justify-center mb-4 group-hover:bg-gold-500 group-hover:text-navy-950 text-teal-400 transition-all duration-300 border border-white/10 shadow-md">
+                            <reason.icon size={24} className="group-hover:scale-110 transition-transform duration-300" />
+                          </div>
+                          <h4 className="font-display text-xl font-bold mb-2 text-white group-hover:text-gold-300 transition-colors">
+                            {reason.title}
+                          </h4>
+                          <p className="text-sm text-sky-200 leading-relaxed">
+                            {reason.desc}
+                          </p>
                         </div>
-                        <h4 className="font-display text-xl font-bold mb-2 text-white group-hover:text-gold-300 transition-colors">
-                          {reason.title}
-                        </h4>
-                        <p className="text-sm text-sky-200 leading-relaxed">
-                          {reason.desc}
-                        </p>
                       </div>
                     </div>
                   </SpringCard>

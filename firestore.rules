@@ -3,12 +3,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Default deny all unknown collections
+    // Default deny all unmatched collections
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // Security Helper Functions
+    // Helper Functions
     function isSignedIn() { 
       return request.auth != null; 
     }
@@ -28,25 +28,33 @@ service cloud.firestore {
       );
     }
 
-    // User Profiles (Private PII isolated to owner & admin)
+    function isRegisteredEmployer() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/employers/$(request.auth.uid)) ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'employer')
+      );
+    }
+
+    // User Private Profiles (Users can ONLY read and write their own record)
     match /users/{userId} {
       allow get: if isOwner(userId) || isAdmin();
-      allow list: if isAdmin() || (isSignedIn() && resource.data.id == request.auth.uid);
+      allow list: if isAdmin();
       allow create: if isOwner(userId) && isValidId(userId);
       allow update: if isOwner(userId) && isValidId(userId);
       allow delete: if isOwner(userId) || isAdmin();
     }
 
-    // Candidate Dossiers & Profiles
+    // Candidate Dossiers (Candidates write only their own; Employers/Admins can view talent pool)
     match /candidates/{candidateId} {
-      allow get: if isSignedIn();
-      allow list: if isSignedIn();
+      allow get: if isOwner(candidateId) || isRegisteredEmployer() || isAdmin();
+      allow list: if isRegisteredEmployer() || isAdmin();
       allow create: if isOwner(candidateId) && isValidId(candidateId);
       allow update: if (isOwner(candidateId) || isAdmin()) && isValidId(candidateId);
       allow delete: if isOwner(candidateId) || isAdmin();
     }
 
-    // Employer Corporate Profiles
+    // Employer Profiles (Employers write only their own record; signed in users can view employer details)
     match /employers/{employerId} {
       allow get: if isSignedIn();
       allow list: if isSignedIn();
@@ -55,7 +63,7 @@ service cloud.firestore {
       allow delete: if isOwner(employerId) || isAdmin();
     }
 
-    // Job Postings (Publicly readable, writable only by job author / employer)
+    // Job Postings (Publicly readable, created/managed only by the publishing employer)
     match /jobs/{jobId} {
       allow get, list: if true;
       allow create: if isSignedIn() && request.resource.data.employerId == request.auth.uid && isValidId(jobId);
@@ -63,7 +71,7 @@ service cloud.firestore {
       allow delete: if isSignedIn() && (resource.data.employerId == request.auth.uid || isAdmin());
     }
 
-    // Job Applications (Confidential - accessible ONLY to candidate applicant and destination employer)
+    // Job Applications (Confidential - accessible strictly to applicant candidate or hiring employer)
     match /applications/{applicationId} {
       allow get: if isSignedIn() && (
         resource.data.candidateId == request.auth.uid || 
@@ -89,5 +97,3 @@ service cloud.firestore {
     }
   }
 }
-
-

@@ -3,7 +3,7 @@ import {
   Search, Filter, MapPin, Briefcase, Mail, CheckCircle, 
   Clock, Users, Building, Plus, X, Calendar, Check, ArrowRight, 
   Eye, Phone, Award, ShieldCheck, Zap, Sparkles, MessageSquare, 
-  FileCheck, FileText, ChevronRight, UserCheck 
+  FileCheck, FileText, ChevronRight, UserCheck, TrendingUp, Settings, UserCog
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { db, handleFirestoreError, OperationType } from '../../lib/firebase';
@@ -15,6 +15,8 @@ import { CandidatePoolBrowser } from './employer/CandidatePoolBrowser';
 import { HiringPipeline } from './employer/HiringPipeline';
 import { ComplianceDocumentVault } from './employer/ComplianceDocumentVault';
 import { EmployerMessagingView } from './employer/EmployerMessagingView';
+import { EmployerAnalyticsCharts } from './employer/EmployerAnalyticsCharts';
+import { ProfileManagementModal } from './ProfileManagementModal';
 import { PostJobModal } from './employer/PostJobModal';
 import { ScheduleInterviewModal } from './employer/ScheduleInterviewModal';
 import { ExtendOfferModal } from './employer/ExtendOfferModal';
@@ -22,8 +24,9 @@ import { PreVettedCandidate } from '../../types/recruitment';
 
 export function EmployerDashboard() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'candidates' | 'pipeline' | 'jobs' | 'applications' | 'compliance' | 'messages'>('candidates');
+  const [activeTab, setActiveTab] = useState<'candidates' | 'pipeline' | 'analytics' | 'jobs' | 'applications' | 'compliance' | 'messages'>('candidates');
   const [isPostingJob, setIsPostingJob] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
   
   // Modals for interview scheduling & offer extension
   const [interviewModalOpen, setInterviewModalOpen] = useState(false);
@@ -154,11 +157,21 @@ export function EmployerDashboard() {
           <div className="flex items-center gap-3 flex-wrap">
             <button 
               type="button"
-              onClick={() => setActiveTab('pipeline')}
+              onClick={() => setProfileModalOpen(true)}
+              className="bg-white text-navy-900 border border-gray-200 px-4 py-3 rounded-2xl font-bold uppercase text-xs tracking-wider flex items-center gap-2 hover:bg-gray-50 transition-all shadow-xs"
+              title="Manage employer corporate profile in Firestore"
+            >
+              <UserCog size={15} className="text-teal-600" />
+              <span>Company Profile</span>
+            </button>
+
+            <button 
+              type="button"
+              onClick={() => setActiveTab('analytics')}
               className="bg-teal-50 text-teal-800 border border-teal-200 px-4 py-3 rounded-2xl font-bold uppercase text-xs tracking-wider flex items-center gap-2 hover:bg-teal-100 transition-all shadow-sm"
             >
-              <Zap size={15} className="text-teal-600" />
-              <span>Track Pipeline</span>
+              <TrendingUp size={15} className="text-teal-600" />
+              <span>Analytics & Metrics</span>
             </button>
 
             <button 
@@ -224,6 +237,7 @@ export function EmployerDashboard() {
           {[
             { id: 'candidates', label: 'Pre-Vetted Candidate Pool', icon: UserCheck, count: '500+' },
             { id: 'pipeline', label: 'Hiring Progress Pipeline', icon: Zap, count: '6 In-Flight' },
+            { id: 'analytics', label: 'Candidate Growth & Placement Analytics', icon: TrendingUp, count: 'Live Recharts' },
             { id: 'jobs', label: 'My Posted Vacancies', icon: Briefcase, count: jobs.length },
             { id: 'applications', label: 'Job Applications', icon: Users, count: applications.length },
             { id: 'compliance', label: 'Compliance & Legal Vault', icon: FileCheck, count: '100% Ready' },
@@ -270,6 +284,11 @@ export function EmployerDashboard() {
             onOpenCompliance={() => setActiveTab('compliance')}
             onSendMessage={handleOpenMessage}
           />
+        )}
+
+        {/* Tab: Real-Time Recharts Candidate Growth & Placement Analytics */}
+        {activeTab === 'analytics' && (
+          <EmployerAnalyticsCharts />
         )}
 
         {/* Tab 3: My Posted Vacancies */}
@@ -330,17 +349,17 @@ export function EmployerDashboard() {
                             )}
                           </div>
 
-                          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
-                            <span className="flex items-center gap-1 text-navy-900 font-medium"><MapPin size={13} className="text-gray-400" /> {job.location}</span>
-                            <span className="flex items-center gap-1"><Briefcase size={13} className="text-gray-400" /> {job.industry}</span>
-                            {job.salary && <span className="font-bold text-teal-700">{job.salary}</span>}
+                          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
+                            <span className="flex items-center gap-1 text-navy-900 font-semibold"><MapPin size={13} className="text-gray-500" /> {job.location}</span>
+                            <span className="flex items-center gap-1"><Briefcase size={13} className="text-gray-500" /> {job.industry}</span>
+                            {job.salary && <span className="font-bold text-teal-800">{job.salary}</span>}
                             <span>Posted: {formatDate(job.createdAt)}</span>
                           </div>
 
                           {job.skills && job.skills.length > 0 && (
                             <div className="flex flex-wrap gap-1 pt-1">
                               {job.skills.slice(0, 4).map((s: string, i: number) => (
-                                <span key={i} className="px-2 py-0.5 bg-gray-100 text-[10px] font-medium text-gray-700 rounded-md">
+                                <span key={i} className="px-2 py-0.5 bg-gray-100 text-[10px] font-semibold text-gray-800 rounded-md border border-gray-200">
                                   {s}
                                 </span>
                               ))}
@@ -353,7 +372,7 @@ export function EmployerDashboard() {
                             <div className="font-bold text-navy-900 text-lg">
                               {applications.filter(a => a.jobId === job.id).length}
                             </div>
-                            <div className="text-gray-400 text-[10px] uppercase font-bold tracking-widest">Applicants</div>
+                            <div className="text-gray-600 text-[10px] uppercase font-bold tracking-widest">Applicants</div>
                           </div>
 
                           <button 
@@ -385,23 +404,23 @@ export function EmployerDashboard() {
                     type="button"
                     onClick={() => setAppFilter(stage)}
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                      appFilter === stage ? 'bg-navy-900 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      appFilter === stage ? 'bg-navy-900 text-white shadow-sm' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
                     {stage}
                   </button>
                 ))}
               </div>
-              <span className="text-xs font-bold text-gray-400">
+              <span className="text-xs font-bold text-gray-600">
                 Showing {filteredApplications.length} candidate applications
               </span>
             </div>
 
             {filteredApplications.length === 0 ? (
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-12 text-center text-gray-500">
-                <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-12 text-center text-gray-600">
+                <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                 <h3 className="font-display text-lg font-bold text-navy-900 mb-1">No Applications in this Filter</h3>
-                <p className="text-xs text-gray-400 max-w-sm mx-auto">
+                <p className="text-xs text-gray-600 max-w-sm mx-auto">
                   When international talent applies to your active jobs, they will appear here with pre-calculated match scores.
                 </p>
               </div>
@@ -506,6 +525,12 @@ export function EmployerDashboard() {
         candidateName={selectedCandidateForAction?.name || 'Selected Candidate'}
         candidateTitle={selectedCandidateForAction?.title || 'Specialist'}
         candidateId={selectedCandidateForAction?.id || 'cand-1'}
+      />
+
+      {/* Corporate Employer Profile Management Modal */}
+      <ProfileManagementModal
+        isOpen={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
       />
     </div>
   );

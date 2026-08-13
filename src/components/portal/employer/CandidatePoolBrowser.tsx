@@ -8,6 +8,7 @@ import {
 import { PRE_VETTED_CANDIDATES } from '../../../data/mockEmployerData';
 import { PreVettedCandidate } from '../../../types/recruitment';
 import { CandidateDetailModal } from './CandidateDetailModal';
+import { GenericAvatar } from '../../common/GenericAvatar';
 import toast from 'react-hot-toast';
 
 interface CandidatePoolBrowserProps {
@@ -208,10 +209,12 @@ export function CandidatePoolBrowser({
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <img
+                    <GenericAvatar
                       src={cand.avatar}
-                      alt={cand.name}
-                      className="w-14 h-14 rounded-2xl object-cover border border-gray-200"
+                      name={cand.name}
+                      role="candidate"
+                      size="md"
+                      className="w-14 h-14 rounded-2xl"
                     />
                     <div className="absolute -bottom-1 -right-1 p-0.5 bg-teal-500 text-white rounded-md">
                       <ShieldCheck size={12} />
@@ -255,32 +258,32 @@ export function CandidatePoolBrowser({
               </div>
 
               {/* Key Details */}
-              <div className="space-y-2 text-xs text-gray-600 pt-1">
+              <div className="space-y-2 text-xs text-gray-700 pt-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Experience:</span>
+                  <span className="text-gray-600 font-medium">Experience:</span>
                   <span className="font-bold text-navy-900">{cand.experienceYears} Years</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Origin / Relocation:</span>
-                  <span className="font-medium text-navy-900 text-right truncate max-w-[180px]">{cand.location} ➔ {cand.targetRelocation}</span>
+                  <span className="text-gray-600 font-medium">Origin / Relocation:</span>
+                  <span className="font-semibold text-navy-900 text-right truncate max-w-[180px]">{cand.location} ➔ {cand.targetRelocation}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Target Salary:</span>
-                  <span className="font-bold text-teal-700">{cand.salaryExpectation}</span>
+                  <span className="text-gray-600 font-medium">Target Salary:</span>
+                  <span className="font-bold text-teal-800">{cand.salaryExpectation}</span>
                 </div>
               </div>
 
               {/* Skills Chips */}
               <div className="pt-2">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Key Skills:</div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-gray-600 mb-1.5">Key Skills:</div>
                 <div className="flex flex-wrap gap-1">
                   {cand.skills.slice(0, 3).map((s) => (
-                    <span key={s} className="px-2 py-0.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] text-gray-700 font-medium">
+                    <span key={s} className="px-2 py-0.5 bg-gray-100 border border-gray-200 rounded-md text-[10px] text-gray-800 font-semibold">
                       {s}
                     </span>
                   ))}
                   {cand.skills.length > 3 && (
-                    <span className="px-1.5 py-0.5 bg-gray-50 text-[10px] text-gray-400 font-bold">
+                    <span className="px-1.5 py-0.5 bg-gray-100 text-[10px] text-gray-600 font-bold rounded-md">
                       +{cand.skills.length - 3}
                     </span>
                   )}

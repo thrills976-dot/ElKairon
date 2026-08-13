@@ -2,6 +2,9 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, PlaneTakeoff, ShieldCheck, Clock, Globe as GlobeIcon, Building2, Sparkles } from 'lucide-react';
 import { useRef } from 'react';
 import { Globe } from './Globe';
+import { BACKGROUND_IMAGES } from '../../data/imageMap';
+
+import { LazyImage } from '../ui/LazyImage';
 
 export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,16 +19,16 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
   const bgGlowY = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
 
   return (
-    <div id="hero" ref={containerRef} className="relative min-h-[94vh] flex items-center overflow-hidden bg-gradient-to-br from-[#0DA2E7] via-[#0878ab] to-[#043e62] pt-32 sm:pt-36 lg:pt-40 pb-20 border-b-4 border-gold-500">
+    <div id="hero" ref={containerRef} className="relative min-h-[94vh] flex items-center overflow-hidden bg-teal-500 pt-32 sm:pt-36 lg:pt-40 pb-20 border-b-4 border-gold-500">
       
       {/* Background ambient lighting with parallax scroll */}
       <motion.div 
         style={{ y: bgGlowY }}
-        className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-white/10 rounded-full blur-[140px] pointer-events-none transform-gpu" 
+        className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-white/20 rounded-full blur-[140px] pointer-events-none transform-gpu" 
       />
       <motion.div 
         style={{ y: bgGlowY }}
-        className="absolute bottom-10 -right-10 w-[500px] h-[500px] bg-[#033654]/60 rounded-full blur-[140px] pointer-events-none transform-gpu" 
+        className="absolute bottom-10 -right-10 w-[500px] h-[500px] bg-teal-300/40 rounded-full blur-[140px] pointer-events-none transform-gpu" 
       />
 
       {/* 3D GLOBE IN BACKGROUND (Directly behind the hero text) */}
@@ -33,7 +36,7 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
         id="hero-globe-element" 
         className="absolute inset-0 z-0 flex items-center justify-center pointer-events-auto overflow-hidden"
       >
-        <div className="w-full h-full max-w-5xl flex items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center">
           <Globe />
         </div>
       </div>

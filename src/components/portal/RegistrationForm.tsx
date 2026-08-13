@@ -20,6 +20,11 @@ import {
   calculateAgeFromDob, computeRecruitmentScores, computePersonalityArchetype 
 } from '../../lib/aiRecruitmentEngine';
 import { TermsAndConditionsModal } from '../TermsAndConditionsModal';
+import { 
+  validateEmailFormat, validatePasswordStrength, validatePhoneFormat,
+  sanitizeText, sanitizeEmail, sanitizePhone, sanitizeStringArray
+} from '../../lib/sanitization';
+import { GenericAvatar } from '../common/GenericAvatar';
 
 interface CandidateRegistrationProps {
   initialProfile?: Partial<CandidateProfile> | null;
@@ -120,7 +125,7 @@ export function CandidateRegistration({
   const [languagesList, setLanguagesList] = useState<{ language: string; proficiency: LanguageProficiency }[]>(
     initialProfile?.languages && initialProfile.languages.length > 0
       ? initialProfile.languages
-      : [{ language: 'English', proficiency: 'Fluent' }]
+      : [{ language: 'English', proficiency: 'Professional' }]
   );
   const [newLanguageName, setNewLanguageName] = useState('');
   const [newLanguageProf, setNewLanguageProf] = useState<LanguageProficiency>('Intermediate');
@@ -323,31 +328,34 @@ export function CandidateRegistration({
     }
   };
 
-  // Compile complete CandidateProfile object
+  // Compile complete CandidateProfile object with strict sanitization
   const assembleFullProfile = (): CandidateProfile => {
-    const fullName = `${personalInfo.firstName} ${personalInfo.lastName}`.trim() || accountForm.fullName.trim() || 'Accredited Candidate';
+    const rawFullName = `${personalInfo.firstName} ${personalInfo.lastName}`.trim() || accountForm.fullName.trim() || 'Accredited Candidate';
+    const fullName = sanitizeText(rawFullName, 100);
+    const sanitizedEmail = sanitizeEmail(accountForm.email);
+    const sanitizedPhone = sanitizePhone(accountForm.phone);
     
     const computedScore = computeRecruitmentScores({
       name: fullName,
-      email: accountForm.email,
-      phone: accountForm.phone,
+      email: sanitizedEmail,
+      phone: sanitizedPhone,
       dob: personalInfo.dob,
       age: calculatedAge,
-      countryOfResidence: personalInfo.countryOfResidence,
+      countryOfResidence: sanitizeText(personalInfo.countryOfResidence, 60),
       workAuthorization: personalInfo.workAuthorization,
       willingToRelocate: personalInfo.willingToRelocate,
       passportAvailable: personalInfo.passportAvailable,
-      currentJobTitle: careerInfo.currentJobTitle,
+      currentJobTitle: sanitizeText(careerInfo.currentJobTitle, 100),
       industry: careerInfo.industry,
       careerLevel: careerInfo.careerLevel,
       totalYearsOfExperience: careerInfo.totalYearsOfExperience,
       highestDegree: educationInfo.highestDegree,
-      institution: educationInfo.institution,
-      skills: skillsList,
-      certifications: certificationsList,
-      languages: languagesList,
-      preferredLocations,
-      cvName: uploadedResume.cvName,
+      institution: sanitizeText(educationInfo.institution, 100),
+      skills: sanitizeStringArray(skillsList, 50, 40),
+      certifications: sanitizeStringArray(certificationsList, 30, 80),
+      languages: languagesList.map(l => ({ language: sanitizeText(l.language, 40), proficiency: l.proficiency })),
+      preferredLocations: sanitizeStringArray(preferredLocations, 20, 60),
+      cvName: sanitizeText(uploadedResume.cvName, 120),
       skillsAssessment: { categoryRatings: skillsAssessment }
     });
 
@@ -356,56 +364,60 @@ export function CandidateRegistration({
     return {
       role: 'candidate',
       name: fullName,
-      email: accountForm.email.trim(),
-      phone: accountForm.phone.trim(),
-      country: accountForm.country,
-      avatarUrl: personalInfo.avatarUrl || '',
-      firstName: personalInfo.firstName.trim(),
-      lastName: personalInfo.lastName.trim(),
+      email: sanitizedEmail,
+      phone: sanitizedPhone,
+      country: sanitizeText(accountForm.country, 60),
+      avatarUrl: sanitizeText(personalInfo.avatarUrl, 300),
+      firstName: sanitizeText(personalInfo.firstName, 50),
+      lastName: sanitizeText(personalInfo.lastName, 50),
       dob: personalInfo.dob,
       age: calculatedAge,
       gender: personalInfo.gender,
-      nationality: personalInfo.nationality.trim(),
-      countryOfResidence: personalInfo.countryOfResidence.trim(),
-      city: personalInfo.city.trim(),
+      nationality: sanitizeText(personalInfo.nationality, 60),
+      countryOfResidence: sanitizeText(personalInfo.countryOfResidence, 60),
+      city: sanitizeText(personalInfo.city, 60),
       workAuthorization: personalInfo.workAuthorization,
       willingToRelocate: personalInfo.willingToRelocate,
       passportAvailable: personalInfo.passportAvailable,
 
-      currentJobTitle: careerInfo.currentJobTitle.trim(),
-      currentCompany: careerInfo.currentCompany.trim(),
+      currentJobTitle: sanitizeText(careerInfo.currentJobTitle, 100),
+      currentCompany: sanitizeText(careerInfo.currentCompany, 100),
       industry: careerInfo.industry,
-      department: careerInfo.department.trim(),
+      department: sanitizeText(careerInfo.department, 80),
       careerLevel: careerInfo.careerLevel,
       totalYearsOfExperience: careerInfo.totalYearsOfExperience,
       yearsOfExperience: careerInfo.totalYearsOfExperience,
 
       highestDegree: educationInfo.highestDegree,
-      institution: educationInfo.institution.trim(),
-      graduationYear: educationInfo.graduationYear.trim(),
-      fieldOfStudy: educationInfo.fieldOfStudy.trim(),
-      gpa: educationInfo.gpa.trim(),
+      institution: sanitizeText(educationInfo.institution, 100),
+      graduationYear: sanitizeText(educationInfo.graduationYear, 10),
+      fieldOfStudy: sanitizeText(educationInfo.fieldOfStudy, 100),
+      gpa: sanitizeText(educationInfo.gpa, 20),
 
-      skills: skillsList,
-      certifications: certificationsList,
-      languages: languagesList,
+      skills: sanitizeStringArray(skillsList, 50, 40),
+      certifications: sanitizeStringArray(certificationsList, 30, 80),
+      languages: languagesList.map(l => ({ language: sanitizeText(l.language, 40), proficiency: l.proficiency })),
 
-      preferredJobs: preferredJobs.length > 0 ? preferredJobs : [careerInfo.currentJobTitle || 'Specialist'],
-      preferredIndustries,
+      preferredJobs: preferredJobs.length > 0 ? sanitizeStringArray(preferredJobs, 20, 80) : [careerInfo.currentJobTitle || 'Specialist'],
+      preferredIndustries: sanitizeStringArray(preferredIndustries, 20, 60),
       preferredWorkStyle,
       employmentType: employmentTypes,
       salaryExpectations: {
-        minSalary: salaryExpectations.minSalary,
-        maxSalary: salaryExpectations.maxSalary,
+        minSalary: Math.max(0, Number(salaryExpectations.minSalary) || 0),
+        maxSalary: Math.max(0, Number(salaryExpectations.maxSalary) || 0),
         currency: salaryExpectations.currency,
         period: 'Monthly'
       },
       availability,
-      preferredLocations,
+      preferredLocations: sanitizeStringArray(preferredLocations, 20, 60),
 
-      documents: uploadedResume,
-      cvName: uploadedResume.cvName,
-      coverLetterUrl: uploadedResume.coverLetterName,
+      documents: {
+        ...uploadedResume,
+        cvName: sanitizeText(uploadedResume.cvName, 120),
+        coverLetterName: sanitizeText(uploadedResume.coverLetterName, 120)
+      },
+      cvName: sanitizeText(uploadedResume.cvName, 120),
+      coverLetterUrl: sanitizeText(uploadedResume.coverLetterName, 120),
 
       skillsAssessment: {
         categoryRatings: skillsAssessment
@@ -416,7 +428,13 @@ export function CandidateRegistration({
         archetype
       },
 
-      careerGoals,
+      careerGoals: {
+        dreamJob: sanitizeText(careerGoals.dreamJob, 100),
+        desiredCareerPath: sanitizeText(careerGoals.desiredCareerPath, 200),
+        industriesOfInterest: sanitizeStringArray(careerGoals.industriesOfInterest, 10, 60),
+        targetCompanies: sanitizeStringArray(careerGoals.targetCompanies, 20, 80),
+        longTermGoals: sanitizeText(careerGoals.longTermGoals, 500)
+      },
       matchingPreferences,
       aiRecruitmentScore: computedScore,
       profileCompleted: true,
@@ -426,37 +444,44 @@ export function CandidateRegistration({
 
   // Step Validation Logic
   const handleNextStep = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (currentStep === 1) {
       // Step 1: Account Creation Validation
-      if (!accountForm.fullName.trim() || accountForm.fullName.trim().split(/\s+/).length < 2) {
+      const fullNameClean = sanitizeText(accountForm.fullName, 100);
+      if (!fullNameClean || fullNameClean.split(/\s+/).length < 2) {
         toast.error('Please enter your full legal first and last name.');
         return;
       }
-      if (!accountForm.email.trim() || !emailRegex.test(accountForm.email.trim())) {
-        toast.error('Please provide a valid email address.');
+
+      const emailValidation = validateEmailFormat(accountForm.email);
+      if (!emailValidation.isValid) {
+        toast.error(emailValidation.error || 'Please provide a valid email address.');
         return;
       }
-      if (!accountForm.password || accountForm.password.length < 6) {
-        toast.error('Password must contain at least 6 characters.');
+
+      const pwdValidation = validatePasswordStrength(accountForm.password);
+      if (!pwdValidation.isValid) {
+        toast.error(pwdValidation.error || 'Password must meet security requirements.');
         return;
       }
+
       if (accountForm.password !== accountForm.confirmPassword) {
         toast.error('Passwords do not match. Please re-enter.');
         return;
       }
-      if (!accountForm.phone.trim() || accountForm.phone.trim().replace(/\D/g, '').length < 7) {
-        toast.error('Please enter a valid international contact number with country code.');
+
+      const phoneValidation = validatePhoneFormat(accountForm.phone);
+      if (!phoneValidation.isValid) {
+        toast.error(phoneValidation.error || 'Please enter a valid phone number.');
         return;
       }
+
       if (!accountForm.acceptedTerms) {
         toast.error('You must read and accept the Terms & Conditions to register.');
         return;
       }
 
       // Sync name into personal info
-      const parts = accountForm.fullName.trim().split(/\s+/);
+      const parts = fullNameClean.split(/\s+/);
       const fName = parts[0];
       const lName = parts.slice(1).join(' ');
       setPersonalInfo(prev => ({
@@ -1997,36 +2022,63 @@ export function EmployerRegistration({ onBack, onCancel, onSubmit, onComplete }:
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!formData.companyName.trim()) {
+    const companyNameClean = sanitizeText(formData.companyName, 100);
+    if (!companyNameClean) {
       toast.error('Please enter your legal company name.');
       return;
     }
-    if (!formData.contactName.trim()) {
+
+    const contactNameClean = sanitizeText(formData.contactName, 80);
+    if (!contactNameClean) {
       toast.error('Please enter the primary contact person name.');
       return;
     }
-    if (!formData.contactEmail.trim() || !emailRegex.test(formData.contactEmail.trim())) {
-      toast.error('Please enter a valid official corporate work email.');
+
+    const emailValidation = validateEmailFormat(formData.contactEmail);
+    if (!emailValidation.isValid) {
+      toast.error(emailValidation.error || 'Please enter a valid official corporate work email.');
       return;
     }
-    if (!formData.contactPhone.trim()) {
-      toast.error('Please provide a direct telephone number.');
+
+    const phoneValidation = validatePhoneFormat(formData.contactPhone);
+    if (!phoneValidation.isValid) {
+      toast.error(phoneValidation.error || 'Please provide a valid direct contact telephone number.');
       return;
     }
-    if (!formData.headquartersCity.trim()) {
+
+    const cityClean = sanitizeText(formData.headquartersCity, 60);
+    if (!cityClean) {
       toast.error('Please enter your headquarters city.');
       return;
     }
+
     if (!formData.acceptedTerms) {
       toast.error('Please read and accept the Employer Terms & Labor Standards Agreement.');
       return;
     }
 
+    const sanitizedEmployerData = {
+      role: 'employer' as const,
+      companyName: companyNameClean,
+      industry: formData.industry,
+      website: sanitizeText(formData.website, 120),
+      contactName: contactNameClean,
+      contactEmail: sanitizeEmail(formData.contactEmail),
+      contactPhone: sanitizePhone(formData.contactPhone),
+      headquartersCountry: sanitizeText(formData.headquartersCountry, 60),
+      headquartersCity: cityClean,
+      companySize: formData.companySize,
+      hiringCountries: sanitizeStringArray(formData.hiringCountries, 20, 60),
+      openRolesCount: formData.openRolesCount,
+      visaSponsorshipProvided: Boolean(formData.visaSponsorshipProvided),
+      relocationAssistanceProvided: Boolean(formData.relocationAssistanceProvided),
+      acceptedTerms: true
+    };
+
     toast.success('Corporate employer registration completed!');
-    if (onSubmit) onSubmit({ role: 'employer', ...formData });
-    if (onComplete) onComplete({ role: 'employer', ...formData });
+    if (onSubmit) onSubmit(sanitizedEmployerData);
+    if (onComplete) onComplete(sanitizedEmployerData);
   };
 
   const handleReturn = () => {

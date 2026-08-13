@@ -1,7 +1,11 @@
+import { BACKGROUND_IMAGES } from '../../data/imageMap';
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, Sparkles, Briefcase, Building, CheckCircle } from 'lucide-react';
 import { SpringCard } from '../common/SpringCard';
+import { LazyImage } from '../ui/LazyImage';
+
+import { LazyImage } from '../ui/LazyImage';
 
 export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -13,9 +17,26 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
   const glow1Y = useTransform(scrollYProgress, [0, 1], [-50, 80]);
   const glow2Y = useTransform(scrollYProgress, [0, 1], [60, -70]);
   const cardScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.97, 1, 0.98]);
+  const bgParallax = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-navy-950/80 border-y border-white/10 relative overflow-hidden text-white">
+    <section ref={sectionRef} className="py-24 bg-navy-950 border-y border-white/10 relative overflow-hidden text-white">
+      {/* Background Image Overlay from User Attachments with parallax */}
+      <motion.div 
+        style={{ y: bgParallax }}
+        className="absolute inset-0 pointer-events-none transform-gpu origin-center"
+      >
+        <motion.div
+          initial={{ filter: 'blur(20px)', opacity: 0 }}
+          whileInView={{ filter: 'blur(0px)', opacity: 0.1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center mix-blend-luminosity"
+          style={{ backgroundImage: `url('/images/construction.jpg')` }}
+        />
+      </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-b from-navy-950 via-navy-950/95 to-navy-950 pointer-events-none" />
+
       {/* High-Performance Parallax background accents */}
       <motion.div 
         style={{ y: glow1Y }}
@@ -55,10 +76,17 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
             className="h-full"
           >
             <SpringCard className="h-full">
-              <div className="group relative bg-navy-900/90 backdrop-blur-md border border-white/15 hover:border-teal-400/80 text-white p-8 sm:p-12 rounded-3xl overflow-hidden shadow-2xl transition-all h-full flex flex-col justify-between">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/15 rounded-bl-full group-hover:scale-125 transition-transform duration-500" />
+              <div className="group relative bg-navy-950/95 backdrop-blur-md border border-white/15 hover:border-teal-400/80 text-white p-8 sm:p-12 rounded-3xl overflow-hidden shadow-2xl transition-all h-full flex flex-col justify-between cursor-pointer">
+                <LazyImage 
+                  src="/images/office-collaboration.jpg" 
+                  alt="Office Collaboration" 
+                  containerClassName="absolute inset-0 z-0 opacity-20" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950 via-navy-950/90 to-navy-950/80 pointer-events-none" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/15 rounded-bl-full group-hover:scale-125 transition-transform duration-500 pointer-events-none z-10" />
                 
-                <div className="relative z-10">
+                <div className="relative z-20">
                   <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-teal-950 border border-teal-400/40 text-teal-300 text-xs font-black uppercase tracking-widest rounded-full mb-6 shadow-sm">
                     <Briefcase size={12} />
                     For Talent
@@ -86,7 +114,7 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
                   </ul>
                 </div>
 
-                <div className="relative z-10 pt-4 border-t border-white/10">
+                <div className="relative z-20 pt-4 border-t border-white/10">
                   <motion.button 
                     whileHover={{ scale: 1.02, x: 4 }}
                     whileTap={{ scale: 0.98 }}
@@ -110,11 +138,18 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
             className="h-full"
           >
             <SpringCard className="h-full">
-              <div className="group relative bg-navy-900/90 backdrop-blur-md border border-white/15 hover:border-gold-400/80 p-8 sm:p-12 rounded-3xl overflow-hidden shadow-2xl transition-all h-full flex flex-col justify-between">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/15 rounded-bl-full group-hover:scale-125 transition-transform duration-500" />
+              <div className="group relative bg-navy-950/95 backdrop-blur-md border border-white/15 hover:border-gold-400/80 p-8 sm:p-12 rounded-3xl overflow-hidden shadow-2xl transition-all h-full flex flex-col justify-between cursor-pointer">
+                <LazyImage 
+                  src="/images/open-for-business.jpg" 
+                  alt="Open for business" 
+                  containerClassName="absolute inset-0 z-0 opacity-20" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950 via-navy-950/90 to-navy-950/80 pointer-events-none" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/15 rounded-bl-full group-hover:scale-125 transition-transform duration-500 pointer-events-none z-10" />
                 
-                <div className="relative z-10 text-white">
-                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-navy-950 border border-gold-400/40 text-gold-400 text-xs font-black uppercase tracking-widest rounded-full mb-6 shadow-sm">
+                <div className="relative z-20 text-white">
+                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-navy-900 border border-gold-400/40 text-gold-400 text-xs font-black uppercase tracking-widest rounded-full mb-6 shadow-sm">
                     <Building size={12} />
                     For Employers
                   </span>
@@ -141,7 +176,7 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
                   </ul>
                 </div>
 
-                <div className="relative z-10 pt-4 border-t border-white/10">
+                <div className="relative z-20 pt-4 border-t border-white/10">
                   <motion.button 
                     whileHover={{ scale: 1.02, x: 4 }}
                     whileTap={{ scale: 0.98 }}

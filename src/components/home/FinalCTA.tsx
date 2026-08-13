@@ -1,6 +1,9 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, Sparkles, Building2, Users } from 'lucide-react';
+import { BACKGROUND_IMAGES } from '../../data/imageMap';
+
+import { LazyImage } from '../ui/LazyImage';
 
 export function FinalCTA({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -9,17 +12,27 @@ export function FinalCTA({ onNavigate }: { onNavigate: (v: 'home' | 'opportuniti
     offset: ["start end", "end start"]
   });
 
-  const bgImageY = useTransform(scrollYProgress, [0, 1], [-40, 40]);
+  const bgImageY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
   const glow1Y = useTransform(scrollYProgress, [0, 1], [-80, 80]);
   const glow2Y = useTransform(scrollYProgress, [0, 1], [80, -80]);
 
   return (
     <section ref={sectionRef} className="py-32 bg-navy-950 border-t-4 border-gold-500 relative overflow-hidden text-center text-white">
-      {/* High-performance Parallax Background Image */}
+      {/* Background Image Overlay with Parallax and Blur Load */}
       <motion.div 
         style={{ y: bgImageY }}
-        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2850&q=80')] bg-cover bg-center opacity-15 pointer-events-none scale-110 transform-gpu" 
-      />
+        className="absolute inset-0 pointer-events-none transform-gpu origin-center"
+      >
+        <motion.div
+          initial={{ filter: 'blur(20px)', opacity: 0 }}
+          whileInView={{ filter: 'blur(0px)', opacity: 0.15 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center mix-blend-luminosity"
+          style={{ backgroundImage: `url('${BACKGROUND_IMAGES.openForBusiness}')` }}
+        />
+      </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/85 to-navy-950 pointer-events-none" />
 
       {/* Parallax Floating Glow Accents */}
       <motion.div 

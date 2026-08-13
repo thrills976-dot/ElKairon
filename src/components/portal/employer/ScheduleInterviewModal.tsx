@@ -59,7 +59,7 @@ export function ScheduleInterviewModal({
             </div>
             <div>
               <h3 className="font-display text-lg font-bold">Schedule Fast-Track Video Call</h3>
-              <p className="text-xs text-gray-400">Interview: {candidateName} ({candidateTitle})</p>
+              <p className="text-xs text-gray-300">Interview: {candidateName} ({candidateTitle})</p>
             </div>
           </div>
           <button type="button" onClick={onClose} className="text-gray-400 hover:text-white">

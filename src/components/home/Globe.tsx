@@ -1,268 +1,242 @@
-import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
-import GlobeGL from 'globe.gl';
+import { useEffect, useRef } from "react";
+import GlobeJS from "globe.gl";
+import * as THREE from "three";
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
+// Constants
 const EARTH_IMG_URL = 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg';
 const EARTH_BUMP_URL = 'https://unpkg.com/three-globe/example/img/earth-topology.png';
-const GLOBE_RADIUS = 100;
-
-// Recruitment Hub Coordinates & Migration Corridors
-const HUBS = [
-  { name: 'Lagos', lat: 6.5244, lng: 3.3792, type: 'origin', color: '#f59e0b' },
-  { name: 'Nairobi', lat: -1.2921, lng: 36.8219, type: 'origin', color: '#f59e0b' },
-  { name: 'Accra', lat: 5.6037, lng: -0.1870, type: 'origin', color: '#f59e0b' },
-  { name: 'Johannesburg', lat: -26.2041, lng: 28.0473, type: 'origin', color: '#f59e0b' },
-  { name: 'Kigali', lat: -1.9706, lng: 30.1044, type: 'origin', color: '#f59e0b' },
-  { name: 'London', lat: 51.5074, lng: -0.1278, type: 'dest', color: '#38bdf8' },
-  { name: 'Frankfurt', lat: 50.1109, lng: 8.6821, type: 'dest', color: '#38bdf8' },
-  { name: 'Amsterdam', lat: 52.3676, lng: 4.9041, type: 'dest', color: '#38bdf8' },
-  { name: 'Dubai', lat: 25.2048, lng: 55.2708, type: 'dest', color: '#38bdf8' },
-];
-
-const CORRIDOR_ARCS = [
-  { startLat: 6.5244, startLng: 3.3792, endLat: 51.5074, endLng: -0.1278, name: 'Lagos → London' },
-  { startLat: -1.2921, startLng: 36.8219, endLat: 50.1109, endLng: 8.6821, name: 'Nairobi → Frankfurt' },
-  { startLat: 5.6037, startLng: -0.1870, endLat: 52.3676, endLng: 4.9041, name: 'Accra → Amsterdam' },
-  { startLat: -26.2041, startLng: 28.0473, endLat: 25.2048, endLng: 55.2708, name: 'Johannesburg → Dubai' },
-  { startLat: -1.9706, startLng: 30.1044, endLat: 51.5074, endLng: -0.1278, name: 'Kigali → London' },
-  { startLat: 6.5244, startLng: 3.3792, endLat: 25.2048, endLng: 55.2708, name: 'Lagos → Dubai' },
-];
+const GLOBE_RADIUS = 100; // Standard Globe.gl radius
 
 export function Globe() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
+    const container = containerRef.current;
 
-    // Setup the Globe with Crisp Visual Fidelity
+    // Setup the Globe
+    const myGlobe = GlobeJS({ animateIn: false })(container)
+        .globeImageUrl(EARTH_IMG_URL)
+        .bumpImageUrl(EARTH_BUMP_URL)
+        .backgroundColor('rgba(0,0,0,0)') // Kept transparent to blend with Hero section
+        
+        // Cinematic Atmosphere
+        .showAtmosphere(true)
+        .atmosphereColor('#0ea5e9')
+        .atmosphereAltitude(0.2);
+
+    // Enhance Earth Material
+    const globeMaterial = myGlobe.globeMaterial();
     // @ts-ignore
-    const myGlobe = GlobeGL({ animateIn: false })(containerRef.current)
-      .globeImageUrl(EARTH_IMG_URL)
-      .bumpImageUrl(EARTH_BUMP_URL)
-      .backgroundColor('rgba(0,0,0,0)')
-      .showAtmosphere(true)
-      .atmosphereColor('#38bdf8')
-      .atmosphereAltitude(0.18)
-      // Active Relocation Corridors (Arcs)
-      .arcsData(CORRIDOR_ARCS)
-      .arcColor(() => ['#f59e0b', '#38bdf8'])
-      .arcAltitude(0.28)
-      .arcStroke(1.8)
-      .arcDashLength(0.4)
-      .arcDashGap(0.2)
-      .arcDashAnimateTime(2000)
-      // Key Hubs (Points)
-      .pointsData(HUBS)
-      .pointLat((d: any) => d.lat)
-      .pointLng((d: any) => d.lng)
-      .pointColor((d: any) => d.color)
-      .pointAltitude(0.02)
-      .pointRadius(1.2)
-      // Pulsing Hub Rings
-      .ringsData(HUBS)
-      .ringLat((d: any) => d.lat)
-      .ringLng((d: any) => d.lng)
-      .ringColor((d: any) => (t: number) => d.type === 'origin' ? `rgba(245, 158, 11, ${1 - t})` : `rgba(56, 189, 248, ${1 - t})`)
-      .ringMaxRadius(3.5)
-      .ringPropagationSpeed(1.8)
-      .ringRepeatPeriod(1200);
+    globeMaterial.bumpScale = 10;
+    // @ts-ignore
+    globeMaterial.roughness = 0.6;
+    // @ts-ignore
+    globeMaterial.metalness = 0.1;
 
-    // Enhance Earth Material for High Clarity & Vibrancy
-    const globeMaterial = myGlobe.globeMaterial() as THREE.MeshStandardMaterial;
-    globeMaterial.bumpScale = 16;
-    globeMaterial.roughness = 0.4;
-    globeMaterial.metalness = 0.15;
-
-    // High-Definition Multi-Light Setup
-    const sunLight = new THREE.DirectionalLight(0xffffff, 5.5);
-    sunLight.position.set(250, 160, 280);
+    // Lighting for Cinematic Effect
+    const sunLight = new THREE.DirectionalLight(0xffffff, 3);
+    sunLight.position.set(500, 300, 500);
     myGlobe.scene().add(sunLight);
 
-    const warmFill = new THREE.DirectionalLight(0xfef08a, 2.0);
-    warmFill.position.set(-200, 200, 150);
-    myGlobe.scene().add(warmFill);
+    const fillLight = new THREE.DirectionalLight(0x0ea5e9, 2);
+    fillLight.position.set(-500, -300, -500);
+    myGlobe.scene().add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 4.0);
-    rimLight.position.set(-300, -100, -300);
-    myGlobe.scene().add(rimLight);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     myGlobe.scene().add(ambientLight);
 
+    // ==========================================
     // 1. Universal Studios 3D Golden Text
+    // ==========================================
     const textString = "ELKAIRON GLOBAL CONNECT";
     const textGroup = new THREE.Group();
+    // Distinct upward tilt matching the Universal logo
+    textGroup.rotation.x = Math.PI / 10; 
     myGlobe.scene().add(textGroup);
 
     const loader = new FontLoader();
-    loader.load('https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-      const textMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0xffb703, // Rich Gold
-        emissive: 0x4a2800,
-        metalness: 0.95,
-        roughness: 0.15,
-      });
-      
-      const radius = GLOBE_RADIUS * 1.35; 
-      const arcSpread = Math.PI * 1.1; 
-      const startAngle = -arcSpread / 2;
-      const angleStep = arcSpread / (textString.length - 1);
-      
-      for (let i = 0; i < textString.length; i++) {
-        const char = textString[i];
-        if (char === ' ') continue;
-        
-        const textGeo = new TextGeometry(char, {
-          font: font,
-          size: 11,
-          depth: 4, 
-          curveSegments: 12,
-          bevelEnabled: true,
-          bevelThickness: 0.5,
-          bevelSize: 0.3,
-          bevelOffset: 0,
-          bevelSegments: 5
+    loader.load('/fonts/helvetiker_bold.typeface.json', 
+      function (font) {
+        const textMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0xffd700, // Brighter pure gold
+            emissive: 0x4a2a00, // Warmer internal glow
+            metalness: 0.9,
+            roughness: 0.15,
         });
         
-        textGeo.center();
-        const textMesh = new THREE.Mesh(textGeo, textMaterial);
+        // Push radius slightly out to fit larger letters
+        const radius = GLOBE_RADIUS * 1.55; 
+        // Spread letters out a bit more so they wrap properly around the front
+        const arcSpread = Math.PI * 1.25; 
+        const startAngle = -arcSpread / 2;
+        const angleStep = arcSpread / (textString.length - 1);
         
-        const angle = startAngle + (i * angleStep);
-        
-        textMesh.position.x = radius * Math.sin(angle);
-        textMesh.position.z = radius * Math.cos(angle);
-        textMesh.rotation.y = angle;
-        
-        textGroup.add(textMesh);
-      }
+        for (let i = 0; i < textString.length; i++) {
+            const char = textString[i];
+            if (char === ' ') continue;
+            
+            const textGeo = new TextGeometry(char, {
+                font: font,
+                size: 24, // Much larger text
+                depth: 10, // Thicker 3D extrusion
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 1.2,
+                bevelSize: 0.6,
+                bevelOffset: 0,
+                bevelSegments: 5
+            });
+            
+            textGeo.center();
+            const textMesh = new THREE.Mesh(textGeo, textMaterial);
+            
+            const angle = startAngle + (i * angleStep);
+            
+            // Position on the X-Z plane
+            textMesh.position.x = radius * Math.sin(angle);
+            textMesh.position.z = radius * Math.cos(angle);
+            
+            // Rotate text to face outwards perfectly
+            textMesh.rotation.y = angle;
+            
+            textGroup.add(textMesh);
+        }
+    },
+    undefined,
+    function (error) {
+        console.error('An error happened while loading the font:', error);
     });
 
+    // ==========================================
     // 2. Flying Airplanes
+    // ==========================================
     const planesGroup = new THREE.Group();
     myGlobe.scene().add(planesGroup);
 
     function createPlane() {
-      const group = new THREE.Group();
-      const material = new THREE.MeshStandardMaterial({ 
-        color: 0xffffff, 
-        metalness: 0.9, 
-        roughness: 0.15 
-      });
-      
-      const fuselageGeo = new THREE.ConeGeometry(1.6, 8.5, 8);
-      fuselageGeo.rotateX(Math.PI / 2); 
-      const fuselage = new THREE.Mesh(fuselageGeo, material);
-      group.add(fuselage);
-      
-      const wingGeo = new THREE.BoxGeometry(10.5, 0.5, 3.2);
-      const wings = new THREE.Mesh(wingGeo, material);
-      wings.position.set(0, 0, 1); 
-      group.add(wings);
-      
-      const tailGeo = new THREE.BoxGeometry(3.2, 3.2, 1.6);
-      const tail = new THREE.Mesh(tailGeo, material);
-      tail.position.set(0, 1.6, -3.2);
-      group.add(tail);
-      
-      return group;
+        const group = new THREE.Group();
+        const material = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5, roughness: 0.2 });
+        
+        // Fuselage
+        const fuselageGeo = new THREE.ConeGeometry(1.5, 8, 8);
+        fuselageGeo.rotateX(Math.PI / 2); 
+        const fuselage = new THREE.Mesh(fuselageGeo, material);
+        group.add(fuselage);
+        
+        // Wings
+        const wingGeo = new THREE.BoxGeometry(10, 0.5, 3);
+        const wings = new THREE.Mesh(wingGeo, material);
+        wings.position.set(0, 0, 1); 
+        group.add(wings);
+        
+        // Tail
+        const tailGeo = new THREE.BoxGeometry(3, 3, 1.5);
+        const tail = new THREE.Mesh(tailGeo, material);
+        tail.position.set(0, 1.5, -3);
+        group.add(tail);
+        
+        return group;
     }
 
     const numPlanes = 4;
-    const planes: { group: THREE.Group, speed: number, offset: number }[] = [];
-
+    const planes: any[] = [];
     for (let i = 0; i < numPlanes; i++) {
-      const plane = createPlane();
-      
-      const orbitGroup = new THREE.Group();
-      orbitGroup.rotation.x = Math.random() * Math.PI * 2;
-      orbitGroup.rotation.y = Math.random() * Math.PI * 2;
-      
-      plane.position.z = GLOBE_RADIUS * 1.16; 
-      plane.rotation.x = -Math.PI / 2;
-      
-      orbitGroup.add(plane);
-      planesGroup.add(orbitGroup);
-      
-      planes.push({
-        group: orbitGroup,
-        speed: 0.0035 + Math.random() * 0.002,
-        offset: Math.random() * Math.PI * 2
-      });
+        const plane = createPlane();
+        
+        const orbitGroup = new THREE.Group();
+        // Randomize orbit angle
+        orbitGroup.rotation.x = Math.random() * Math.PI * 2;
+        orbitGroup.rotation.y = Math.random() * Math.PI * 2;
+        
+        // Place plane altitude between globe (100) and text (135)
+        plane.position.z = GLOBE_RADIUS * 1.15; 
+        
+        // Adjust plane orientation to fly forward along the orbit
+        plane.rotation.x = -Math.PI / 2;
+        
+        orbitGroup.add(plane);
+        planesGroup.add(orbitGroup);
+        
+        planes.push({
+            group: orbitGroup,
+            speed: 0.004 + Math.random() * 0.004
+        });
     }
 
-    // 3. Animation & Rotation Loop
+    // ==========================================
+    // 3. Animation & Intro Sequence
+    // ==========================================
     let animationFrameId: number;
-    let time = 0;
+
+    // Continuous custom animations
     function animate() {
-      animationFrameId = requestAnimationFrame(animate);
-      time += 0.05;
-      
-      if (textGroup) {
-        textGroup.rotation.y -= 0.0022;
-      }
-      
-      planes.forEach((p) => {
-        p.group.rotation.z -= p.speed; 
-        p.group.children[0].position.z = GLOBE_RADIUS * 1.16 + Math.sin(time + p.offset) * 2;
-        p.group.children[0].rotation.z = Math.sin(time * 0.5 + p.offset) * 0.1;
-      });
+        animationFrameId = requestAnimationFrame(animate);
+        
+        // Text orbits the globe (Universal Studios style speed and direction)
+        if (textGroup) {
+            textGroup.rotation.y -= 0.012;
+        }
+        
+        // Planes fly along their orbits
+        planes.forEach(p => {
+            p.group.rotation.z -= p.speed; // Orbit around Z axis pushes the plane forward
+        });
     }
     animate();
 
-    // Responsive sizing and altitude calibrated for clear framing
-    const getTargetAltitude = (w: number) => (w < 640 ? 3.0 : w < 1024 ? 2.8 : 2.65);
-
-    // Initial cinematic point of view focused on African continent & corridors
+    // Cinematic Intro Setup
     myGlobe.controls().autoRotate = false;
-    myGlobe.controls().enableZoom = false; 
-    myGlobe.pointOfView({ lat: 60, lng: -150, altitude: 5.5 });
+    myGlobe.controls().enableZoom = false; // Prevent user interference during intro
 
-    const zoomTimeout = setTimeout(() => {
-      const initialWidth = containerRef.current?.clientWidth || window.innerWidth;
-      myGlobe.pointOfView({ lat: 12, lng: 18, altitude: getTargetAltitude(initialWidth) }, 3200);
-    }, 150);
+    // Start camera far away and angled
+    myGlobe.pointOfView({ lat: 60, lng: -150, altitude: 5 });
 
-    const controlTimeout = setTimeout(() => {
-      myGlobe.controls().autoRotate = true;
-      myGlobe.controls().autoRotateSpeed = 0.65;
-    }, 3400);
+    const timeout1 = setTimeout(() => {
+        // Epic slow zoom-in to the front of the globe
+        const isMobile = window.innerWidth < 768;
+        const targetAltitude = isMobile ? 4.5 : 2.8;
+        myGlobe.pointOfView({ lat: 15, lng: 0, altitude: targetAltitude }, 5000);
+    }, 200);
 
+    const timeout2 = setTimeout(() => {
+        // Intro finished: Enable user controls and auto-rotation
+        myGlobe.controls().enableZoom = true;
+        myGlobe.controls().autoRotate = true;
+        myGlobe.controls().autoRotateSpeed = 0.8;
+    }, 5200);
+
+    // Handle Resize
     const handleResize = () => {
-      if (containerRef.current) {
-        const width = containerRef.current.clientWidth || window.innerWidth;
-        const height = containerRef.current.clientHeight || 480;
-        myGlobe.width(width);
-        myGlobe.height(height);
+      if (container) {
+        myGlobe.width(container.clientWidth);
+        myGlobe.height(container.clientHeight);
       }
     };
+    window.addEventListener("resize", handleResize);
     
+    // Initial size
     handleResize();
-    window.addEventListener('resize', handleResize);
-
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize();
-    });
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
 
     return () => {
+      window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-      resizeObserver.disconnect();
-      clearTimeout(zoomTimeout);
-      clearTimeout(controlTimeout);
-      myGlobe._destructor();
+      clearTimeout(timeout1);
+      clearTimeout(timeout2);
+      if (myGlobe && container) {
+        container.innerHTML = '';
+      }
     };
   }, []);
 
   return (
     <div className="w-full h-full relative group">
-      <div 
-        ref={containerRef} 
-        className="w-full h-full absolute inset-0 pointer-events-auto cursor-grab active:cursor-grabbing"
+      <div
+        ref={containerRef}
+        className="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing pointer-events-auto"
+        style={{ minHeight: "600px" }}
       />
     </div>
   );

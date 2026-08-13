@@ -72,7 +72,7 @@ export function ExtendOfferModal({
             </div>
             <div>
               <h3 className="font-display text-lg font-bold">Extend Official Job Offer</h3>
-              <p className="text-xs text-gray-400">{candidateName} • {candidateTitle}</p>
+              <p className="text-xs text-gray-300">{candidateName} • {candidateTitle}</p>
             </div>
           </div>
           <button type="button" onClick={onClose} className="text-gray-400 hover:text-white">

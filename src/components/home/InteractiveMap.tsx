@@ -1,19 +1,52 @@
+import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { MapPin } from 'lucide-react';
+import * as d3 from 'd3';
+import * as topojson from 'topojson-client';
+
+const hubs = [
+  { country: 'Germany', lon: 10.4515, lat: 51.1657, talent: 'Tech & Healthcare', active: true },
+  { country: 'United Kingdom', lon: -3.4360, lat: 55.3781, talent: 'Care & Hospitality', active: true },
+  { country: 'Canada', lon: -106.3468, lat: 56.1304, talent: 'Trades & Transport', active: true },
+  { country: 'Norway', lon: 8.4689, lat: 60.4720, talent: 'Logistics & Processing', active: true },
+  { country: 'UAE', lon: 53.8478, lat: 23.4241, talent: 'Engineering & Finance', active: true },
+  { country: 'Zimbabwe Hub', lon: 29.1549, lat: -19.0154, talent: 'Vetted Talent Pool', active: false },
+];
 
 export function InteractiveMap() {
-  const hubs = [
-    { country: 'Germany', x: '52%', y: '32%', talent: 'Tech & Healthcare', active: true },
-    { country: 'United Kingdom', x: '48%', y: '30%', talent: 'Care & Hospitality', active: true },
-    { country: 'Canada', x: '24%', y: '30%', talent: 'Trades & Transport', active: true },
-    { country: 'Norway', x: '53%', y: '22%', talent: 'Logistics & Processing', active: true },
-    { country: 'UAE', x: '63%', y: '45%', talent: 'Engineering & Finance', active: true },
-    { country: 'Zimbabwe Hub', x: '57%', y: '72%', talent: 'Vetted Talent Pool', active: false },
-  ];
+  const [geographies, setGeographies] = useState<any[]>([]);
+  const [hoveredHub, setHoveredHub] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/countries-110m.json')
+      .then(res => res.json())
+      .then(worldData => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { features } = topojson.feature(worldData as any, worldData.objects.countries as any) as any;
+        setGeographies(features);
+      })
+      .catch(err => console.error("Could not load map data", err));
+  }, []);
+
+  const width = 800;
+  const height = 450;
+
+  const projection = useMemo(() => {
+    return d3.geoMercator()
+      .scale(130)
+      .translate([width / 2, height / 1.5]);
+  }, []);
+
+  const pathGenerator = useMemo(() => {
+    return d3.geoPath().projection(projection);
+  }, [projection]);
+
+  const sourceHub = hubs.find(h => !h.active)!;
+  const targetHubs = hubs.filter(h => h.active);
 
   return (
-    <div className="relative w-full h-[400px] bg-navy-900 rounded-3xl p-6 overflow-hidden border border-navy-800 flex flex-col justify-between shadow-2xl">
-      <div className="flex justify-between items-start z-10">
+    <div className="relative w-full h-[500px] bg-navy-950 rounded-3xl p-6 overflow-hidden border border-navy-800 shadow-2xl flex flex-col">
+      <div className="flex justify-between items-start z-10 relative">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-widest text-teal-400">Global Corridor Network</span>
           <h4 className="text-white font-bold text-lg">Active Placement Corridors</h4>
@@ -22,58 +55,134 @@ export function InteractiveMap() {
           <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" /> Live Deployment
         </span>
       </div>
+      
+      <div className="flex-1 w-full h-full relative mt-4">
+        {geographies.length === 0 ? (
+          <div className="absolute inset-0 flex items-center justify-center text-teal-500/50">
+            <span className="animate-pulse text-sm">Initializing global network...</span>
+          </div>
+        ) : (
+          <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+            <g className="map-geographies">
+              {geographies.map((geo, i) => (
+                <path
+                  key={`geo-${i}`}
+                  d={pathGenerator(geo) || ''}
+                  fill="#041a2e"
+                  stroke="#0f345c"
+                  strokeWidth={0.5}
+                  className="transition-colors duration-300 hover:fill-navy-900"
+                />
+              ))}
+            </g>
 
-      {/* Stylized world grid dots */}
-      <div className="relative w-full h-[260px] my-auto">
-        <svg className="w-full h-full opacity-20" viewBox="0 0 800 400" fill="none">
-          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.5" fill="#0DA2E7" />
-          </pattern>
-          <rect width="800" height="400" fill="url(#grid)" />
-        </svg>
+            <g className="arcs">
+              {targetHubs.map((target, i) => {
+                const s = projection([sourceHub.lon, sourceHub.lat]);
+                const t = projection([target.lon, target.lat]);
+                if (!s || !t) return null;
+                
+                const dx = t[0] - s[0];
+                const dy = t[1] - s[1];
+                const dr = Math.sqrt(dx * dx + dy * dy) * 1.2;
 
-        {/* Connection arcs */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M 57 72 Q 55 50 52 32" stroke="rgba(13, 162, 231, 0.4)" strokeWidth="0.5" strokeDasharray="1,1" fill="none" />
-          <path d="M 57 72 Q 50 45 48 30" stroke="rgba(13, 162, 231, 0.4)" strokeWidth="0.5" strokeDasharray="1,1" fill="none" />
-          <path d="M 57 72 Q 40 45 24 30" stroke="rgba(13, 162, 231, 0.4)" strokeWidth="0.5" strokeDasharray="1,1" fill="none" />
-          <path d="M 57 72 Q 60 55 63 45" stroke="rgba(13, 162, 231, 0.4)" strokeWidth="0.5" strokeDasharray="1,1" fill="none" />
-          <path d="M 57 72 Q 55 40 53 22" stroke="rgba(13, 162, 231, 0.4)" strokeWidth="0.5" strokeDasharray="1,1" fill="none" />
-        </svg>
+                return (
+                  <motion.path
+                    key={`arc-${i}`}
+                    d={`M ${s[0]},${s[1]} A ${dr},${dr} 0 0,1 ${t[0]},${t[1]}`}
+                    fill="none"
+                    stroke="url(#arcGradient)"
+                    strokeWidth={1.5}
+                    strokeDasharray="4 4"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    whileInView={{ pathLength: 1, opacity: 0.6 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, delay: i * 0.2, ease: "easeOut" }}
+                  />
+                );
+              })}
+            </g>
 
-        {/* Interactive nodes */}
-        {hubs.map((hub) => (
-          <motion.div
-            key={hub.country}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-            style={{ left: hub.x, top: hub.y }}
-            className="absolute -translate-x-1/2 -translate-y-1/2 group cursor-pointer"
-          >
-            <div className="relative">
-              <span className={`flex h-3.5 w-3.5 items-center justify-center rounded-full ${hub.active ? 'bg-teal-400' : 'bg-gold-400'}`}>
-                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${hub.active ? 'bg-teal-400' : 'bg-gold-400'}`} />
-              </span>
-              
-              {/* Tooltip on hover */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-30 pointer-events-none">
-                <div className="bg-navy-950 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow-xl border border-navy-700 whitespace-nowrap">
-                  <div className="flex items-center gap-1">
-                    <MapPin size={10} className="text-teal-400" />
-                    <span>{hub.country}</span>
-                  </div>
-                  <span className="text-[9px] text-gray-400 block">{hub.talent}</span>
+            <g className="markers">
+              {hubs.map((hub, i) => {
+                const pos = projection([hub.lon, hub.lat]);
+                if (!pos) return null;
+
+                return (
+                  <g 
+                    key={`marker-${i}`} 
+                    transform={`translate(${pos[0]}, ${pos[1]})`}
+                    onMouseEnter={() => setHoveredHub(hub.country)}
+                    onMouseLeave={() => setHoveredHub(null)}
+                    className="cursor-pointer group"
+                  >
+                    <circle 
+                      r={hub.active ? 4 : 6} 
+                      fill={hub.active ? "#0DA2E7" : "#FBBF24"} 
+                      className="transition-transform duration-300 group-hover:scale-150"
+                    />
+                    <circle 
+                      r={hub.active ? 12 : 16} 
+                      fill={hub.active ? "#0DA2E7" : "#FBBF24"} 
+                      opacity={0.2}
+                    >
+                      <animate attributeName="r" values={hub.active ? "8;16;8" : "12;24;12"} dur="2s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                  </g>
+                );
+              })}
+            </g>
+
+            <defs>
+              <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#FBBF24" />
+                <stop offset="100%" stopColor="#0DA2E7" />
+              </linearGradient>
+            </defs>
+          </svg>
+        )}
+
+        {hubs.map((hub, i) => {
+          if (hoveredHub !== hub.country) return null;
+          
+          const pos = projection([hub.lon, hub.lat]);
+          if (!pos) return null;
+
+          return (
+            <div 
+              key={`tooltip-${i}`}
+              className="absolute pointer-events-none z-20 flex flex-col items-center transform -translate-x-1/2 -translate-y-full pb-3"
+              style={{ 
+                left: `${(pos[0] / width) * 100}%`, 
+                top: `${(pos[1] / height) * 100}%` 
+              }}
+            >
+              <motion.div 
+                initial={{ opacity: 0, y: 5, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                className="bg-navy-900 border border-teal-500/30 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-xl whitespace-nowrap"
+              >
+                <div className="flex items-center gap-1.5 mb-1">
+                  <MapPin size={12} className={hub.active ? "text-teal-400" : "text-gold-400"} />
+                  <span>{hub.country}</span>
                 </div>
-              </div>
+                <span className="text-[10px] text-sky-200 block ml-4">{hub.talent}</span>
+              </motion.div>
             </div>
-          </motion.div>
-        ))}
+          );
+        })}
       </div>
 
-      <div className="flex items-center justify-between text-xs text-gray-400 pt-3 border-t border-navy-800">
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-teal-400 inline-block" /> Destination Market</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-gold-400 inline-block" /> Sourcing Hub</span>
+      <div className="relative z-10 mt-auto flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-navy-800 bg-navy-950/50 backdrop-blur-md -mx-6 px-6 -mb-6 pb-6">
+        <span className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-teal-400 inline-block shadow-[0_0_8px_rgba(13,162,231,0.8)]" /> 
+          Destination Market
+        </span>
+        <span className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-gold-400 inline-block shadow-[0_0_10px_rgba(251,191,36,0.8)]" /> 
+          African Sourcing Hubs
+        </span>
       </div>
     </div>
   );

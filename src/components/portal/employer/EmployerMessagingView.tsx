@@ -160,7 +160,7 @@ export function EmployerMessagingView({ onScheduleInterview, onOpenCompliance }:
                     <span>Pre-Vetted</span>
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 font-medium">{activeThread.subject}</p>
+                <p className="text-xs text-gray-600 font-medium">{activeThread.subject}</p>
               </div>
             </div>
 
@@ -239,7 +239,7 @@ export function EmployerMessagingView({ onScheduleInterview, onOpenCompliance }:
             <button
               type="button"
               onClick={() => toast.success('Attach document file (PDF / DOCX)')}
-              className="p-2.5 text-gray-400 hover:text-navy-900 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2.5 text-gray-600 hover:text-navy-900 hover:bg-gray-100 rounded-xl transition-colors"
               title="Attach Document"
             >
               <Paperclip size={18} />
@@ -264,9 +264,9 @@ export function EmployerMessagingView({ onScheduleInterview, onOpenCompliance }:
           </form>
         </div>
       ) : (
-        <div className="flex-1 flex items-center justify-center p-12 text-center text-gray-400">
-          <MessageSquare size={32} className="mx-auto mb-2 opacity-50" />
-          <p className="text-xs">Select a conversation thread to begin communicating.</p>
+        <div className="flex-1 flex items-center justify-center p-12 text-center text-gray-600">
+          <MessageSquare size={32} className="mx-auto mb-2 opacity-60 text-navy-900" />
+          <p className="text-xs font-medium">Select a conversation thread to begin communicating.</p>
         </div>
       )}
     </div>

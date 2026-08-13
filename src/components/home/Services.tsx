@@ -1,33 +1,35 @@
+import { BACKGROUND_IMAGES } from '../../data/imageMap';
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Building2, Users, FileCheck, Stethoscope, HardHat, Coffee, Globe, ArrowUpRight } from 'lucide-react';
+import { Users, FileCheck, Stethoscope, HardHat, Coffee, Globe, ArrowUpRight, Sprout, Building2 } from 'lucide-react';
 import { SpringCard } from '../common/SpringCard';
+import { LazyImage } from '../ui/LazyImage';
+import { SECTOR_IMAGE_CARDS } from '../../data/imageMap';
+
+import { LazyImage } from '../ui/LazyImage';
 
 const services = [
   {
     title: "Talent Sourcing",
-    desc: "Pre-qualified candidate pools across Healthcare, Construction, Hospitality, Logistics, and Skilled Trades.",
+    desc: "Pre-qualified candidate pools across Healthcare, Construction, Agriculture, Hospitality, and Skilled Trades.",
     icon: Users,
     badge: "Verified Candidates",
+    image: BACKGROUND_IMAGES.officeCollaboration
   },
   {
     title: "Visa & Relocation Support",
     desc: "End-to-end support for work permits, contracts, flights, and government process guidance.",
     icon: FileCheck,
     badge: "Full Compliance",
+    image: BACKGROUND_IMAGES.corporateHandshake
   },
   {
     title: "Cultural Integration",
     desc: "Pre-departure briefings and on-ground assistance to ensure smooth transitions into new environments.",
     icon: Globe,
     badge: "On-Ground Network",
+    image: BACKGROUND_IMAGES.happyCandidate
   }
-];
-
-const sectors = [
-  { name: "Healthcare", icon: Stethoscope },
-  { name: "Construction", icon: HardHat },
-  { name: "Hospitality", icon: Coffee },
 ];
 
 export function Services() {
@@ -38,9 +40,26 @@ export function Services() {
   });
 
   const yBackground = useTransform(scrollYProgress, [0, 1], [-40, 60]);
+  const yParallax = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   return (
-    <section ref={sectionRef} id="services" className="py-24 bg-navy-900/60 backdrop-blur-md border-y border-white/10 relative overflow-hidden">
+    <section ref={sectionRef} id="services" className="py-24 bg-navy-950 border-y border-white/10 relative overflow-hidden">
+      {/* Background Image Overlay from User Attachments with Parallax and Gradient */}
+      <motion.div 
+        style={{ y: yParallax }}
+        className="absolute inset-0 pointer-events-none transform-gpu origin-center"
+      >
+        <motion.div
+          initial={{ filter: 'blur(20px)', opacity: 0 }}
+          whileInView={{ filter: 'blur(0px)', opacity: 0.15 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center mix-blend-luminosity"
+          style={{ backgroundImage: `url('/images/corporate-handshake.jpg')` }}
+        />
+      </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-b from-navy-950/80 via-navy-950/85 to-navy-950 pointer-events-none" />
+
       {/* Parallax background ambient glow */}
       <motion.div 
         style={{ y: yBackground }}
@@ -77,19 +96,24 @@ export function Services() {
               className="h-full"
             >
               <SpringCard className="h-full">
-                <div className="bg-navy-950/90 p-8 rounded-2xl border-t-4 border-gold-400 hover:border-teal-400 shadow-2xl transition-all h-full flex flex-col justify-between group border border-white/10">
-                  <div>
-                    <div className="w-14 h-14 bg-navy-900 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gold-500 group-hover:text-navy-950 text-gold-400 transition-all duration-300 shadow-md">
-                      <service.icon size={28} className="group-hover:scale-110 transition-transform duration-300" />
+                <div className="relative  rounded-2xl border-t-4 border-gold-400 hover:border-teal-400 shadow-2xl transition-all h-full flex flex-col justify-between group border-x border-b border-white/10 overflow-hidden">
+                  <LazyImage src={service.image} alt={service.title} containerClassName="absolute inset-0 z-0 opacity-60 group-hover:opacity-100 transition-opacity duration-500" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/80 via-navy-950/20 to-transparent pointer-events-none" />
+                  
+                  <div className="relative z-20 p-8 flex flex-col h-full">
+                    <div>
+                      <div className="w-14 h-14 bg-navy-900 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gold-500 group-hover:text-navy-950 text-gold-400 transition-all duration-300 shadow-md">
+                        <service.icon size={28} className="group-hover:scale-110 transition-transform duration-300" />
+                      </div>
+                      <h4 className="font-display text-xl font-bold italic text-white mb-3 group-hover:text-gold-300 transition-colors">
+                        {service.title}
+                      </h4>
+                      <p className="text-sky-200 text-sm leading-relaxed">{service.desc}</p>
                     </div>
-                    <h4 className="font-display text-xl font-bold italic text-white mb-3 group-hover:text-gold-300 transition-colors">
-                      {service.title}
-                    </h4>
-                    <p className="text-sky-200 text-sm leading-relaxed">{service.desc}</p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-bold text-teal-300">
-                    <span>{service.badge}</span>
-                    <ArrowUpRight size={15} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-gold-400" />
+                    <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-bold text-teal-300">
+                      <span>{service.badge}</span>
+                      <ArrowUpRight size={15} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-gold-400" />
+                    </div>
                   </div>
                 </div>
               </SpringCard>
@@ -97,40 +121,43 @@ export function Services() {
           ))}
         </div>
 
+        {/* Specialized Industry Sectors with Authentic Image Cards */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-20 border-t border-white/10 pt-16"
         >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div>
-              <h4 className="font-display italic text-2xl font-bold text-white mb-2">Key Sectors We Serve</h4>
-              <p className="text-sky-200">Specialized talent pools ready for deployment.</p>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              {sectors.map((sector, idx) => (
-                <motion.div 
-                  key={idx} 
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                  className="flex items-center gap-2 bg-navy-950 px-5 py-3 rounded-full border border-white/15 shadow-sm text-gold-400 font-bold uppercase tracking-wider text-[10px] cursor-pointer hover:border-gold-400/60 transition-colors"
-                >
-                  <sector.icon size={16} className="text-teal-400" />
-                  <span>{sector.name}</span>
-                </motion.div>
-              ))}
-              <motion.div 
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.96 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                className="flex items-center gap-2 bg-gold-500 text-navy-950 px-5 py-3 rounded-full border border-gold-400 shadow-md font-bold uppercase tracking-wider text-[10px] cursor-pointer"
+          <div className="mb-8 text-center md:text-left">
+            <h4 className="font-display italic text-3xl font-bold text-white mb-2">Key Sectors We Serve</h4>
+            <p className="text-sky-200 text-base">Verified, job-ready talent pipelines across specialized global industries.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            {SECTOR_IMAGE_CARDS.map((sector) => (
+              <motion.div
+                key={sector.id}
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 350, damping: 20 }}
+                className="group relative rounded-2xl overflow-hidden border border-white/15 bg-navy-900 shadow-xl flex flex-col h-80 cursor-pointer"
               >
-                <span>+ Logistics &amp; Domestic</span>
+                {/* Image Background Layer with Blur Image */}
+                <LazyImage src={sector.image} alt={sector.title} containerClassName="absolute inset-0 z-0 group-hover:scale-105 transition-transform duration-700" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/80 via-navy-950/75 to-transparent transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
+
+                <div className="relative z-20 p-6 flex flex-col justify-end h-full">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gold-400 mb-1">
+                    {sector.subtitle}
+                  </span>
+                  <h5 className="text-xl font-display font-bold text-white mb-2 group-hover:text-gold-300 transition-colors">
+                    {sector.title}
+                  </h5>
+                  <p className="text-xs text-sky-100/90 leading-relaxed line-clamp-3">
+                    {sector.description}
+                  </p>
+                </div>
               </motion.div>
-            </div>
+            ))}
           </div>
         </motion.div>
       </div>

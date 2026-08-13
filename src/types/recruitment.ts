@@ -130,6 +130,23 @@ export interface AIRecruitmentScore {
   recruiterVisibility: 'Excellent' | 'Very High' | 'High' | 'Good' | 'Fair';
 }
 
+export interface UserProfile {
+  id: string;
+  email: string;
+  role: 'candidate' | 'employer';
+  name: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  country?: string;
+  avatarUrl?: string;
+  company?: string;
+  industry?: string;
+  size?: string;
+  createdAt?: any;
+  updatedAt?: any;
+}
+
 export interface CandidateProfile {
   // Step 1: Create Account Essentials
   id?: string;
@@ -139,7 +156,7 @@ export interface CandidateProfile {
   phone?: string;
   country?: string;
 
-  // Step 2: Personal Information
+  // Step 2: Personal Information (Strict real user data)
   avatarUrl?: string;
   firstName?: string;
   lastName?: string;
@@ -191,7 +208,7 @@ export interface CandidateProfile {
   cvName?: string;
   coverLetterUrl?: string;
 
-  // AI Modules
+  // AI Modules (Derived dynamically from candidate profile)
   skillsAssessment?: AISkillsAssessment;
   personalityStyle?: AIPersonalityWorkStyle;
   careerGoals?: AICareerGoals;

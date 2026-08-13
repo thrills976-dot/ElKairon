@@ -10,12 +10,14 @@ import {
 } from 'firebase/auth';
 import { auth, db, googleProvider, formatAuthError, isDomainUnauthorized } from '../lib/firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { CandidateProfile, EmployerProfile } from '../types/recruitment';
+import { CandidateProfile, EmployerProfile, UserProfile } from '../types/recruitment';
 import { computeRecruitmentScores, computePersonalityArchetype } from '../lib/aiRecruitmentEngine';
+import { sanitizeText, sanitizeEmail, sanitizePhone, sanitizeStringArray } from '../lib/sanitization';
 import toast from 'react-hot-toast';
 
 export interface AuthContextType {
   user: User | null;
+  userProfile: UserProfile | null;
   loading: boolean;
   role: 'candidate' | 'employer' | null;
   candidateProfile: CandidateProfile | null;
@@ -40,11 +42,10 @@ const DEFAULT_EMPTY_CANDIDATE: CandidateProfile = {
   lastName: '',
   email: '',
   phone: '',
-  country: 'South Africa',
+  country: '',
   avatarUrl: '',
   dob: '',
   age: 0,
-  gender: 'Prefer not to say',
   nationality: '',
   countryOfResidence: '',
   city: '',
@@ -54,13 +55,11 @@ const DEFAULT_EMPTY_CANDIDATE: CandidateProfile = {
 
   currentJobTitle: '',
   currentCompany: '',
-  industry: 'Technology',
+  industry: '',
   department: '',
-  careerLevel: 'Mid-Level',
-  totalYearsOfExperience: '1-3 years',
-  yearsOfExperience: '2 years',
+  totalYearsOfExperience: '',
+  yearsOfExperience: '',
 
-  highestDegree: "Bachelor's Degree",
   institution: '',
   fieldOfStudy: '',
   graduationYear: '',
@@ -71,16 +70,16 @@ const DEFAULT_EMPTY_CANDIDATE: CandidateProfile = {
   languages: [{ language: 'English', proficiency: 'Professional' }],
 
   preferredJobs: [],
-  preferredIndustries: ['Technology'],
+  preferredIndustries: [],
   preferredWorkStyle: 'Hybrid',
   employmentType: ['Permanent'],
   salaryExpectations: {
-    minSalary: 4000,
-    maxSalary: 7000,
+    minSalary: 0,
+    maxSalary: 0,
     currency: 'EUR',
     period: 'Monthly'
   },
-  availability: 'One Month',
+  availability: 'Immediately',
   preferredLocations: ['United Kingdom', 'Germany', 'Netherlands', 'UAE'],
 
   documents: {
@@ -100,7 +99,7 @@ const DEFAULT_EMPTY_CANDIDATE: CandidateProfile = {
     learnQuickly: 4,
     adaptToChange: 4,
     workUnderPressure: 3,
-    archetype: 'Strategic International Talent'
+    archetype: 'International Talent'
   },
 
   careerGoals: {
@@ -128,6 +127,7 @@ const DEFAULT_EMPTY_CANDIDATE: CandidateProfile = {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  userProfile: null,
   loading: true,
   role: null,
   candidateProfile: null,
@@ -149,6 +149,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [role, setRoleState] = useState<'candidate' | 'employer' | null>(null);
   const [candidateProfile, setCandidateProfile] = useState<CandidateProfile | null>(null);
   const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
@@ -160,7 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuthError(null);
   }, []);
 
-  // Fetch or construct profile document on user change
+  // Fetch or construct profile document on user change strictly from Firestore
   const syncUserProfile = useCallback(async (currentUser: User) => {
     try {
       // 1. Fetch from 'users' collection
@@ -178,6 +179,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (userRole) {
         setRoleState(userRole);
       }
+
+      const activeUserProfile: UserProfile = {
+        id: currentUser.uid,
+        email: currentUser.email || userData.email || '',
+        role: userRole || 'candidate',
+        name: userData.name || currentUser.displayName || '',
+        firstName: userData.firstName || '',
+        lastName: userData.lastName || '',
+        phone: userData.phone || '',
+        country: userData.country || '',
+        avatarUrl: userData.avatarUrl || currentUser.photoURL || '',
+        company: userData.company || '',
+        industry: userData.industry || '',
+        size: userData.size || '',
+        createdAt: userData.createdAt,
+        updatedAt: userData.updatedAt
+      };
+      setUserProfile(activeUserProfile);
 
       // 2. Fetch specific role collection
       if (userRole === 'employer') {
@@ -239,22 +258,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               size: empData.size || '50-200'
             });
           } else {
-            // New user without role yet — default to candidate
-            setRoleState('candidate');
-            const newCand: CandidateProfile = {
-              ...DEFAULT_EMPTY_CANDIDATE,
-              id: currentUser.uid,
-              role: 'candidate',
-              email: currentUser.email || '',
-              name: currentUser.displayName || 'Candidate'
-            };
-            newCand.aiRecruitmentScore = computeRecruitmentScores(newCand);
-            setCandidateProfile(newCand);
+            // New user without role yet — keep role null so user can explicitly choose Candidate vs Employer
+            setRoleState(null);
+            setCandidateProfile(null);
+            setEmployerProfile(null);
           }
         }
       }
     } catch (err: any) {
       console.warn('Profile synchronization notice:', err?.message || err);
+      toast.error('Session data synchronization notice. Please verify network access.');
     }
   }, []);
 
@@ -364,8 +377,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setRoleState(newRole);
 
     const activeUid = user ? user.uid : `user-${Date.now()}`;
-    const userDisplayName = profileData.name || profileData.fullName || profileData.contactName || user?.displayName || (newRole === 'candidate' ? 'Candidate' : 'Employer');
-    const userEmail = profileData.email || profileData.contactEmail || user?.email || '';
+    const rawDisplayName = profileData.name || profileData.fullName || profileData.contactName || user?.displayName || (newRole === 'candidate' ? 'Candidate' : 'Employer');
+    const userDisplayName = sanitizeText(rawDisplayName, 100);
+    const userEmail = sanitizeEmail(profileData.email || profileData.contactEmail || user?.email || '');
 
     if (newRole === 'candidate') {
       const mergedProfile: CandidateProfile = {
@@ -376,8 +390,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         name: userDisplayName,
         email: userEmail
       };
+      if (profileData.phone) mergedProfile.phone = sanitizePhone(profileData.phone);
+      if (profileData.country) mergedProfile.country = sanitizeText(profileData.country, 100);
+      if (profileData.skills) mergedProfile.skills = sanitizeStringArray(profileData.skills);
+
       mergedProfile.aiRecruitmentScore = computeRecruitmentScores(mergedProfile);
       setCandidateProfile(mergedProfile);
+
+      const activeProfile: UserProfile = {
+        id: activeUid,
+        email: userEmail,
+        role: 'candidate',
+        name: userDisplayName,
+        avatarUrl: mergedProfile.avatarUrl || user?.photoURL || ''
+      };
+      setUserProfile(activeProfile);
 
       if (user) {
         try {
@@ -402,13 +429,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         role: 'employer',
         name: userDisplayName,
         email: userEmail,
-        company: profileData.company || profileData.companyName || 'Enterprise Partner',
-        industry: profileData.industry || 'Technology',
-        size: profileData.size || profileData.companySize || '50-200',
-        phone: profileData.phone || profileData.contactPhone || '',
-        country: profileData.country || profileData.headquartersCountry || ''
+        company: sanitizeText(profileData.company || profileData.companyName || 'Enterprise Partner', 120),
+        industry: sanitizeText(profileData.industry || 'Technology', 100),
+        size: sanitizeText(profileData.size || profileData.companySize || '50-200', 50),
+        phone: sanitizePhone(profileData.phone || profileData.contactPhone || ''),
+        country: sanitizeText(profileData.country || profileData.headquartersCountry || '', 100)
       };
       setEmployerProfile(empData);
+
+      const activeProfile: UserProfile = {
+        id: activeUid,
+        email: userEmail,
+        role: 'employer',
+        name: userDisplayName,
+        company: empData.company,
+        industry: empData.industry
+      };
+      setUserProfile(activeProfile);
 
       if (user) {
         try {
@@ -433,10 +470,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateCandidateProfile = async (updates: Partial<CandidateProfile>) => {
+    // Sanitize incoming candidate updates
+    const sanitizedUpdates: Partial<CandidateProfile> = { ...updates };
+    if (updates.name) sanitizedUpdates.name = sanitizeText(updates.name, 100);
+    if (updates.firstName) sanitizedUpdates.firstName = sanitizeText(updates.firstName, 80);
+    if (updates.lastName) sanitizedUpdates.lastName = sanitizeText(updates.lastName, 80);
+    if (updates.email) sanitizedUpdates.email = sanitizeEmail(updates.email);
+    if (updates.phone) sanitizedUpdates.phone = sanitizePhone(updates.phone);
+    if (updates.city) sanitizedUpdates.city = sanitizeText(updates.city, 80);
+    if (updates.currentJobTitle) sanitizedUpdates.currentJobTitle = sanitizeText(updates.currentJobTitle, 100);
+    if (updates.currentCompany) sanitizedUpdates.currentCompany = sanitizeText(updates.currentCompany, 100);
+    if (updates.institution) sanitizedUpdates.institution = sanitizeText(updates.institution, 120);
+    if (updates.skills) sanitizedUpdates.skills = sanitizeStringArray(updates.skills);
+
     setCandidateProfile(prev => {
       const updated: CandidateProfile = {
         ...(prev || DEFAULT_EMPTY_CANDIDATE),
-        ...updates
+        ...sanitizedUpdates
       };
       updated.aiRecruitmentScore = computeRecruitmentScores(updated);
       if (updated.personalityStyle) {
@@ -450,39 +500,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const userRef = doc(db, 'users', user.uid);
         await setDoc(userRef, {
-          ...updates,
+          ...sanitizedUpdates,
           updatedAt: serverTimestamp()
         }, { merge: true });
         const candRef = doc(db, 'candidates', user.uid);
         await setDoc(candRef, {
-          ...updates,
+          ...sanitizedUpdates,
           updatedAt: serverTimestamp()
         }, { merge: true });
       } catch (err) {
         console.warn('Firestore updateCandidateProfile notice:', err);
+        toast.error('Could not save candidate updates to Firestore.');
       }
     }
   };
 
   const updateEmployerProfile = async (updates: Partial<EmployerProfile>) => {
+    const sanitizedUpdates: Partial<EmployerProfile> = { ...updates };
+    if (updates.name) sanitizedUpdates.name = sanitizeText(updates.name, 100);
+    if (updates.company) sanitizedUpdates.company = sanitizeText(updates.company, 120);
+    if (updates.industry) sanitizedUpdates.industry = sanitizeText(updates.industry, 100);
+    if (updates.phone) sanitizedUpdates.phone = sanitizePhone(updates.phone);
+
     setEmployerProfile(prev => {
-      const updated = { ...(prev as EmployerProfile), ...updates };
+      const updated = { ...(prev as EmployerProfile), ...sanitizedUpdates };
       return updated;
     });
     if (user) {
       try {
         const userRef = doc(db, 'users', user.uid);
         await setDoc(userRef, {
-          ...updates,
+          ...sanitizedUpdates,
           updatedAt: serverTimestamp()
         }, { merge: true });
         const empRef = doc(db, 'employers', user.uid);
         await setDoc(empRef, {
-          ...updates,
+          ...sanitizedUpdates,
           updatedAt: serverTimestamp()
         }, { merge: true });
       } catch (err) {
         console.warn('Firestore updateEmployerProfile notice:', err);
+        toast.error('Could not save employer updates to Firestore.');
       }
     }
   };
@@ -496,6 +554,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Sign out notice:', e);
     }
     setUser(null);
+    setUserProfile(null);
     setRoleState(null);
     setCandidateProfile(null);
     setEmployerProfile(null);
@@ -506,6 +565,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <AuthContext.Provider
       value={{
         user,
+        userProfile,
         loading,
         role,
         candidateProfile,

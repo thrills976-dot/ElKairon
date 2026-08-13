@@ -1,7 +1,9 @@
+import { BACKGROUND_IMAGES } from '../../data/imageMap';
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { PlaneTakeoff, FileCheck, ShieldCheck, FileText, CheckCircle } from 'lucide-react';
 import { SpringCard } from '../common/SpringCard';
+import { LazyImage } from '../ui/LazyImage';
 
 export function Visas() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -17,25 +19,29 @@ export function Visas() {
       title: "EU Blue Card (Germany/EU)",
       description: "Fast-track work and residence permit for highly skilled professionals.",
       icon: ShieldCheck,
-      details: ["Recognized degree required", "Binding employment contract", "Fast pathway to permanent residency"]
+      details: ["Recognized degree required", "Binding employment contract", "Fast pathway to permanent residency"],
+      image: BACKGROUND_IMAGES.euBlueCard
     },
     {
       title: "UAE Employment Visa",
       description: "Comprehensive corporate work visa sponsored directly by UAE employers.",
       icon: FileCheck,
-      details: ["Employer sponsorship", "Medical fitness certification", "Emirates ID & residency clearance"]
+      details: ["Employer sponsorship", "Medical fitness certification", "Emirates ID & residency clearance"],
+      image: BACKGROUND_IMAGES.uaeEmployment
     },
     {
       title: "Germany Opportunity Card",
       description: "Chancenkarte points-based permit to seek employment on-ground in Germany.",
       icon: PlaneTakeoff,
-      details: ["Points system based on education", "Proof of livelihood funds", "Up to 1-year renewable validity"]
+      details: ["Points system based on education", "Proof of livelihood funds", "Up to 1-year renewable validity"],
+      image: BACKGROUND_IMAGES.germanyOpportunity
     },
     {
       title: "Skilled Worker Visa (UK/EU)",
       description: "Direct visa pathway for candidates holding certified sponsor certificates.",
       icon: FileText,
-      details: ["Certificate of Sponsorship (CoS)", "English proficiency verification", "Full family settlement eligibility"]
+      details: ["Certificate of Sponsorship (CoS)", "English proficiency verification", "Full family settlement eligibility"],
+      image: BACKGROUND_IMAGES.ukSkilledWorker
     }
   ];
 
@@ -77,9 +83,17 @@ export function Visas() {
                 className="h-full"
               >
                 <SpringCard className="h-full">
-                  <div className="bg-navy-900/90 border border-white/15 rounded-2xl p-8 shadow-2xl hover:border-teal-400/80 transition-all duration-300 relative overflow-hidden group h-full flex flex-col justify-between cursor-default">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-teal-400/10 rounded-full blur-3xl group-hover:bg-gold-400/20 transition-colors" />
-                    <div className="relative z-10">
+                  <div className=" border border-white/15 rounded-2xl shadow-2xl hover:border-teal-400/80 transition-all duration-300 relative overflow-hidden group h-full flex flex-col justify-between cursor-default">
+                    <LazyImage 
+                      src={visa.image} 
+                      alt={visa.title} 
+                      containerClassName="absolute inset-0 z-0 opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/80 via-navy-950/20 to-transparent pointer-events-none" />
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-teal-400/10 rounded-full blur-3xl group-hover:bg-gold-400/20 transition-colors z-10" />
+                    
+                    <div className="relative z-20 p-8 flex flex-col h-full">
                       <div className="w-14 h-14 bg-teal-500 text-navy-950 rounded-xl flex items-center justify-center mb-6 shadow-md font-bold group-hover:bg-gold-400 group-hover:rotate-6 transition-all duration-300">
                         <Icon size={28} />
                       </div>
@@ -90,7 +104,7 @@ export function Visas() {
                         {visa.description}
                       </p>
                       
-                      <ul className="space-y-3 pt-4 border-t border-white/10">
+                      <ul className="space-y-3 pt-4 border-t border-white/10 mt-auto">
                         {visa.details.map((detail, dIdx) => (
                           <li key={dIdx} className="flex items-start gap-2 text-xs text-sky-100 font-medium">
                             <CheckCircle size={14} className="text-gold-400 shrink-0 mt-0.5" />
