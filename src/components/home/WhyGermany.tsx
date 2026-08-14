@@ -3,10 +3,8 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { CheckCircle2, TrendingUp, HeartPulse, GraduationCap, Plane, MapPin, Sparkles } from 'lucide-react';
 import { SpringCard } from '../common/SpringCard';
-import { BACKGROUND_IMAGES } from '../../data/imageMap';
 import { LazyImage } from '../ui/LazyImage';
 
-import { LazyImage } from '../ui/LazyImage';
 
 const reasons = [
   { icon: TrendingUp, title: "Strong Economy", desc: "High demand for skilled workers in IT, engineering, healthcare, and business.", image: BACKGROUND_IMAGES.strongEconomy },

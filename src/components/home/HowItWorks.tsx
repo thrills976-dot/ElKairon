@@ -5,7 +5,6 @@ import { SpringCard } from '../common/SpringCard';
 import { BACKGROUND_IMAGES } from '../../data/imageMap';
 import { LazyImage } from '../ui/LazyImage';
 
-import { LazyImage } from '../ui/LazyImage';
 
 export function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null);

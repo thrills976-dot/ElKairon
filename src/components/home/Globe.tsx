@@ -17,7 +17,7 @@ export function Globe() {
     const container = containerRef.current;
 
     // Setup the Globe
-    const myGlobe = GlobeJS({ animateIn: false })(container)
+    const myGlobe = (GlobeJS as any)({ animateIn: false })(container)
         .globeImageUrl(EARTH_IMG_URL)
         .bumpImageUrl(EARTH_BUMP_URL)
         .backgroundColor('rgba(0,0,0,0)') // Kept transparent to blend with Hero section
@@ -54,7 +54,7 @@ export function Globe() {
     const textString = "ELKAIRON GLOBAL CONNECT";
     const textGroup = new THREE.Group();
     // Distinct upward tilt matching the Universal logo
-    textGroup.rotation.x = Math.PI / 10; 
+    textGroup.rotation.x = 0; // Flat orbit 
     myGlobe.scene().add(textGroup);
 
     const loader = new FontLoader();
@@ -177,7 +177,7 @@ export function Globe() {
         
         // Text orbits the globe (Universal Studios style speed and direction)
         if (textGroup) {
-            textGroup.rotation.y -= 0.012;
+            textGroup.rotation.y += 0.012; // Left to right orbit
         }
         
         // Planes fly along their orbits

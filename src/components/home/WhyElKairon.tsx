@@ -4,7 +4,6 @@ import { Target, Lightbulb, Clock, Globe } from 'lucide-react';
 import { BACKGROUND_IMAGES } from '../../data/imageMap';
 import { LazyImage } from '../ui/LazyImage';
 
-import { LazyImage } from '../ui/LazyImage';
 
 export function WhyElKairon() {
   const sectionRef = useRef<HTMLElement>(null);

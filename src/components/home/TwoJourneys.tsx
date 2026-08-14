@@ -5,7 +5,6 @@ import { ArrowRight, Sparkles, Briefcase, Building, CheckCircle } from 'lucide-r
 import { SpringCard } from '../common/SpringCard';
 import { LazyImage } from '../ui/LazyImage';
 
-import { LazyImage } from '../ui/LazyImage';
 
 export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
   const sectionRef = useRef<HTMLElement>(null);
