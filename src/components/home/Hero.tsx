@@ -19,7 +19,7 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
   const bgGlowY = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
 
   return (
-    <div id="hero" ref={containerRef} className="relative min-h-[94vh] flex items-center overflow-hidden bg-teal-500 pt-32 sm:pt-36 lg:pt-40 pb-20 border-b-4 border-gold-500">
+    <div id="hero" ref={containerRef} className="relative min-h-[94vh] flex items-center overflow-hidden bg-navy-900 pt-32 sm:pt-36 lg:pt-40 pb-20 border-b-4 border-gold-500">
       
       {/* Background ambient lighting with parallax scroll */}
       <motion.div 
@@ -193,7 +193,7 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
                 whileTap={{ scale: 0.96 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 onClick={() => onNavigate('candidate-portal')}
-                className="px-7 py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-bold shadow-xl uppercase text-xs tracking-wider flex items-center justify-center gap-2 transition-colors border border-teal-400/40 group transform-gpu"
+                className="px-7 py-3.5 bg-teal-600 hover:bg-navy-900 text-white rounded-xl font-bold shadow-xl uppercase text-xs tracking-wider flex items-center justify-center gap-2 transition-colors border border-teal-400/40 group transform-gpu"
               >
                 <span>Find Your Opportunity</span>
                 <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
