@@ -1,4 +1,7 @@
+const fs = require('fs');
+const path = require('path');
 
+const newImageMapContent = `
 import heroGlobalConnect from '../assets/images/hero_global_connect_1787071744753.jpg';
 import sectorHealthcare from '../assets/images/sector_healthcare_1787071757306.jpg';
 import sectorConstruction from '../assets/images/sector_construction_1787071770537.jpg';
@@ -8,36 +11,13 @@ import sectorCorporate from '../assets/images/sector_corporate_1787071810370.jpg
 import happyCandidate from '../assets/images/happy_candidate_visa_1787071823220.jpg';
 import berlinCityscape from '../assets/images/berlin_cityscape_1787071833455.jpg';
 
-import germanVisaImg from '../assets/images/german_visa_1787071936912.jpg';
-import rigorousScreeningImg from '../assets/images/rigorous_screening_1787071952354.jpg';
-import euBlueCardImg from '../assets/images/eu_blue_card_1787071965176.jpg';
-import centralEuropeHubImg from '../assets/images/central_europe_hub_1787071978333.jpg';
-import qualityOfLifeImg from '../assets/images/quality_of_life_1787071991105.jpg';
-import workLifeBalanceImg from '../assets/images/work_life_balance_1787072002394.jpg';
-import strongEconomyImg from '../assets/images/strong_economy_1787072014642.jpg';
-import discoverTalentImg from '../assets/images/discover_talent_1787072028448.jpg';
-
-import uaeEmploymentImg from '../assets/images/uae_employment_1787072050465.jpg';
-import germanyOpportunityImg from '../assets/images/germany_opportunity_1787072066068.jpg';
-import ukSkilledWorkerImg from '../assets/images/uk_skilled_worker_1787072078433.jpg';
-import hotelChefImg from '../assets/images/hotel_chef_1787072090541.jpg';
-import softwareDeveloperImg from '../assets/images/software_developer_1787072106632.jpg';
-import seafoodProcessingImg from '../assets/images/seafood_processing_1787072119021.jpg';
-import crossBorderVisaImg from '../assets/images/cross_border_visa_1787072133001.jpg';
-import kairosPrecisionImg from '../assets/images/kairos_precision_1787072146159.jpg';
-
-
-import officeCollaborationImg from '../assets/images/office_collaboration_1787072239484.jpg';
-import openForBusinessImg from '../assets/images/open_for_business_1787072251104.jpg';
-import accommodationApartmentImg from '../assets/images/accommodation_apartment_1787072264325.jpg';
-
 export const BACKGROUND_IMAGES = {
   // Generated Hero & General Backgrounds
   heroGlobalConnect: heroGlobalConnect,
   corporateHandshake: sectorCorporate,
   berlinCityscape: berlinCityscape,
   happyCandidate: happyCandidate,
-  germanVisa: germanVisaImg,
+  germanVisa: 'https://loremflickr.com/1200/800/passport,visa/all',
 
   // Generated Sector Backgrounds
   constructionEngineering: sectorConstruction,
@@ -46,37 +26,37 @@ export const BACKGROUND_IMAGES = {
   logisticsWarehouse: sectorLogistics,
   
   // Collaboration & Business
-  officeCollaboration: officeCollaborationImg,
-  openForBusiness: openForBusinessImg,
+  officeCollaboration: 'https://loremflickr.com/1200/800/office,collaboration/all',
+  openForBusiness: 'https://loremflickr.com/1200/800/modern,office,building/all',
 
   // Specific Features / Workflows
-  accommodationApartment: accommodationApartmentImg,
+  accommodationApartment: 'https://loremflickr.com/1200/800/apartment,livingroom/all',
   airlineFlight: 'https://loremflickr.com/1200/800/airport,flight/all',
   cafeteriaMeal: 'https://loremflickr.com/1200/800/healthy,lunch,meal/all',
-  centralEuropeHub: centralEuropeHubImg,
-  crossBorderVisa: crossBorderVisaImg,
+  centralEuropeHub: 'https://loremflickr.com/1200/800/train,europe,landscape/all',
+  crossBorderVisa: 'https://loremflickr.com/1200/800/passport,europe/all',
   deployRelocate: 'https://loremflickr.com/1200/800/airport,travel,relocation/all',
-  discoverTalent: discoverTalentImg,
-  euBlueCard: euBlueCardImg,
-  germanyOpportunity: germanyOpportunityImg,
-  hotelChef: hotelChefImg,
-  kairosPrecision: kairosPrecisionImg,
+  discoverTalent: 'https://loremflickr.com/1200/800/business,recruitment/all',
+  euBlueCard: 'https://loremflickr.com/1200/800/bluecard,europe/all',
+  germanyOpportunity: 'https://loremflickr.com/1200/800/berlin,brandenburg/all',
+  hotelChef: 'https://loremflickr.com/1200/800/chef,restaurant/all',
+  kairosPrecision: 'https://loremflickr.com/1200/800/clock,precision,business/all',
   matchInterview: 'https://loremflickr.com/1200/800/job,interview/all',
   overtimeClock: 'https://loremflickr.com/1200/800/clock,business/all',
   paidAnnualLeave: 'https://loremflickr.com/1200/800/vacation,relax/all',
   prepareAssess: 'https://loremflickr.com/1200/800/exam,assessment,laptop/all',
-  qualityOfLife: qualityOfLifeImg,
+  qualityOfLife: 'https://loremflickr.com/1200/800/happy,family,city/all',
   residenceCard: 'https://loremflickr.com/1200/800/idcard,document/all',
-  rigorousScreening: rigorousScreeningImg,
-  seafoodProcessing: seafoodProcessingImg,
-  softwareDeveloper: softwareDeveloperImg,
-  strongEconomy: strongEconomyImg,
+  rigorousScreening: 'https://loremflickr.com/1200/800/hr,interview/all',
+  seafoodProcessing: 'https://loremflickr.com/1200/800/food,processing,factory/all',
+  softwareDeveloper: 'https://loremflickr.com/1200/800/programmer,coding/all',
+  strongEconomy: 'https://loremflickr.com/1200/800/frankfurt,skyline/all',
   transportationBus: 'https://loremflickr.com/1200/800/public,transit,bus/all',
   truckDriver: 'https://loremflickr.com/1200/800/truck,highway,logistics/all',
-  uaeEmployment: uaeEmploymentImg,
-  ukSkilledWorker: ukSkilledWorkerImg,
+  uaeEmployment: 'https://loremflickr.com/1200/800/dubai,business/all',
+  ukSkilledWorker: 'https://loremflickr.com/1200/800/london,business/all',
   universityCampus: 'https://loremflickr.com/1200/800/university,campus/all',
-  workLifeBalance: workLifeBalanceImg,
+  workLifeBalance: 'https://loremflickr.com/1200/800/relax,park,bicycle/all',
 
   // Fallbacks
   qualityHealthcare: sectorHealthcare,
@@ -125,3 +105,7 @@ export const SECTOR_IMAGE_CARDS = [
     description: 'Top-tier corporate placements in tech hubs, financial institutions, and international business enterprises.',
   },
 ];
+`;
+
+fs.writeFileSync(path.join(__dirname, 'src', 'data', 'imageMap.ts'), newImageMapContent);
+console.log('imageMap.ts updated successfully with native and placeholder images.');

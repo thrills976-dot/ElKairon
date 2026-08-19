@@ -35,7 +35,7 @@ const benefits = [
     desc: "Comprehensive health and emergency insurance coverage under official host-nation labor standards.",
     icon: HeartPulse,
     badge: "Full Health",
-    image: BACKGROUND_IMAGES.healthcareNursing
+    image: BACKGROUND_IMAGES.medicalInsurance
   },
   {
     title: "One-time meal during duty",
@@ -77,6 +77,13 @@ const benefits = [
 export function GuaranteedBenefits() {
   return (
     <section id="benefits" className="py-24 bg-gradient-to-b from-navy-950/80 via-[#041a2e] to-navy-950 text-white relative overflow-hidden border-t border-b border-white/10">
+      {/* Background Image Overlay - Permanently Visible */}
+      <div 
+        className="absolute inset-0 pointer-events-none bg-cover bg-center opacity-25"
+        style={{ backgroundImage: `url('${BACKGROUND_IMAGES.accommodationApartment}')` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-navy-950/90 via-[#041a2e]/95 to-navy-950 pointer-events-none" />
+
       {/* Decorative ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-teal-500/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute top-0 right-0 w-96 h-96 bg-gold-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -137,10 +144,10 @@ export function GuaranteedBenefits() {
                 <LazyImage 
                   src={item.image} 
                   alt={item.title} 
-                  containerClassName="absolute inset-0 z-0 opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
+                  containerClassName="absolute inset-0 z-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500" 
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/80 via-navy-950/20 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/85 via-navy-950/30 to-transparent pointer-events-none" />
 
                 <div className="relative z-20 p-6 flex flex-col h-full justify-between">
                   <div>

@@ -1,4 +1,7 @@
+const fs = require('fs');
+const path = require('path');
 
+const newImageMapContent = `
 import heroGlobalConnect from '../assets/images/hero_global_connect_1787071744753.jpg';
 import sectorHealthcare from '../assets/images/sector_healthcare_1787071757306.jpg';
 import sectorConstruction from '../assets/images/sector_construction_1787071770537.jpg';
@@ -26,11 +29,6 @@ import seafoodProcessingImg from '../assets/images/seafood_processing_1787072119
 import crossBorderVisaImg from '../assets/images/cross_border_visa_1787072133001.jpg';
 import kairosPrecisionImg from '../assets/images/kairos_precision_1787072146159.jpg';
 
-
-import officeCollaborationImg from '../assets/images/office_collaboration_1787072239484.jpg';
-import openForBusinessImg from '../assets/images/open_for_business_1787072251104.jpg';
-import accommodationApartmentImg from '../assets/images/accommodation_apartment_1787072264325.jpg';
-
 export const BACKGROUND_IMAGES = {
   // Generated Hero & General Backgrounds
   heroGlobalConnect: heroGlobalConnect,
@@ -46,11 +44,11 @@ export const BACKGROUND_IMAGES = {
   logisticsWarehouse: sectorLogistics,
   
   // Collaboration & Business
-  officeCollaboration: officeCollaborationImg,
-  openForBusiness: openForBusinessImg,
+  officeCollaboration: 'https://loremflickr.com/1200/800/office,collaboration/all',
+  openForBusiness: 'https://loremflickr.com/1200/800/modern,office,building/all',
 
   // Specific Features / Workflows
-  accommodationApartment: accommodationApartmentImg,
+  accommodationApartment: 'https://loremflickr.com/1200/800/apartment,livingroom/all',
   airlineFlight: 'https://loremflickr.com/1200/800/airport,flight/all',
   cafeteriaMeal: 'https://loremflickr.com/1200/800/healthy,lunch,meal/all',
   centralEuropeHub: centralEuropeHubImg,
@@ -125,3 +123,7 @@ export const SECTOR_IMAGE_CARDS = [
     description: 'Top-tier corporate placements in tech hubs, financial institutions, and international business enterprises.',
   },
 ];
+`;
+
+fs.writeFileSync(path.join(__dirname, 'src', 'data', 'imageMap.ts'), newImageMapContent);
+console.log('imageMap.ts updated successfully with 24 native images.');

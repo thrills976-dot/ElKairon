@@ -18,17 +18,13 @@ export function FinalCTA({ onNavigate }: { onNavigate: (v: 'home' | 'opportuniti
 
   return (
     <section ref={sectionRef} className="py-32 bg-navy-950 border-t-4 border-gold-500 relative overflow-hidden text-center text-white">
-      {/* Background Image Overlay with Parallax and Blur Load */}
+      {/* Background Image Overlay with Parallax - Permanently Visible */}
       <motion.div 
         style={{ y: bgImageY }}
         className="absolute inset-0 pointer-events-none transform-gpu origin-center"
       >
-        <motion.div
-          initial={{ filter: 'blur(20px)', opacity: 0 }}
-          whileInView={{ filter: 'blur(0px)', opacity: 0.15 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center mix-blend-luminosity"
+        <div
+          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-30"
           style={{ backgroundImage: `url('${BACKGROUND_IMAGES.openForBusiness}')` }}
         />
       </motion.div>

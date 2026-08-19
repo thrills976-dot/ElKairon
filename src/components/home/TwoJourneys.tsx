@@ -20,21 +20,17 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
 
   return (
     <section ref={sectionRef} className="py-24 bg-navy-950 border-y border-white/10 relative overflow-hidden text-white">
-      {/* Background Image Overlay from User Attachments with parallax */}
+      {/* Background Image Overlay with parallax - Permanently Visible */}
       <motion.div 
         style={{ y: bgParallax }}
         className="absolute inset-0 pointer-events-none transform-gpu origin-center"
       >
-        <motion.div
-          initial={{ filter: 'blur(20px)', opacity: 0 }}
-          whileInView={{ filter: 'blur(0px)', opacity: 0.1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center mix-blend-luminosity"
-          style={{ backgroundImage: `url('/images/construction.jpg')` }}
+        <div
+          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-30"
+          style={{ backgroundImage: `url('${BACKGROUND_IMAGES.constructionEngineering}')` }}
         />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-b from-navy-950 via-navy-950/95 to-navy-950 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-navy-950/85 via-navy-950/90 to-navy-950 pointer-events-none" />
 
       {/* High-Performance Parallax background accents */}
       <motion.div 
@@ -77,9 +73,9 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
             <SpringCard className="h-full">
               <div className="group relative bg-navy-950/95 backdrop-blur-md border border-white/15 hover:border-teal-400/80 text-white p-8 sm:p-12 rounded-3xl overflow-hidden shadow-2xl transition-all h-full flex flex-col justify-between cursor-pointer">
                 <LazyImage 
-                  src="/images/office-collaboration.jpg" 
+                  src={BACKGROUND_IMAGES.officeCollaboration} 
                   alt="Office Collaboration" 
-                  containerClassName="absolute inset-0 z-0 opacity-20" 
+                  containerClassName="absolute inset-0 z-0 opacity-60 group-hover:opacity-85 transition-opacity duration-500" 
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950 via-navy-950/90 to-navy-950/80 pointer-events-none" />
@@ -139,9 +135,9 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
             <SpringCard className="h-full">
               <div className="group relative bg-navy-950/95 backdrop-blur-md border border-white/15 hover:border-gold-400/80 p-8 sm:p-12 rounded-3xl overflow-hidden shadow-2xl transition-all h-full flex flex-col justify-between cursor-pointer">
                 <LazyImage 
-                  src="/images/open-for-business.jpg" 
+                  src={BACKGROUND_IMAGES.openForBusiness} 
                   alt="Open for business" 
-                  containerClassName="absolute inset-0 z-0 opacity-20" 
+                  containerClassName="absolute inset-0 z-0 opacity-60 group-hover:opacity-85 transition-opacity duration-500" 
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950 via-navy-950/90 to-navy-950/80 pointer-events-none" />

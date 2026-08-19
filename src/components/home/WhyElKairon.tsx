@@ -43,21 +43,17 @@ export function WhyElKairon() {
 
   return (
     <section ref={sectionRef} className="py-24 bg-navy-950 text-white relative overflow-hidden border-y border-white/10">
-      {/* Background Image Overlay with Parallax and Blur Load */}
+      {/* Background Image Overlay with Parallax - Permanently Visible */}
       <motion.div 
         style={{ y: bgParallax }}
         className="absolute inset-0 pointer-events-none transform-gpu origin-center"
       >
-        <motion.div
-          initial={{ filter: 'blur(20px)', opacity: 0 }}
-          whileInView={{ filter: 'blur(0px)', opacity: 0.15 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center mix-blend-luminosity"
+        <div
+          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-30"
           style={{ backgroundImage: `url('${BACKGROUND_IMAGES.germanVisa}')` }}
         />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-br from-navy-950/80 via-[#043350]/90 to-[#064266]/80 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-navy-950/80 via-[#043350]/85 to-[#064266]/80 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div 
@@ -88,15 +84,15 @@ export function WhyElKairon() {
                 y: -6,
                 boxShadow: "0 20px 30px -10px rgba(0, 0, 0, 0.5)"
               }}
-              className={`relative  backdrop-blur-md rounded-2xl border border-white/15 shadow-xl transition-all duration-300 ${feature.accent} group cursor-default overflow-hidden flex flex-col`}
+              className={`relative backdrop-blur-md rounded-2xl border border-white/15 shadow-xl transition-all duration-300 ${feature.accent} group cursor-default overflow-hidden flex flex-col`}
             >
               <LazyImage 
                 src={feature.image} 
                 alt={feature.title} 
-                containerClassName="absolute inset-0 z-0 opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
-                className="w-full h-full object-cover"
+                containerClassName="absolute inset-0 z-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500" 
+                className="w-full h-full object-cover" 
               />
-              <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/80 via-navy-950/20 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/85 via-navy-950/40 to-transparent pointer-events-none" />
               
               <div className="relative z-20 p-8 flex-grow flex flex-col">
                 <div className={`w-14 h-14 ${feature.bg} rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300`}>

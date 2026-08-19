@@ -40,7 +40,7 @@ const JOBS: Job[] = [
     experience: "Mid-level (2-5 years)",
     skills: ["Nursing", "Patient Care", "Healthcare Qualification", "English"],
     description: "Hospitals, clinics, and healthcare facilities across Canada and Europe are urgently hiring international healthcare workers.",
-    image: BACKGROUND_IMAGES.healthcareNursing
+    image: BACKGROUND_IMAGES.registeredNurse
   },
   {
     id: "j3",
@@ -64,7 +64,7 @@ const JOBS: Job[] = [
     experience: "Entry-level (0-2 years)",
     skills: ["Inventory", "Physical Fitness", "Sorting", "Loading"],
     description: "Fast processing work permits for warehouse workers, packing staff, loaders, and inventory assistants.",
-    image: BACKGROUND_IMAGES.logisticsWarehouse
+    image: BACKGROUND_IMAGES.warehouseStaff
   },
   {
     id: "j5",
@@ -88,7 +88,7 @@ const JOBS: Job[] = [
     experience: "Senior (5+ years)",
     skills: ["Engineering Degree", "Project Management", "AutoCAD"],
     description: "In-demand roles for engineers and technicians with stable career growth and strong future prospects.",
-    image: BACKGROUND_IMAGES.centralEuropeHub
+    image: BACKGROUND_IMAGES.civilEngineer
   },
   {
     id: "j7",
@@ -112,7 +112,7 @@ const JOBS: Job[] = [
     experience: "Mid-level (2-5 years)",
     skills: ["Accounting", "Finance", "Management"],
     description: "Diverse job opportunities in sectors like finance, retail, and manufacturing with average 40-hour work weeks.",
-    image: BACKGROUND_IMAGES.corporateHandshake
+    image: BACKGROUND_IMAGES.financeSupervisor
   },
   {
     id: "j9",
@@ -124,7 +124,7 @@ const JOBS: Job[] = [
     experience: "Entry-level (0-2 years)",
     skills: ["Manual Labor", "Maintenance", "Physical Fitness"],
     description: "Construction and maintenance workers wanted for immediate placement. Work permits processed in 4 to 5 weeks.",
-    image: BACKGROUND_IMAGES.constructionEngineering
+    image: BACKGROUND_IMAGES.constructionWorker
   }
 ];
 

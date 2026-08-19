@@ -11,7 +11,7 @@ const services = [
     details: "We leverage our expansive global network to source, vet, and pre-qualify top-tier professionals. Every candidate undergoes rigorous skill assessments and background checks to ensure they meet your exact organizational requirements.",
     icon: Users,
     badge: "Verified Candidates",
-    image: BACKGROUND_IMAGES.officeCollaboration
+    image: '/images/talent-sourcing.jpg'
   },
   {
     title: "Visa & Relocation",
@@ -19,7 +19,7 @@ const services = [
     details: "Navigating international immigration can be complex. Our dedicated legal and mobility teams handle all paperwork, embassy appointments, work permit applications, and flight logistics for a seamless transition.",
     icon: FileCheck,
     badge: "Full Compliance",
-    image: BACKGROUND_IMAGES.corporateHandshake
+    image: '/images/visa-relocation.jpg'
   },
   {
     title: "Cultural Integration",
@@ -27,7 +27,7 @@ const services = [
     details: "Success abroad requires more than just job skills. We provide comprehensive language training, cultural workshops, and on-ground local support to help candidates integrate quickly and thrive in their new communities.",
     icon: Globe,
     badge: "On-Ground Network",
-    image: BACKGROUND_IMAGES.happyCandidate
+    image: '/images/cultural-integration.jpg'
   }
 ];
 
@@ -42,7 +42,13 @@ export function Services() {
   const yBackground = useTransform(scrollYProgress, [0, 1], [-40, 60]);
 
   return (
-    <section ref={sectionRef} id="services" className="py-24 bg-navy-950 relative overflow-hidden">
+    <section ref={sectionRef} id="services" className="py-24 bg-navy-950 relative overflow-hidden border-b border-white/10">
+      {/* Permanent Section Background Image */}
+      <div 
+        className="absolute inset-0 pointer-events-none bg-cover bg-center opacity-25"
+        style={{ backgroundImage: `url('${BACKGROUND_IMAGES.corporateHandshake}')` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-navy-950/90 via-navy-950/95 to-navy-950 pointer-events-none" />
       
       {/* Dark Theme Ambient Background Glows */}
       <motion.div 
@@ -87,11 +93,11 @@ export function Services() {
                 <LazyImage 
                   src={service.image} 
                   alt={service.title} 
-                  containerClassName="absolute inset-0 z-0 opacity-75 group-hover:opacity-100 transition-opacity duration-700" 
+                  containerClassName="absolute inset-0 z-0 opacity-90 group-hover:opacity-100 transition-opacity duration-700" 
                   className="w-full h-full object-cover transform scale-110 group-hover:scale-100 transition-transform duration-700" 
                 />
                 {/* Dark Gradient Overlay to ensure text readability */}
-                <div className="absolute inset-0 z-10 bg-gradient-to-b from-navy-950/60 via-navy-950/30 to-navy-950/80 group-hover:from-navy-950/80 group-hover:via-navy-950/50 group-hover:to-navy-950/90 transition-colors duration-500 pointer-events-none" />
+                <div className="absolute inset-0 z-10 bg-gradient-to-b from-navy-950/40 via-navy-950/10 to-navy-950/70 group-hover:from-navy-950/60 group-hover:via-navy-950/30 group-hover:to-navy-950/80 transition-colors duration-500 pointer-events-none" />
 
                 {/* Content Layer */}
                 <div className="absolute inset-0 z-20 p-8 flex flex-col">
@@ -101,10 +107,10 @@ export function Services() {
                     <div className="w-16 h-16 bg-navy-900/80 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-white/10 text-gold-400">
                       <service.icon size={32} />
                     </div>
-                    <h4 className="font-display text-2xl font-bold italic text-white mb-4">
+                    <h4 className="font-display text-2xl font-bold italic text-white mb-4 [text-shadow:_0_2px_10px_rgba(0,0,0,0.8)]">
                       {service.title}
                     </h4>
-                    <p className="text-sky-100 leading-relaxed text-base">
+                    <p className="text-white leading-relaxed text-base font-medium [text-shadow:_0_1px_5px_rgba(0,0,0,0.8)]">
                       {service.desc}
                     </p>
                     
@@ -170,11 +176,11 @@ export function Services() {
                 <LazyImage 
                   src={sector.image} 
                   alt={sector.title} 
-                  containerClassName="absolute inset-0 z-0 group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
+                  containerClassName="absolute inset-0 z-0 group-hover:scale-105 transition-transform duration-700 opacity-100" 
                   className="w-full h-full object-cover" 
                 />
                 {/* Dark Gradient Overlay for text readability */}
-                <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/95 via-navy-950/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/95 via-navy-950/40 to-transparent opacity-70 group-hover:opacity-85 transition-opacity duration-300 pointer-events-none" />
                 
                 {/* Content */}
                 <div className="relative z-20 p-6 flex flex-col justify-end h-full">
@@ -182,12 +188,12 @@ export function Services() {
                     <span className="inline-block px-2.5 py-1 rounded-full bg-gold-400/20 border border-gold-400/30 backdrop-blur-md text-[9px] font-black uppercase tracking-widest text-gold-300 mb-3">
                       {sector.subtitle}
                     </span>
-                    <h5 className="text-xl font-display font-bold text-white mb-2 group-hover:text-gold-300 transition-colors">
+                    <h5 className="text-xl font-display font-bold text-white mb-2 group-hover:text-gold-300 [text-shadow:_0_2px_10px_rgba(0,0,0,0.8)] transition-colors">
                       {sector.title}
                     </h5>
                     {/* Expandable Description */}
                     <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out">
-                      <p className="text-xs text-sky-100/90 leading-relaxed overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                      <p className="text-xs text-white leading-relaxed font-medium overflow-hidden [text-shadow:_0_1px_5px_rgba(0,0,0,0.8)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
                         {sector.description}
                       </p>
                     </div>

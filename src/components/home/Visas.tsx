@@ -47,6 +47,18 @@ export function Visas() {
 
   return (
     <section ref={sectionRef} id="visas" className="py-24 bg-navy-950/80 border-y border-white/10 relative overflow-hidden text-white">
+      {/* Background Image Overlay with Parallax - Permanently Visible */}
+      <motion.div 
+        style={{ y: parallaxBgY }}
+        className="absolute inset-0 pointer-events-none transform-gpu origin-center"
+      >
+        <div
+          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-25"
+          style={{ backgroundImage: `url('${BACKGROUND_IMAGES.crossBorderVisa}')` }}
+        />
+      </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/90 to-navy-950/95 pointer-events-none" />
+
       <motion.div 
         style={{ y: parallaxBgY }}
         className="absolute top-0 left-0 w-1/3 h-full bg-teal-500/10 skew-x-12 -translate-x-1/2 blur-3xl pointer-events-none transform-gpu" 
@@ -87,10 +99,10 @@ export function Visas() {
                     <LazyImage 
                       src={visa.image} 
                       alt={visa.title} 
-                      containerClassName="absolute inset-0 z-0 opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
+                      containerClassName="absolute inset-0 z-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500" 
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/80 via-navy-950/20 to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 z-10 bg-gradient-to-t from-navy-950/85 via-navy-950/30 to-transparent pointer-events-none" />
                     <div className="absolute top-0 right-0 w-32 h-32 bg-teal-400/10 rounded-full blur-3xl group-hover:bg-gold-400/20 transition-colors z-10" />
                     
                     <div className="relative z-20 p-8 flex flex-col h-full">
