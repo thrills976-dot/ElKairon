@@ -177,7 +177,7 @@ export function Globe() {
         
         // Text orbits the globe (Universal Studios style speed and direction)
         if (textGroup) {
-            textGroup.rotation.y += 0.012; // Left to right orbit
+            textGroup.rotation.y -= 0.012; // Left to right orbit
         }
         
         // Planes fly along their orbits

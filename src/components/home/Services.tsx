@@ -11,7 +11,7 @@ const services = [
     details: "We leverage our expansive global network to source, vet, and pre-qualify top-tier professionals. Every candidate undergoes rigorous skill assessments and background checks to ensure they meet your exact organizational requirements.",
     icon: Users,
     badge: "Verified Candidates",
-    image: '/images/talent-sourcing.jpg'
+    image: BACKGROUND_IMAGES.discoverTalent
   },
   {
     title: "Visa & Relocation",
@@ -19,7 +19,7 @@ const services = [
     details: "Navigating international immigration can be complex. Our dedicated legal and mobility teams handle all paperwork, embassy appointments, work permit applications, and flight logistics for a seamless transition.",
     icon: FileCheck,
     badge: "Full Compliance",
-    image: '/images/visa-relocation.jpg'
+    image: BACKGROUND_IMAGES.crossBorderVisa
   },
   {
     title: "Cultural Integration",
@@ -27,7 +27,7 @@ const services = [
     details: "Success abroad requires more than just job skills. We provide comprehensive language training, cultural workshops, and on-ground local support to help candidates integrate quickly and thrive in their new communities.",
     icon: Globe,
     badge: "On-Ground Network",
-    image: '/images/cultural-integration.jpg'
+    image: BACKGROUND_IMAGES.officeCollaboration
   }
 ];
 

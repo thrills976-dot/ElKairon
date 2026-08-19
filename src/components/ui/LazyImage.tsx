@@ -18,13 +18,15 @@ export function LazyImage({ src, placeholderSrc, alt, className, containerClassN
   const imgRef = useRef<HTMLImageElement>(null);
 
   return (
-    <div className={cn("relative overflow-hidden w-full h-full bg-navy-800/40", containerClassName)}>
+    <div
+        className={cn("relative overflow-hidden w-full h-full bg-navy-800/40", containerClassName)}>
       <img
         ref={imgRef}
         src={src}
         alt={alt}
         loading="eager"
         decoding="async"
+        referrerPolicy="no-referrer"
         className={cn(
           "absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out",
           className
