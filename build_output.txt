@@ -1,0 +1,53 @@
+
+> react-example@0.0.0 build
+> vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs
+
+vite v6.4.3 building for production...
+transforming...
+✓ 3263 modules transformed.
+[plugin vite:reporter] 
+(!) /app/applet/node_modules/react-hot-toast/dist/index.mjs is dynamically imported by /app/applet/src/components/insights/CandidateGuides.tsx but also statically imported by /app/applet/src/components/AuthModal.tsx, /app/applet/src/components/ConsultationModal.tsx, /app/applet/src/components/FirebaseDomainGuideModal.tsx, /app/applet/src/components/Layout.tsx, /app/applet/src/components/home/ContactMap.tsx, /app/applet/src/components/home/NewsletterSignup.tsx, /app/applet/src/components/portal/CandidateDashboard.tsx, /app/applet/src/components/portal/EmployerDashboard.tsx, /app/applet/src/components/portal/ProfileManagementModal.tsx, /app/applet/src/components/portal/RegistrationForm.tsx, /app/applet/src/components/portal/employer/CandidateDetailModal.tsx, /app/applet/src/components/portal/employer/CandidatePoolBrowser.tsx, /app/applet/src/components/portal/employer/ComplianceDocumentVault.tsx, /app/applet/src/components/portal/employer/EmployerAnalyticsCharts.tsx, /app/applet/src/components/portal/employer/EmployerMessagingView.tsx, /app/applet/src/components/portal/employer/ExtendOfferModal.tsx, /app/applet/src/components/portal/employer/HiringPipeline.tsx, /app/applet/src/components/portal/employer/PostJobModal.tsx, /app/applet/src/components/portal/employer/ScheduleInterviewModal.tsx, /app/applet/src/contexts/AuthContext.tsx, dynamic import will not move module into another chunk.
+
+rendering chunks...
+computing gzip size...
+dist/index.html                                                     1.61 kB │ gzip:     0.70 kB
+dist/assets/eu_blue_card_1787071965176-B80vkytz.jpg               665.30 kB
+dist/assets/uae_employment_1787072050465-DQU6C0Jg.jpg             721.12 kB
+dist/assets/sector_corporate_1787071810370-ChjHqZBF.jpg           737.25 kB
+dist/assets/discover_talent_1787072028448-C6LzUwOm.jpg            788.93 kB
+dist/assets/hotel_chef_1787072090541-DAtfac1y.jpg                 789.38 kB
+dist/assets/rigorous_screening_1787071952354-XoCaRWoj.jpg         793.13 kB
+dist/assets/sector_healthcare_1787071757306-Ct1RoW5J.jpg          807.02 kB
+dist/assets/kairos_precision_1787072146159-CBEEx30-.jpg           810.11 kB
+dist/assets/german_visa_1787071936912-Cz9otbE8.jpg                828.44 kB
+dist/assets/accommodation_apartment_1787072264325-BbogpUuH.jpg    842.00 kB
+dist/assets/uk_skilled_worker_1787072078433-ctkyCw-Z.jpg          842.23 kB
+dist/assets/software_developer_1787072106632-DBSKROhj.jpg         843.76 kB
+dist/assets/happy_candidate_visa_1787071823220-cS-249ij.jpg       860.01 kB
+dist/assets/hero_global_connect_1787071744753-D8z4k0ph.jpg        866.60 kB
+dist/assets/germany_opportunity_1787072066068-fO4dwEm0.jpg        882.76 kB
+dist/assets/office_collaboration_1787072239484-x-YBjmnx.jpg       908.26 kB
+dist/assets/strong_economy_1787072014642-YN291Jcu.jpg             933.11 kB
+dist/assets/berlin_cityscape_1787071833455-D240u8ii.jpg           951.60 kB
+dist/assets/sector_construction_1787071770537-DKRc_6cM.jpg        972.51 kB
+dist/assets/work_life_balance_1787072002394-DQoxUA-C.jpg          977.08 kB
+dist/assets/seafood_processing_1787072119021-DlhfYeMX.jpg         992.51 kB
+dist/assets/cross_border_visa_1787072133001-DpIp0N15.jpg        1,008.24 kB
+dist/assets/quality_of_life_1787071991105-D-v7XCmd.jpg          1,036.04 kB
+dist/assets/open_for_business_1787072251104-Ce_5BP5E.jpg        1,044.37 kB
+dist/assets/sector_logistics_1787071797441-eK4yT-C9.jpg         1,063.64 kB
+dist/assets/sector_agriculture_1787071783603-CtPOkW_-.jpg       1,116.29 kB
+dist/assets/central_europe_hub_1787071978333-EjHYduR6.jpg       1,162.82 kB
+dist/assets/index-BsbFGki7.css                                    117.25 kB │ gzip:    16.41 kB
+dist/assets/index-C0rpZRUj.js                                   4,869.06 kB │ gzip: 1,266.64 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 23.82s
+
+  dist/server.cjs      16.5kb
+  dist/server.cjs.map  25.5kb
+
+⚡ Done in 6ms

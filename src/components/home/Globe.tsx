@@ -107,7 +107,7 @@ export function Globe() {
     },
     undefined,
     function (error) {
-        console.error('An error happened while loading the font:', error);
+        console.warn('Warning: font load failed');
     });
 
     // ==========================================

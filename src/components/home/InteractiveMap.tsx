@@ -25,7 +25,7 @@ export function InteractiveMap() {
         const { features } = topojson.feature(worldData as any, worldData.objects.countries as any) as any;
         setGeographies(features);
       })
-      .catch(err => console.error("Could not load map data", err));
+      .catch(err => { console.warn("Could not load topojson map data. Using fallback.", err); setGeographies([]); });
   }, []);
 
   const width = 800;

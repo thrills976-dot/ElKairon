@@ -1,91 +1,52 @@
 
-import heroGlobalConnect from '../assets/images/hero_global_connect_1787071744753.jpg';
-import sectorHealthcare from '../assets/images/sector_healthcare_1787071757306.jpg';
-import sectorConstruction from '../assets/images/sector_construction_1787071770537.jpg';
-import sectorAgriculture from '../assets/images/sector_agriculture_1787071783603.jpg';
-import sectorLogistics from '../assets/images/sector_logistics_1787071797441.jpg';
-import sectorCorporate from '../assets/images/sector_corporate_1787071810370.jpg';
-import happyCandidate from '../assets/images/happy_candidate_visa_1787071823220.jpg';
-import berlinCityscape from '../assets/images/berlin_cityscape_1787071833455.jpg';
-
-import germanVisaImg from '../assets/images/german_visa_1787071936912.jpg';
-import rigorousScreeningImg from '../assets/images/rigorous_screening_1787071952354.jpg';
-import euBlueCardImg from '../assets/images/eu_blue_card_1787071965176.jpg';
-import centralEuropeHubImg from '../assets/images/central_europe_hub_1787071978333.jpg';
-import qualityOfLifeImg from '../assets/images/quality_of_life_1787071991105.jpg';
-import workLifeBalanceImg from '../assets/images/work_life_balance_1787072002394.jpg';
-import strongEconomyImg from '../assets/images/strong_economy_1787072014642.jpg';
-import discoverTalentImg from '../assets/images/discover_talent_1787072028448.jpg';
-
-import uaeEmploymentImg from '../assets/images/uae_employment_1787072050465.jpg';
-import germanyOpportunityImg from '../assets/images/germany_opportunity_1787072066068.jpg';
-import ukSkilledWorkerImg from '../assets/images/uk_skilled_worker_1787072078433.jpg';
-import hotelChefImg from '../assets/images/hotel_chef_1787072090541.jpg';
-import softwareDeveloperImg from '../assets/images/software_developer_1787072106632.jpg';
-import seafoodProcessingImg from '../assets/images/seafood_processing_1787072119021.jpg';
-import crossBorderVisaImg from '../assets/images/cross_border_visa_1787072133001.jpg';
-import kairosPrecisionImg from '../assets/images/kairos_precision_1787072146159.jpg';
-
-
-import officeCollaborationImg from '../assets/images/office_collaboration_1787072239484.jpg';
-import openForBusinessImg from '../assets/images/open_for_business_1787072251104.jpg';
-import accommodationApartmentImg from '../assets/images/accommodation_apartment_1787072264325.jpg';
-
 export const BACKGROUND_IMAGES = {
-  // Generated Hero & General Backgrounds
-  heroGlobalConnect: heroGlobalConnect,
-  corporateHandshake: sectorCorporate,
-  berlinCityscape: berlinCityscape,
-  happyCandidate: happyCandidate,
-  germanVisa: germanVisaImg,
-
-  // Generated Sector Backgrounds
-  constructionEngineering: sectorConstruction,
-  healthcareNursing: sectorHealthcare,
-  agricultureHarvest: sectorAgriculture,
-  logisticsWarehouse: sectorLogistics,
-  
-  // Collaboration & Business
-  officeCollaboration: officeCollaborationImg,
-  openForBusiness: openForBusinessImg,
-
-  // Specific Features / Workflows
-  accommodationApartment: accommodationApartmentImg,
-  airlineFlight: 'https://loremflickr.com/1200/800/airport,flight/all',
-  cafeteriaMeal: 'https://loremflickr.com/1200/800/healthy,lunch,meal/all',
-  centralEuropeHub: centralEuropeHubImg,
-  crossBorderVisa: crossBorderVisaImg,
-  deployRelocate: 'https://loremflickr.com/1200/800/airport,travel,relocation/all',
-  discoverTalent: discoverTalentImg,
-  euBlueCard: euBlueCardImg,
-  germanyOpportunity: germanyOpportunityImg,
-  hotelChef: hotelChefImg,
-  kairosPrecision: kairosPrecisionImg,
-  matchInterview: 'https://loremflickr.com/1200/800/job,interview/all',
-  overtimeClock: 'https://loremflickr.com/1200/800/clock,business/all',
-  paidAnnualLeave: 'https://loremflickr.com/1200/800/vacation,relax/all',
-  prepareAssess: 'https://loremflickr.com/1200/800/exam,assessment,laptop/all',
-  qualityOfLife: qualityOfLifeImg,
-  residenceCard: 'https://loremflickr.com/1200/800/idcard,document/all',
-  rigorousScreening: rigorousScreeningImg,
-  seafoodProcessing: seafoodProcessingImg,
-  softwareDeveloper: softwareDeveloperImg,
-  strongEconomy: strongEconomyImg,
-  transportationBus: 'https://loremflickr.com/1200/800/public,transit,bus/all',
-  truckDriver: 'https://loremflickr.com/1200/800/truck,highway,logistics/all',
-  uaeEmployment: uaeEmploymentImg,
-  ukSkilledWorker: ukSkilledWorkerImg,
-  universityCampus: 'https://loremflickr.com/1200/800/university,campus/all',
-  workLifeBalance: workLifeBalanceImg,
+  heroGlobalConnect: 'https://images.unsplash.com/photo-1512453979436-5a52c95f9022?auto=format&fit=crop&q=80&w=1200',
+  corporateHandshake: 'https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&q=80&w=1200',
+  berlinCityscape: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&q=80&w=1200',
+  happyCandidate: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1200',
+  germanVisa: 'https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&q=80&w=1200',
+  constructionEngineering: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=1200',
+  healthcareNursing: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200',
+  agricultureHarvest: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200',
+  logisticsWarehouse: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1200',
+  officeCollaboration: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1200',
+  openForBusiness: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200',
+  accommodationApartment: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=1200',
+  airlineFlight: 'https://images.unsplash.com/photo-1436491865461-1cece12e378c?auto=format&fit=crop&q=80&w=1200',
+  cafeteriaMeal: 'https://images.unsplash.com/photo-1490645935980-d144393bf649?auto=format&fit=crop&q=80&w=1200',
+  centralEuropeHub: 'https://images.unsplash.com/photo-1474487548417-72840c247305?auto=format&fit=crop&q=80&w=1200',
+  crossBorderVisa: 'https://images.unsplash.com/photo-1436491865461-1cece12e378c?auto=format&fit=crop&q=80&w=1200',
+  deployRelocate: 'https://images.unsplash.com/photo-1436491865461-1cece12e378c?auto=format&fit=crop&q=80&w=1200',
+  discoverTalent: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=1200',
+  euBlueCard: 'https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&q=80&w=1200',
+  germanyOpportunity: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&q=80&w=1200',
+  hotelChef: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=1200',
+  kairosPrecision: 'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&q=80&w=1200',
+  matchInterview: 'https://images.unsplash.com/photo-1573164713619-24bf7efbf414?auto=format&fit=crop&q=80&w=1200',
+  overtimeClock: 'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&q=80&w=1200',
+  paidAnnualLeave: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1200',
+  prepareAssess: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1200',
+  qualityOfLife: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=1200',
+  residenceCard: 'https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&q=80&w=1200',
+  rigorousScreening: 'https://images.unsplash.com/photo-1573164713619-24bf7efbf414?auto=format&fit=crop&q=80&w=1200',
+  seafoodProcessing: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=1200',
+  softwareDeveloper: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1200',
+  strongEconomy: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200',
+  transportationBus: 'https://images.unsplash.com/photo-1544620347-19de4f1e428c?auto=format&fit=crop&q=80&w=1200',
+  truckDriver: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&q=80&w=1200',
+  uaeEmployment: 'https://images.unsplash.com/photo-1512453979436-5a52c95f9022?auto=format&fit=crop&q=80&w=1200',
+  ukSkilledWorker: 'https://images.unsplash.com/photo-1513635269974-59f9d5efa320?auto=format&fit=crop&q=80&w=1200',
+  universityCampus: 'https://images.unsplash.com/photo-1541339185-c5ef6101c43f?auto=format&fit=crop&q=80&w=1200',
+  workLifeBalance: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=1200',
 
   // Fallbacks
-  qualityHealthcare: sectorHealthcare,
-  registeredNurse: sectorHealthcare,
-  warehouseStaff: sectorLogistics,
-  civilEngineer: sectorConstruction,
-  financeSupervisor: sectorCorporate,
-  constructionWorker: sectorConstruction,
-  medicalInsurance: sectorHealthcare,
+  qualityHealthcare: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200',
+  registeredNurse: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200',
+  warehouseStaff: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1200',
+  civilEngineer: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=1200',
+  financeSupervisor: 'https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&q=80&w=1200',
+  constructionWorker: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=1200',
+  medicalInsurance: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200',
 };
 
 export const SECTOR_IMAGE_CARDS = [
@@ -93,35 +54,35 @@ export const SECTOR_IMAGE_CARDS = [
     id: 'healthcare',
     title: 'Healthcare & Nursing',
     subtitle: 'Registered Nurses, Clinical Caregivers & Medical Technicians',
-    image: sectorHealthcare,
+    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200',
     description: 'Direct Fast-Track § 81a placement into German hospitals and clinical care facilities with B1/B2 German language support.',
   },
   {
     id: 'construction',
     title: 'Construction & Civil Engineering',
     subtitle: 'Structural Engineers, Electricians, Welders & Site Supervisors',
-    image: sectorConstruction,
+    image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=1200',
     description: 'High-rise structural steel assembly, electrical infrastructure, and architectural site management across Europe.',
   },
   {
     id: 'agriculture',
     title: 'Agri-Tech & Harvesting',
     subtitle: 'Modern Farm Machine Operators & Produce Logistics',
-    image: sectorAgriculture,
+    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200',
     description: 'Large-scale agricultural operations, combine harvesting, fresh produce supply chains, and specialized farming.',
   },
   {
     id: 'logistics',
     title: 'Logistics & Supply Chain',
     subtitle: 'Warehouse Operations, Transport & Heavy Delivery',
-    image: sectorLogistics,
+    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1200',
     description: 'Opportunities in distribution centers, freight forwarding, and international supply chain management.',
   },
   {
     id: 'corporate',
     title: 'IT, Finance & Enterprise Services',
     subtitle: 'Cloud Engineers, Analysts & Strategic Operations',
-    image: sectorCorporate,
+    image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&q=80&w=1200',
     description: 'Top-tier corporate placements in tech hubs, financial institutions, and international business enterprises.',
   },
 ];
