@@ -17,7 +17,7 @@ export function cn(...inputs: (string | undefined | null | false)[]) {
 export function LazyImage({ src, placeholderSrc, alt, className, containerClassName, ...props }: LazyImageProps) {
   const imgRef = useRef<HTMLImageElement>(null);
 
-  console.log("LazyImage rendering with src:", src);
+  
   return (
     <div
         className={cn("relative overflow-hidden w-full h-full bg-navy-800/40", containerClassName)}>
