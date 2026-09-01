@@ -11,80 +11,7 @@ const app = express();
 const PORT = 3000;
 
 // Configure Helmet Security Headers (including Content-Security-Policy, HSTS, X-Content-Type-Options)
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          "'unsafe-eval'",
-          "https://apis.google.com",
-          "https://*.googleapis.com",
-          "https://*.firebaseapp.com",
-          "https://accounts.google.com"
-        ],
-        connectSrc: [
-          "'self'",
-          "https://*.googleapis.com",
-          "https://*.firebaseio.com",
-          "https://identitytoolkit.googleapis.com",
-          "https://securetoken.googleapis.com",
-          "https://firestore.googleapis.com",
-          "https://accounts.google.com",
-          "https://*.run.app",
-          "ws:",
-          "wss:"
-        ],
-        imgSrc: [
-          "'self'",
-          "data:",
-          "blob:",
-          "https:",
-          "https://*.googleusercontent.com",
-          "https://images.unsplash.com",
-          "https://flagcdn.com",
-          "https://purecatamphetamine.github.io"
-        ],
-        styleSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          "https://fonts.googleapis.com"
-        ],
-        fontSrc: [
-          "'self'",
-          "data:",
-          "https://fonts.gstatic.com"
-        ],
-        frameSrc: [
-          "'self'",
-          "https://*.firebaseapp.com",
-          "https://accounts.google.com",
-          "https://*.google.com"
-        ],
-        frameAncestors: [
-          "'self'",
-          "https://*.google.com",
-          "https://ai.studio",
-          "https://*.aistudio.google.com",
-          "https://*.run.app"
-        ],
-        objectSrc: ["'none'"],
-        upgradeInsecureRequests: [],
-      },
-    },
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-    hsts: {
-      maxAge: 31536000,
-      includeSubDomains: true,
-      preload: true,
-    },
-    xContentTypeOptions: true,
-    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-  })
-);
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false, crossOriginResourcePolicy: false, frameguard: false }));
 
 // Enforce strict payload body limit (prevent memory exhaustion / denial of service)
 app.use(express.json({ limit: '250kb' }));
@@ -431,7 +358,7 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
-    app.get('*all', (_req: Request, res: Response) => {
+    app.get('*', (_req: Request, res: Response) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

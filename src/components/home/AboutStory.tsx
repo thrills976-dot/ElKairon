@@ -6,10 +6,14 @@ export function AboutStory() {
   return (
     <section className="py-32 bg-navy-900 border-t border-b border-white/10 relative overflow-hidden text-white">
       {/* Permanent Section Background Image */}
-      <div 
-        className="absolute inset-0 pointer-events-none bg-cover bg-center opacity-20"
-        style={{ backgroundImage: `url('${BACKGROUND_IMAGES.centralEuropeHub}')` }}
-      />
+      <div className="absolute inset-0 pointer-events-none bg-cover bg-center opacity-50 overflow-hidden">
+        <img 
+          src={BACKGROUND_IMAGES.centralEuropeHub} 
+          alt="Background" 
+          className="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-b from-navy-900/90 via-navy-900/95 to-navy-900 pointer-events-none" />
 
       {/* GSAP Parallax Ambient Lighting */}

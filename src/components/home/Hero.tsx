@@ -4,7 +4,6 @@ import { useRef } from 'react';
 import { Globe } from './Globe';
 import { BACKGROUND_IMAGES } from '../../data/imageMap';
 
-import { LazyImage } from '../ui/LazyImage';
 
 export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,11 +20,15 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
   return (
     <div id="hero" ref={containerRef} className="relative min-h-[94vh] flex items-center overflow-hidden bg-navy-900 pt-32 sm:pt-36 lg:pt-40 pb-20 border-b-4 border-gold-500">
       {/* Permanent Background Image Overlay */}
-      <div 
-        className="absolute inset-0 z-0 opacity-25 pointer-events-none bg-cover bg-center"
-        style={{ backgroundImage: `url('${BACKGROUND_IMAGES.heroGlobalConnect}')` }}
-      />
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-navy-950/80 via-navy-900/60 to-navy-950 pointer-events-none" />
+      <div className="absolute inset-0 z-0 opacity-60 pointer-events-none overflow-hidden">
+        <img 
+          src={BACKGROUND_IMAGES.heroGlobalConnect} 
+          alt="Global Connect" 
+          className="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-navy-950/50 via-navy-900/40 to-navy-950/90 pointer-events-none" />
       
       {/* Background ambient lighting with parallax scroll */}
       <motion.div 

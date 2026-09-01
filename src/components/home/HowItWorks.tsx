@@ -54,10 +54,14 @@ export function HowItWorks() {
         style={{ y: bgParallax }}
         className="absolute inset-0 pointer-events-none transform-gpu origin-center"
       >
-        <div
-          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-30"
-          style={{ backgroundImage: `url('${BACKGROUND_IMAGES.happyCandidate}')` }}
+        <div className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-60 overflow-hidden">
+        <img 
+          src={BACKGROUND_IMAGES.happyCandidate} 
+          alt="Background" 
+          className="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
         />
+      </div>
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/90 to-navy-950/95 pointer-events-none" />
 

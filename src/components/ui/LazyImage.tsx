@@ -17,16 +17,18 @@ export function cn(...inputs: (string | undefined | null | false)[]) {
 export function LazyImage({ src, placeholderSrc, alt, className, containerClassName, ...props }: LazyImageProps) {
   const imgRef = useRef<HTMLImageElement>(null);
 
+  console.log("LazyImage rendering with src:", src);
   return (
     <div
         className={cn("relative overflow-hidden w-full h-full bg-navy-800/40", containerClassName)}>
-      <img
+      <img onError={(e) => { console.error('Image load error:', e.currentTarget.src); e.currentTarget.style.display = 'none'; }}
         ref={imgRef}
         src={src}
         alt={alt}
         loading="eager"
         decoding="async"
         referrerPolicy="no-referrer"
+        
         className={cn(
           "absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out",
           className

@@ -945,7 +945,7 @@ export function CandidateRegistration({
                           value={personalInfo.firstName}
                           onChange={e => setPersonalInfo({ ...personalInfo, firstName: e.target.value })}
                           placeholder="e.g. Tendai"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                       <div>
@@ -959,7 +959,7 @@ export function CandidateRegistration({
                           value={personalInfo.lastName}
                           onChange={e => setPersonalInfo({ ...personalInfo, lastName: e.target.value })}
                           placeholder="e.g. Ndlovu"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                     </div>
@@ -975,7 +975,7 @@ export function CandidateRegistration({
                           required
                           value={personalInfo.dob}
                           onChange={e => setPersonalInfo({ ...personalInfo, dob: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                       <div>
@@ -994,7 +994,7 @@ export function CandidateRegistration({
                         <select
                           value={personalInfo.gender}
                           onChange={e => setPersonalInfo({ ...personalInfo, gender: e.target.value as any })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           <option value="Female">Female</option>
                           <option value="Male">Male</option>
@@ -1016,7 +1016,7 @@ export function CandidateRegistration({
                           value={personalInfo.nationality}
                           onChange={e => setPersonalInfo({ ...personalInfo, nationality: e.target.value })}
                           placeholder="e.g. South African"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                       <div>
@@ -1030,7 +1030,7 @@ export function CandidateRegistration({
                           value={personalInfo.countryOfResidence}
                           onChange={e => setPersonalInfo({ ...personalInfo, countryOfResidence: e.target.value })}
                           placeholder="e.g. South Africa"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                       <div>
@@ -1044,7 +1044,7 @@ export function CandidateRegistration({
                           value={personalInfo.city}
                           onChange={e => setPersonalInfo({ ...personalInfo, city: e.target.value })}
                           placeholder="e.g. Johannesburg"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                     </div>
@@ -1055,7 +1055,7 @@ export function CandidateRegistration({
                         <select
                           value={personalInfo.workAuthorization}
                           onChange={e => setPersonalInfo({ ...personalInfo, workAuthorization: e.target.value as any })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           <option value="Requires Visa Sponsorship">Requires Visa Sponsorship</option>
                           <option value="Valid Work Permit">Valid Work Permit</option>
@@ -1069,7 +1069,7 @@ export function CandidateRegistration({
                         <select
                           value={personalInfo.willingToRelocate}
                           onChange={e => setPersonalInfo({ ...personalInfo, willingToRelocate: e.target.value as any })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           <option value="Yes, Anywhere">Yes, Anywhere Globally</option>
                           <option value="Yes, Europe & UK">Yes, Europe & UK</option>
@@ -1083,7 +1083,7 @@ export function CandidateRegistration({
                         <select
                           value={personalInfo.passportAvailable}
                           onChange={e => setPersonalInfo({ ...personalInfo, passportAvailable: e.target.value as any })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           <option value="Valid Passport Available (Ready to Travel)">Valid Passport Available (Ready to Travel)</option>
                           <option value="Passport in Renewal / Processing">In Renewal / Processing</option>
@@ -1114,7 +1114,7 @@ export function CandidateRegistration({
                           value={careerInfo.currentJobTitle}
                           onChange={e => setCareerInfo({ ...careerInfo, currentJobTitle: e.target.value })}
                           placeholder="e.g. Senior Systems Engineer / Registered Nurse"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                       <div>
@@ -1128,7 +1128,7 @@ export function CandidateRegistration({
                           value={careerInfo.currentCompany}
                           onChange={e => setCareerInfo({ ...careerInfo, currentCompany: e.target.value })}
                           placeholder="e.g. Vodacom / Discovery Health"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                     </div>
@@ -1139,7 +1139,7 @@ export function CandidateRegistration({
                         <select
                           value={careerInfo.industry}
                           onChange={e => setCareerInfo({ ...careerInfo, industry: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           {POPULAR_INDUSTRIES.map(ind => (
                             <option key={ind} value={ind}>{ind}</option>
@@ -1151,7 +1151,7 @@ export function CandidateRegistration({
                         <select
                           value={careerInfo.careerLevel}
                           onChange={e => setCareerInfo({ ...careerInfo, careerLevel: e.target.value as any })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           <option value="Entry-Level">Entry-Level (0-2 years)</option>
                           <option value="Mid-Level">Mid-Level (3-5 years)</option>
@@ -1165,7 +1165,7 @@ export function CandidateRegistration({
                         <select
                           value={careerInfo.totalYearsOfExperience}
                           onChange={e => setCareerInfo({ ...careerInfo, totalYearsOfExperience: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           <option value="1-2 years">1-2 years</option>
                           <option value="3-5 years">3-5 years</option>
@@ -1192,7 +1192,7 @@ export function CandidateRegistration({
                         <select
                           value={educationInfo.highestDegree}
                           onChange={e => setEducationInfo({ ...educationInfo, highestDegree: e.target.value as any })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           <option value="High School">High School / Matric / O-Levels</option>
                           <option value="Vocational Certificate">Vocational / Trade Certificate</option>
@@ -1215,7 +1215,7 @@ export function CandidateRegistration({
                           value={educationInfo.institution}
                           onChange={e => setEducationInfo({ ...educationInfo, institution: e.target.value })}
                           placeholder="e.g. University of Cape Town / Wits"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                     </div>
@@ -1232,7 +1232,7 @@ export function CandidateRegistration({
                           value={educationInfo.fieldOfStudy}
                           onChange={e => setEducationInfo({ ...educationInfo, fieldOfStudy: e.target.value })}
                           placeholder="e.g. Information Technology / Nursing Science"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                       <div>
@@ -1247,7 +1247,7 @@ export function CandidateRegistration({
                           onChange={e => setEducationInfo({ ...educationInfo, graduationYear: e.target.value })}
                           placeholder="e.g. 2021"
                           maxLength={4}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         />
                       </div>
                     </div>
@@ -1274,7 +1274,7 @@ export function CandidateRegistration({
                           }
                         }}
                         placeholder="Type a skill and press Add (e.g. Python, Azure, Patient Care, PLC)"
-                        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                        className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                       />
                       <button
                         type="button"
@@ -1364,7 +1364,7 @@ export function CandidateRegistration({
                           }
                         }}
                         placeholder="e.g. AWS Solutions Architect / CCNA / IELTS 7.5+"
-                        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                        className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                       />
                       <button
                         type="button"
@@ -1429,7 +1429,7 @@ export function CandidateRegistration({
                           value={newLanguageName}
                           onChange={e => setNewLanguageName(e.target.value)}
                           placeholder="e.g. English / German / French"
-                          className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-600"
+                          className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
                         />
                       </div>
                       <div>
@@ -1437,7 +1437,7 @@ export function CandidateRegistration({
                         <select
                           value={newLanguageProf}
                           onChange={e => setNewLanguageProf(e.target.value as any)}
-                          className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none focus:border-teal-600"
+                          className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
                         >
                           <option value="Basic">Basic</option>
                           <option value="Intermediate">Intermediate</option>
@@ -1520,7 +1520,7 @@ export function CandidateRegistration({
                         <select
                           value={preferredWorkStyle}
                           onChange={e => setPreferredWorkStyle(e.target.value as any)}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           <option value="On-site">On-site (Relocation to Employer City)</option>
                           <option value="Hybrid">Hybrid (On-site + Remote)</option>
@@ -1532,7 +1532,7 @@ export function CandidateRegistration({
                         <select
                           value={availability}
                           onChange={e => setAvailability(e.target.value as any)}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                         >
                           <option value="Immediate">Immediate</option>
                           <option value="Two Weeks">2 Weeks Notice</option>
@@ -1822,7 +1822,7 @@ export function CandidateRegistration({
                       value={careerGoals.dreamJob}
                       onChange={e => setCareerGoals({ ...careerGoals, dreamJob: e.target.value })}
                       placeholder="e.g. Lead Enterprise Cloud Architect / Clinical Nursing Supervisor"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                     />
                   </div>
 
@@ -1835,7 +1835,7 @@ export function CandidateRegistration({
                       value={careerGoals.longTermGoals}
                       onChange={e => setCareerGoals({ ...careerGoals, longTermGoals: e.target.value })}
                       placeholder="e.g. Lead international multi-region projects, achieve host-country chartered engineering status..."
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-600 text-sm text-gray-900"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-sm text-gray-900 bg-white placeholder:text-gray-400"
                     />
                   </div>
                 </div>
@@ -2127,7 +2127,7 @@ export function EmployerRegistration({ onBack, onCancel, onSubmit, onComplete }:
               value={formData.companyName}
               onChange={e => setFormData({ ...formData, companyName: e.target.value })}
               placeholder="e.g. NextGen Cloud Systems B.V."
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-600"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm bg-white text-navy-900 placeholder:text-gray-400 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
             />
           </div>
 
@@ -2137,7 +2137,7 @@ export function EmployerRegistration({ onBack, onCancel, onSubmit, onComplete }:
               <select
                 value={formData.industry}
                 onChange={e => setFormData({ ...formData, industry: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none focus:border-teal-600"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm text-gray-900 bg-white placeholder:text-gray-400 focus:outline-none focus:border-teal-600"
               >
                 {POPULAR_INDUSTRIES.map(ind => (
                   <option key={ind} value={ind}>{ind}</option>
@@ -2150,7 +2150,7 @@ export function EmployerRegistration({ onBack, onCancel, onSubmit, onComplete }:
               <select
                 value={formData.headquartersCountry}
                 onChange={e => setFormData({ ...formData, headquartersCountry: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none focus:border-teal-600"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm text-gray-900 bg-white placeholder:text-gray-400 focus:outline-none focus:border-teal-600"
               >
                 <option value="Netherlands">Netherlands</option>
                 <option value="United Kingdom">United Kingdom</option>
@@ -2175,7 +2175,7 @@ export function EmployerRegistration({ onBack, onCancel, onSubmit, onComplete }:
                 value={formData.headquartersCity}
                 onChange={e => setFormData({ ...formData, headquartersCity: e.target.value })}
                 placeholder="e.g. Amsterdam / London"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-600"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm bg-white text-navy-900 placeholder:text-gray-400 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
               />
             </div>
 
@@ -2184,7 +2184,7 @@ export function EmployerRegistration({ onBack, onCancel, onSubmit, onComplete }:
               <select
                 value={formData.companySize}
                 onChange={e => setFormData({ ...formData, companySize: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none focus:border-teal-600"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm text-gray-900 bg-white placeholder:text-gray-400 focus:outline-none focus:border-teal-600"
               >
                 <option value="1-50 employees">1-50 employees</option>
                 <option value="50-250 employees">50-250 employees</option>
@@ -2206,7 +2206,7 @@ export function EmployerRegistration({ onBack, onCancel, onSubmit, onComplete }:
                 value={formData.contactName}
                 onChange={e => setFormData({ ...formData, contactName: e.target.value })}
                 placeholder="e.g. Elena Rostova (Head of Talent)"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-600"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm bg-white text-navy-900 placeholder:text-gray-400 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
               />
             </div>
 
@@ -2221,7 +2221,7 @@ export function EmployerRegistration({ onBack, onCancel, onSubmit, onComplete }:
                 value={formData.contactEmail}
                 onChange={e => setFormData({ ...formData, contactEmail: e.target.value })}
                 placeholder="elena@company.com"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-600"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm bg-white text-navy-900 placeholder:text-gray-400 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
               />
             </div>
           </div>
@@ -2237,7 +2237,7 @@ export function EmployerRegistration({ onBack, onCancel, onSubmit, onComplete }:
               value={formData.contactPhone}
               onChange={e => setFormData({ ...formData, contactPhone: e.target.value })}
               placeholder="e.g. +31 20 555 0192"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-600"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm bg-white text-navy-900 placeholder:text-gray-400 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
             />
           </div>
 

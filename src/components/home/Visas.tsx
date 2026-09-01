@@ -52,10 +52,14 @@ export function Visas() {
         style={{ y: parallaxBgY }}
         className="absolute inset-0 pointer-events-none transform-gpu origin-center"
       >
-        <div
-          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-25"
-          style={{ backgroundImage: `url('${BACKGROUND_IMAGES.crossBorderVisa}')` }}
+        <div className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-50 overflow-hidden">
+        <img 
+          src={BACKGROUND_IMAGES.crossBorderVisa} 
+          alt="Background" 
+          className="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
         />
+      </div>
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/90 to-navy-950/95 pointer-events-none" />
 

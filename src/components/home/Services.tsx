@@ -44,11 +44,15 @@ export function Services() {
   return (
     <section ref={sectionRef} id="services" className="py-24 bg-navy-950 relative overflow-hidden border-b border-white/10">
       {/* Permanent Section Background Image */}
-      <div 
-        className="absolute inset-0 pointer-events-none bg-cover bg-center opacity-25"
-        style={{ backgroundImage: `url('${BACKGROUND_IMAGES.corporateHandshake}')` }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-navy-950/90 via-navy-950/95 to-navy-950 pointer-events-none" />
+      <div className="absolute inset-0 pointer-events-none bg-cover bg-center opacity-50 overflow-hidden">
+        <img 
+          src={BACKGROUND_IMAGES.corporateHandshake} 
+          alt="Background" 
+          className="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-b from-navy-950/70 via-navy-950/80 to-navy-950/90 pointer-events-none" />
       
       {/* Dark Theme Ambient Background Glows */}
       <motion.div 

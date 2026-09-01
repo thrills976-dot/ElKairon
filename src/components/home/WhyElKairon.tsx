@@ -48,10 +48,14 @@ export function WhyElKairon() {
         style={{ y: bgParallax }}
         className="absolute inset-0 pointer-events-none transform-gpu origin-center"
       >
-        <div
-          className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-30"
-          style={{ backgroundImage: `url('${BACKGROUND_IMAGES.germanVisa}')` }}
+        <div className="w-full h-[120%] -top-[10%] relative bg-cover bg-center opacity-60 overflow-hidden">
+        <img 
+          src={BACKGROUND_IMAGES.germanVisa} 
+          alt="Background" 
+          className="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
         />
+      </div>
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-br from-navy-950/80 via-[#043350]/85 to-[#064266]/80 pointer-events-none" />
 

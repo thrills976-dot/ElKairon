@@ -27,7 +27,7 @@ const INITIAL_PIPELINE_CANDIDATES: PipelineCandidate[] = [
   {
     id: 'pipe-1',
     name: 'Dr. Amina Benali',
-    avatar: 'https://images.unsplash.com/photo-1594824813682-1e967a14ecb3?auto=format&fit=crop&q=80&w=300',
+    avatar: 'https://ui-avatars.com/api/?name=User+1&background=0D9488&color=fff&size=128',
     jobTitle: 'Senior ICU Specialist Nurse',
     sector: 'Healthcare',
     stage: 'interview',
@@ -41,7 +41,7 @@ const INITIAL_PIPELINE_CANDIDATES: PipelineCandidate[] = [
   {
     id: 'pipe-2',
     name: 'Marko Petrovic',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300',
+    avatar: 'https://ui-avatars.com/api/?name=User+2&background=0D9488&color=fff&size=128',
     jobTitle: 'Master Electrician',
     sector: 'Construction',
     stage: 'compliance',
@@ -54,7 +54,7 @@ const INITIAL_PIPELINE_CANDIDATES: PipelineCandidate[] = [
   {
     id: 'pipe-3',
     name: 'Fatima Zahra Alami',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300',
+    avatar: 'https://ui-avatars.com/api/?name=User+3&background=0D9488&color=fff&size=128',
     jobTitle: 'Front Office & Guest Relations Manager',
     sector: 'Hospitality',
     stage: 'compliance',
@@ -67,7 +67,7 @@ const INITIAL_PIPELINE_CANDIDATES: PipelineCandidate[] = [
   {
     id: 'pipe-4',
     name: 'Arjun Nair',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=300',
+    avatar: 'https://ui-avatars.com/api/?name=User+4&background=0D9488&color=fff&size=128',
     jobTitle: 'Cloud DevOps Architect',
     sector: 'Technology',
     stage: 'placed',
@@ -80,7 +80,7 @@ const INITIAL_PIPELINE_CANDIDATES: PipelineCandidate[] = [
   {
     id: 'pipe-5',
     name: 'Samuel Kiprop',
-    avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=300',
+    avatar: 'https://ui-avatars.com/api/?name=User+5&background=0D9488&color=fff&size=128',
     jobTitle: 'Geriatric Care Specialist',
     sector: 'Healthcare',
     stage: 'screening',
@@ -93,7 +93,7 @@ const INITIAL_PIPELINE_CANDIDATES: PipelineCandidate[] = [
   {
     id: 'pipe-6',
     name: 'Chef Alessandro Morini',
-    avatar: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=300',
+    avatar: 'https://ui-avatars.com/api/?name=User+6&background=0D9488&color=fff&size=128',
     jobTitle: 'Executive Sous Chef',
     sector: 'Hospitality',
     stage: 'offer',

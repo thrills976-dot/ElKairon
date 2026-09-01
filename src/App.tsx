@@ -138,6 +138,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleNavigate = (view: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees' | 'services-terms') => {
+    window.scrollTo(0, 0);
     setIsLoading(true);
     setCurrentView(view);
   };
