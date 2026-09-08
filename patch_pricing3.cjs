@@ -1,4 +1,6 @@
-import { useState } from 'react';
+const fs = require('fs');
+
+const content = `import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ShieldCheck, Info, CheckCircle, XCircle, AlertTriangle, Scale, Target, FileText, Briefcase, FileCheck, Plane, ChevronDown } from 'lucide-react';
 
@@ -91,7 +93,7 @@ export function Pricing() {
               <div className="text-center md:text-right bg-teal-950/30 border border-teal-500/20 rounded-2xl p-4 md:p-6 w-full md:w-auto">
                 <div className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Total Program Fee</div>
                 <div className="text-4xl md:text-5xl font-extrabold text-teal-300">
-                  ${total.toLocaleString()}
+                  \${total.toLocaleString()}
                 </div>
               </div>
             </div>
@@ -105,7 +107,7 @@ export function Pricing() {
                   <span className="text-xs font-bold uppercase tracking-widest text-gold-400 bg-gold-950/50 px-2 py-1 rounded">10%</span>
                   <FileText className="text-gold-500/50" size={24} />
                 </div>
-                <div className="text-2xl font-extrabold text-white mb-1">${m1.toLocaleString()}</div>
+                <div className="text-2xl font-extrabold text-white mb-1">\${m1.toLocaleString()}</div>
                 <h4 className="text-base font-bold text-gray-200 mb-3">Documentation</h4>
                 <p className="text-xs text-gray-400 flex-grow mb-4">
                   This payment corresponds to the onboarding stage, initiating your file and formatting your profile.
@@ -123,7 +125,7 @@ export function Pricing() {
                   <span className="text-xs font-bold uppercase tracking-widest text-teal-400 bg-teal-950/50 px-2 py-1 rounded">20%</span>
                   <Briefcase className="text-teal-500/50" size={24} />
                 </div>
-                <div className="text-2xl font-extrabold text-white mb-1">${m2.toLocaleString()}</div>
+                <div className="text-2xl font-extrabold text-white mb-1">\${m2.toLocaleString()}</div>
                 <h4 className="text-base font-bold text-gray-200 mb-3">Job Offer</h4>
                 <p className="text-xs text-gray-400 flex-grow mb-4">
                   This payment corresponds to successfully matching with an employer and receiving an offer.
@@ -141,7 +143,7 @@ export function Pricing() {
                   <span className="text-xs font-bold uppercase tracking-widest text-blue-400 bg-blue-950/50 px-2 py-1 rounded">30%</span>
                   <FileCheck className="text-blue-500/50" size={24} />
                 </div>
-                <div className="text-2xl font-extrabold text-white mb-1">${m3.toLocaleString()}</div>
+                <div className="text-2xl font-extrabold text-white mb-1">\${m3.toLocaleString()}</div>
                 <h4 className="text-base font-bold text-gray-200 mb-3">Work Permit Stage</h4>
                 <p className="text-xs text-gray-400 flex-grow mb-4">
                   This payment corresponds to the preparation and submission of your work permit application.
@@ -159,7 +161,7 @@ export function Pricing() {
                   <span className="text-xs font-bold uppercase tracking-widest text-purple-400 bg-purple-950/50 px-2 py-1 rounded">40%</span>
                   <Plane className="text-purple-500/50" size={24} />
                 </div>
-                <div className="text-2xl font-extrabold text-white mb-1">${m4.toLocaleString()}</div>
+                <div className="text-2xl font-extrabold text-white mb-1">\${m4.toLocaleString()}</div>
                 <h4 className="text-base font-bold text-gray-200 mb-3">Visa Issued</h4>
                 <p className="text-xs text-gray-400 flex-grow mb-4">
                   This payment corresponds to the finalization of your embassy visa process.
@@ -266,7 +268,7 @@ export function Pricing() {
                     className="w-full px-6 py-4 flex items-center justify-between text-left focus:outline-none"
                   >
                     <span className="font-bold text-gray-200 text-sm sm:text-base pr-4">{faq.q}</span>
-                    <ChevronDown className={`text-gray-500 transition-transform duration-300 shrink-0 ${openFaq === idx ? 'rotate-180' : ''}`} size={20} />
+                    <ChevronDown className={\`text-gray-500 transition-transform duration-300 shrink-0 \${openFaq === idx ? 'rotate-180' : ''}\`} size={20} />
                   </button>
                   <AnimatePresence>
                     {openFaq === idx && (
@@ -292,3 +294,7 @@ export function Pricing() {
     </section>
   );
 }
+`
+
+fs.writeFileSync('src/components/home/Pricing.tsx', content);
+console.log("Pricing section completely rewritten for legal safety and extreme clarity.");
