@@ -23,7 +23,7 @@ import { ExtendOfferModal } from './employer/ExtendOfferModal';
 import { PreVettedCandidate } from '../../types/recruitment';
 
 export function EmployerDashboard() {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [activeTab, setActiveTab] = useState<'candidates' | 'pipeline' | 'analytics' | 'jobs' | 'applications' | 'compliance' | 'messages'>('candidates');
   const [isPostingJob, setIsPostingJob] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -55,10 +55,10 @@ export function EmployerDashboard() {
     if (!user) return;
     
     // Fetch Jobs
-    const qJobs = query(
-      collection(db, 'jobs'), 
-      where('employerId', '==', user.uid),
-    );
+    const isStaff = role === 'admin' || role === 'recruiter';
+    const qJobs = isStaff
+      ? query(collection(db, 'jobs'))
+      : query(collection(db, 'jobs'), where('employerId', '==', user.uid));
     
     const unsubscribeJobs = onSnapshot(qJobs, (snapshot) => {
       const jobsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -76,10 +76,9 @@ export function EmployerDashboard() {
     });
     
     // Fetch Applications
-    const qApps = query(
-      collection(db, 'applications'),
-      where('employerId', '==', user.uid)
-    );
+    const qApps = isStaff
+      ? query(collection(db, 'applications'))
+      : query(collection(db, 'applications'), where('employerId', '==', user.uid));
     
     const unsubscribeApps = onSnapshot(qApps, (snapshot) => {
       const appsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -104,10 +103,9 @@ export function EmployerDashboard() {
       });
       setApplications(prev => prev.map(a => a.id === appId ? { ...a, stage: newStage, status: newStatus } : a));
       toast.success(`Application updated to: ${newStage}`);
-    } catch (e) {
-      console.warn('Fallback updating local application status', e);
-      setApplications(prev => prev.map(a => a.id === appId ? { ...a, stage: newStage, status: newStatus } : a));
-      toast.success(`Application updated to: ${newStage}`);
+    } catch (e: any) {
+      console.error('Error updating application:', e);
+      toast.error('Failed to update application status.');
     }
   };
 
@@ -119,6 +117,26 @@ export function EmployerDashboard() {
   const handleOpenInterview = (candidate: any) => {
     setSelectedCandidateForAction(candidate);
     setInterviewModalOpen(true);
+  };
+  
+  const handleScheduleSubmit = async (details: any) => {
+    if (!selectedCandidateForAction) return;
+    try {
+      const appRef = doc(db, 'applications', selectedCandidateForAction.id);
+      await updateDoc(appRef, {
+        stage: 'interview',
+        status: 'interview',
+        interviewDate: `${details.date} at ${details.time} (${details.timeZone})`,
+        interviewNotes: details.notes,
+        interviewPlatform: details.platform,
+        updatedAt: serverTimestamp()
+      });
+      // Update local state is handled by onSnapshot
+      toast.success('Interview recorded in system!');
+    } catch(e: any) {
+      console.error('Failed to schedule interview:', e);
+      toast.error('Failed to schedule interview.');
+    }
   };
 
   const handleOpenOffer = (candidate: any) => {
@@ -280,6 +298,9 @@ export function EmployerDashboard() {
         {/* Tab 2: Candidate Hiring Pipeline (Kanban Board) */}
         {activeTab === 'pipeline' && (
           <HiringPipeline
+            applications={applications}
+            jobs={jobs}
+            onUpdateApplicationStatus={handleUpdateApplicationStatus}
             onScheduleInterview={handleOpenInterview}
             onOpenCompliance={() => setActiveTab('compliance')}
             onSendMessage={handleOpenMessage}
@@ -516,6 +537,7 @@ export function EmployerDashboard() {
         onClose={() => setInterviewModalOpen(false)}
         candidateName={selectedCandidateForAction?.name || 'Selected Candidate'}
         candidateTitle={selectedCandidateForAction?.title || 'Specialist'}
+        onScheduled={handleScheduleSubmit}
       />
 
       {/* Extend Offer Modal */}

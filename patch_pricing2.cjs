@@ -1,4 +1,6 @@
+const fs = require('fs');
 
+const content = `
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { ShieldCheck, Info, CheckCircle, XCircle, AlertTriangle, Scale, Target, FileText, Briefcase, FileCheck, Plane } from 'lucide-react';
@@ -114,19 +116,19 @@ export function Pricing() {
                             {row.country}
                           </td>
                           <td className="py-2.5 px-3 font-extrabold text-xs sm:text-sm text-gold-600 text-right border-r border-gray-100 bg-gray-50/30">
-                            ${row.cost.toLocaleString()}
+                            \${row.cost.toLocaleString()}
                           </td>
                           <td className="py-2.5 px-2 text-xs font-bold text-right text-gray-600">
-                            ${(row.cost * 0.1).toFixed(0)}
+                            \${(row.cost * 0.1).toFixed(0)}
                           </td>
                           <td className="py-2.5 px-2 text-xs font-bold text-right text-teal-700">
-                            ${(row.cost * 0.2).toFixed(0)}
+                            \${(row.cost * 0.2).toFixed(0)}
                           </td>
                           <td className="py-2.5 px-2 text-xs font-bold text-right text-navy-800">
-                            ${(row.cost * 0.3).toFixed(0)}
+                            \${(row.cost * 0.3).toFixed(0)}
                           </td>
                           <td className="py-2.5 px-2 text-xs font-bold text-right text-navy-950">
-                            ${(row.cost * 0.4).toFixed(0)}
+                            \${(row.cost * 0.4).toFixed(0)}
                           </td>
                         </tr>
                       );
@@ -291,3 +293,7 @@ export function Pricing() {
     </section>
   );
 }
+`;
+
+fs.writeFileSync('src/components/home/Pricing.tsx', content);
+console.log("Pricing.tsx updated successfully with deep explanations.");

@@ -133,7 +133,7 @@ export interface AIRecruitmentScore {
 export interface UserProfile {
   id: string;
   email: string;
-  role: 'candidate' | 'employer';
+  role: 'candidate' | 'employer' | 'admin' | 'recruiter';
   name: string;
   firstName?: string;
   lastName?: string;
@@ -206,7 +206,10 @@ export interface CandidateProfile {
   documents?: DocumentUploads;
   cvUrl?: string;
   cvName?: string;
+  cvFile?: any;
   coverLetterUrl?: string;
+  coverLetterName?: string;
+  coverLetterFile?: any;
 
   // AI Modules (Derived dynamically from candidate profile)
   skillsAssessment?: AISkillsAssessment;
@@ -287,7 +290,7 @@ export interface JobApplication {
   location?: string;
   salary?: string;
   status: 'pending' | 'reviewed' | 'interview' | 'accepted' | 'rejected';
-  stage?: 'Submitted' | 'Under Review' | 'Interview Scheduled' | 'Final Offer';
+  stage?: 'screening' | 'interview' | 'offer' | 'compliance' | 'placed' | 'rejected';
   matchScore?: number;
   appliedAt?: string;
   interviewDate?: string;
@@ -378,3 +381,116 @@ export interface EmployerMessage {
   messages: MessageEntry[];
 }
 
+
+export interface RecruitmentAuditLog {
+  id?: string;
+  applicationId: string;
+  jobId: string;
+  actorUid: string;
+  actorRole: string;
+  eventType: 'status_changed' | 'interview_scheduled' | 'application_submitted' | 'note_added';
+  previousStage?: string;
+  newStage?: string;
+  metadata?: any;
+  timestamp: any;
+}
+
+export interface RecruitmentNotification {
+  id?: string;
+  recipientId: string;
+  type: 'application_update' | 'interview_invite' | 'system_alert';
+  title: string;
+  message: string;
+  read: boolean;
+  link?: string;
+  createdAt: any;
+}
+
+
+export interface RecruitmentAuditLog {
+  id?: string;
+  applicationId: string;
+  jobId: string;
+  actorUid: string;
+  actorRole: string;
+  eventType: 'status_changed' | 'interview_scheduled' | 'application_submitted' | 'note_added';
+  previousStage?: string;
+  newStage?: string;
+  metadata?: any;
+  timestamp: any;
+}
+
+export interface RecruitmentNotification {
+  id?: string;
+  recipientId: string;
+  type: 'application_update' | 'interview_invite' | 'system_alert';
+  title: string;
+  message: string;
+  read: boolean;
+  link?: string;
+  createdAt: any;
+}
+
+
+export interface RelocationCase {
+  id?: string;
+  candidateId: string;
+  applicationId: string;
+  jobId: string;
+  employerId?: string;
+  destinationCountry: string;
+  destinationCity: string;
+  stage: 'placement' | 'preparation' | 'visa' | 'travel' | 'accommodation' | 'arrival' | 'settlement' | 'completed';
+  status: 'planning' | 'documents' | 'visa' | 'travel' | 'accommodation' | 'arrival' | 'completed' | 'paused' | 'cancelled';
+  createdAt?: any;
+  updatedAt?: any;
+}
+
+export interface VisaImmigrationStatus {
+  id?: string;
+  relocationId: string;
+  status: 'not_started' | 'documents_required' | 'submitted' | 'under_review' | 'approved' | 'rejected' | 'additional_information_required';
+  lastUpdated?: any;
+  nextAction?: string;
+  notes?: string;
+}
+
+export interface TravelInformation {
+  id?: string;
+  relocationId: string;
+  airline?: string;
+  flightNumber?: string;
+  departureAirport?: string;
+  arrivalAirport?: string;
+  departureDate?: string;
+  arrivalDate?: string;
+  bookingReference?: string;
+  status: 'planned' | 'booked' | 'confirmed' | 'completed' | 'cancelled';
+  createdAt?: any;
+  updatedAt?: any;
+}
+
+export interface AccommodationDetails {
+  id?: string;
+  relocationId: string;
+  status: 'not_arranged' | 'searching' | 'reserved' | 'confirmed' | 'occupied';
+  address?: string;
+  moveInDate?: string;
+  contactInformation?: string;
+  notes?: string;
+  updatedAt?: any;
+}
+
+export interface ArrivalTask {
+  id?: string;
+  relocationId: string;
+  candidateId: string;
+  title: string;
+  description: string;
+  category: 'legal' | 'housing' | 'finance' | 'health' | 'work' | 'general';
+  status: 'todo' | 'in_progress' | 'completed' | 'not_applicable';
+  dueDate?: string;
+  completedAt?: any;
+  createdAt?: any;
+  updatedAt?: any;
+}

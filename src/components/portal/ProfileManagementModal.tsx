@@ -367,22 +367,36 @@ export function ProfileManagementModal({ isOpen, onClose }: ProfileManagementMod
         await updateCandidateProfile(sanitizedCandidateData);
 
         // 2. Direct Firestore Persistence with handleFirestoreError protection
+        
         const candRef = doc(db, 'candidates', targetUserId);
+        const privateRef = doc(db, 'candidates', targetUserId, 'private', 'info');
         const userRef = doc(db, 'users', targetUserId);
+
+        const { email, phone, dob, age, nationality, passportAvailable, salaryExpectations, documents, ...publicCandidateData } = sanitizedCandidateData;
+        const privateCandidateData = { email, phone, dob, age, nationality, passportAvailable, salaryExpectations, documents };
         
         await setDoc(candRef, {
-          ...sanitizedCandidateData,
+          ...publicCandidateData,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        // Clean out undefined values for private merge
+        Object.keys(privateCandidateData).forEach(key => privateCandidateData[key] === undefined && delete privateCandidateData[key]);
+
+        await setDoc(privateRef, {
+          ...privateCandidateData,
           updatedAt: serverTimestamp()
         }, { merge: true });
 
         await setDoc(userRef, {
-          name: sanitizedCandidateData.name,
-          email: sanitizedCandidateData.email,
-          phone: sanitizedCandidateData.phone,
-          country: sanitizedCandidateData.country,
-          avatarUrl: sanitizedCandidateData.avatarUrl,
+          name: publicCandidateData.name,
+          email: email,
+          phone: phone,
+          country: publicCandidateData.country,
+          avatarUrl: publicCandidateData.avatarUrl,
           updatedAt: serverTimestamp()
         }, { merge: true });
+
 
         toast.success('Candidate dossier successfully saved to Firestore!');
       } else {

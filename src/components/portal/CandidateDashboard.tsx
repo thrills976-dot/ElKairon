@@ -14,15 +14,16 @@ import {
   RecruiterProfileView, CandidateProfile 
 } from '../../types/recruitment';
 import { 
-  INITIAL_JOBS, RECOMMENDED_COURSES, MOCK_RECRUITER_VIEWS, 
+  RECOMMENDED_COURSES, MOCK_RECRUITER_VIEWS, 
   POPULAR_SKILLS, TARGET_COUNTRIES 
 } from '../../data/mockRecruitmentData';
 import { 
   rankAndMatchJobs, computeRecruitmentScores, computePersonalityArchetype 
 } from '../../lib/aiRecruitmentEngine';
-import { db } from '../../lib/firebase';
-import { collection, addDoc, query, where, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { db, auth } from '../../lib/firebase';
+import { collection, addDoc, setDoc, doc, query, where, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { GenericAvatar } from '../common/GenericAvatar';
+import { RelocationDashboard } from './candidate/RelocationDashboard';
 
 interface CandidateDashboardProps {
   onOpenProfileEditor?: () => void;
@@ -33,7 +34,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
 
   // Active Tab
   const [activeTab, setActiveTab] = useState<
-    'matches' | 'skills_radar' | 'resume_ai' | 'salary_benchmark' | 'applications' | 'recruiter_activity' | 'profile_overview'
+    'matches' | 'skills_radar' | 'resume_ai' | 'salary_benchmark' | 'applications' | 'recruiter_activity' | 'profile_overview' | 'relocation'
   >('matches');
 
   // Filter & Search states for Jobs
@@ -46,6 +47,10 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
   const [selectedJobForModal, setSelectedJobForModal] = useState<MatchedJobResult | null>(null);
   const [loadingAiAnalysis, setLoadingAiAnalysis] = useState(false);
   const [detailedAiAnalysis, setDetailedAiAnalysis] = useState<any>(null);
+
+  // Job Board State
+  const [availableJobs, setAvailableJobs] = useState<JobItem[]>([]);
+  const [loadingJobs, setLoadingJobs] = useState(true);
 
   // Active User Applications state
   const [applications, setApplications] = useState<JobApplication[]>([]);
@@ -77,6 +82,26 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
   }, [candidateProfile, user]);
   const [atsReviewResult, setAtsReviewResult] = useState<any>(null);
   const [loadingAts, setLoadingAts] = useState(false);
+
+  // Fetch Real Jobs from Firestore
+  useEffect(() => {
+    const q = query(collection(db, 'jobs')); // Optionally add: where('status', '==', 'active')
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const fetchedJobs = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as JobItem[];
+      
+      // Filter out closed jobs client-side to avoid index requirement for now, or just show active
+      const activeJobs = fetchedJobs.filter(job => job.status !== 'closed');
+      setAvailableJobs(activeJobs);
+      setLoadingJobs(false);
+    }, (error) => {
+      console.error("Error fetching jobs: ", error);
+      setLoadingJobs(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Sync Applications from Firestore if signed in
   useEffect(() => {
@@ -122,7 +147,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
 
   // Ranked Jobs calculation
   const rankedJobs = useMemo(() => {
-    const matched = rankAndMatchJobs(INITIAL_JOBS, candidateProfile || {});
+    const matched = rankAndMatchJobs(availableJobs, candidateProfile || {});
     return matched.filter(job => {
       const matchesSearch = 
         job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -166,7 +191,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
       location: job.location,
       salary: job.salary,
       status: 'pending',
-      stage: 'Submitted',
+      stage: 'screening',
       matchScore: job.matchPercentage,
       appliedAt: 'Just now',
       notes: `Applied with verified ${job.matchPercentage}% AI Match Readiness.`
@@ -177,7 +202,8 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
 
     if (user) {
       try {
-        await addDoc(collection(db, 'applications'), {
+        const docRef = doc(db, 'applications', newApp.id);
+        await setDoc(docRef, {
           ...newApp,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
@@ -195,20 +221,19 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
     setDetailedAiAnalysis(null);
 
     try {
+      const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
       const res = await fetch('/api/ai/match-analysis', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
-          profile: candidateProfile,
-          job: {
-            title: job.title,
-            company: job.company,
-            location: job.location,
-            industry: job.industry,
-            skills: job.skills,
-            experience: job.experience,
-            description: job.description
-          }
+          candidateId: user?.uid,
+          jobId: job.id,
+          candidateProfile: null, // Should be fetched on server or derived securely
+          jobDetails: job,
+          profile: null, // Legacy param for now to avoid breaking api
+          job: job // Legacy param for now to avoid breaking api
         })
       });
 
@@ -241,12 +266,16 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
   const handleRunAtsReview = async () => {
     setLoadingAts(true);
     try {
+      const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
       const res = await fetch('/api/ai/resume-review', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
-          resumeText: resumeReviewText,
-          targetRole: candidateProfile?.preferredJobs?.[0] || candidateProfile?.currentJobTitle || 'Cloud Engineer'
+          resumeText: '', // Will update this
+          targetRole: 'General',
+          candidateId: user?.uid
         })
       });
       if (res.ok) {
@@ -340,7 +369,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
             <button
               type="button"
               onClick={() => {
-                const refreshed = rankAndMatchJobs(INITIAL_JOBS, candidateProfile || {});
+                const refreshed = rankAndMatchJobs(availableJobs, candidateProfile || {});
                 toast.success(`AI re-matched ${refreshed.length} international roles`);
               }}
               className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-md transition-all"
@@ -425,6 +454,7 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
           { id: 'resume_ai', label: '📄 AI Resume Optimizer', highlight: true },
           { id: 'salary_benchmark', label: '💰 Global Salary Estimates' },
           { id: 'applications', label: '📊 Applications & Interviews', count: applications.length },
+          { id: 'relocation', label: '✈️ Relocation Journey' },
           { id: 'recruiter_activity', label: '⭐ Recruiter Activity', count: recruiterViews.length },
           { id: 'profile_overview', label: '👤 Profile & AI Calibrations' },
         ].map((tab) => (
@@ -941,6 +971,11 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
       )}
 
       {/* TAB 5: 📊 APPLICATION STATUS TRACKER & INTERVIEWS */}
+      {activeTab === 'relocation' && (
+        <RelocationDashboard applications={applications} candidateId={user.uid} />
+      )}
+
+      {/* TAB 5: 📊 APPLICATION STATUS TRACKER & INTERVIEWS */}
       {activeTab === 'applications' && (
         <div className="space-y-6">
           <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
@@ -982,21 +1017,23 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
                         </p>
                       </div>
                       <span className={`px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider self-start md:self-auto ${
-                        app.stage === 'Interview Scheduled'
+                        app.stage === 'interview'
                           ? 'bg-gold-500 text-navy-900 animate-pulse'
-                          : app.stage === 'Under Review'
+                          : app.stage === 'offer'
                           ? 'bg-teal-600 text-white'
+                          : app.stage === 'compliance' || app.stage === 'placed'
+                          ? 'bg-emerald-600 text-white'
                           : 'bg-navy-900 text-white'
                       }`}>
-                        {app.stage}
+                        {app.stage === 'screening' ? 'Under Review' : app.stage === 'compliance' ? 'Visa Processing' : (app.stage || 'screening').charAt(0).toUpperCase() + (app.stage || 'screening').slice(1)}
                       </span>
                     </div>
 
                     {/* Stage Progress Visualizer */}
                     <div className="grid grid-cols-4 gap-2 pt-2">
-                      {['Submitted', 'Under Review', 'Interview', 'Final Offer'].map((stageName, idx) => {
-                        const stages = ['Submitted', 'Under Review', 'Interview Scheduled', 'Final Offer'];
-                        const currentIdx = stages.indexOf(app.stage || 'Submitted');
+                      {['Screening', 'Interview', 'Offer', 'Compliance'].map((stageName, idx) => {
+                        const stages = ['screening', 'interview', 'offer', 'compliance', 'placed'];
+                        const currentIdx = stages.indexOf(app.stage || 'screening');
                         const isComplete = idx <= currentIdx;
                         return (
                           <div key={stageName} className="space-y-1">

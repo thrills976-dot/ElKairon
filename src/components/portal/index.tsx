@@ -158,33 +158,11 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
               <span className="w-2.5 h-2.5 rounded-full bg-teal-500 animate-pulse" />
               <span>Signed in as: <strong className="text-navy-950">{user?.displayName || user?.email || 'Authenticated User'}</strong></span>
               <span className="px-2.5 py-0.5 rounded-full bg-navy-900 text-white text-[10px] uppercase tracking-wider font-extrabold">
-                {role === 'employer' ? '💼 Employer / Recruiter' : '👤 Candidate'}
+                {role === 'candidate' ? '👤 Candidate' : role === 'admin' ? '🛡️ Admin' : role === 'recruiter' ? '🔍 Recruiter' : '💼 Employer'}
               </span>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
-              {/* Switch Role Button */}
-              <button
-                type="button"
-                onClick={async () => {
-                  const targetRole = role === 'candidate' ? 'employer' : 'candidate';
-                  await setRole(targetRole);
-                }}
-                className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-navy-900 border border-gray-200 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5"
-                title={`Switch view to ${role === 'candidate' ? 'Employer' : 'Candidate'} portal`}
-              >
-                {role === 'candidate' ? (
-                  <>
-                    <Briefcase size={13} className="text-teal-600" />
-                    <span>Switch to Employer View</span>
-                  </>
-                ) : (
-                  <>
-                    <UserIcon size={13} className="text-teal-600" />
-                    <span>Switch to Candidate View</span>
-                  </>
-                )}
-              </button>
 
               {/* Manage Profile in Firestore Button */}
               <button

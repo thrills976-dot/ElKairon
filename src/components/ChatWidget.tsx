@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, User, Bot, Loader2 } from 'lucide-react';
+import { auth } from '../lib/firebase';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -46,9 +47,13 @@ export function ChatWidget({ context }: ChatWidgetProps) {
     setIsLoading(true);
 
     try {
+      const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ message: userMessage, context })
       });
       

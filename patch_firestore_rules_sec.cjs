@@ -1,4 +1,8 @@
-rules_version = '2';
+const fs = require('fs');
+let content = fs.readFileSync('firestore.rules', 'utf-8');
+
+// The replacement script
+const newRules = `rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
@@ -7,7 +11,7 @@ service cloud.firestore {
 
     function isSignedIn() { return request.auth != null; }
     function isOwner(userId) { return request.auth != null && request.auth.uid == userId; }
-    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\\\-]+$'); }
     
     function isAdmin() {
       return isSignedIn() && (
@@ -108,3 +112,7 @@ service cloud.firestore {
     }
   }
 }
+`;
+
+fs.writeFileSync('firestore.rules', newRules);
+console.log("firestore.rules heavily secured");

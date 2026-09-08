@@ -108,14 +108,10 @@ export function PostJobModal({ isOpen, onClose, onJobCreated }: PostJobModalProp
       }
       setIsSubmitting(false);
       onClose();
-    } catch (error) {
-      console.warn('Fallback local job creation due to permissions', error);
-      toast.success(`Job vacancy "${title}" posted successfully!`);
-      if (onJobCreated) {
-        onJobCreated({ id: `job-${Date.now()}`, ...newJobData, createdAt: new Date() });
-      }
+    } catch (error: any) {
+      console.error('Job creation failed:', error);
+      toast.error('Failed to post job. Please verify permissions.');
       setIsSubmitting(false);
-      onClose();
     }
   };
 

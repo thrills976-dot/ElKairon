@@ -1,12 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Search, Filter, MapPin, Briefcase, Star, ShieldCheck, 
   Zap, ArrowRight, UserCheck, Stethoscope, HardHat, Utensils, 
-  Cpu, CheckCircle2, Eye, Calendar, MessageSquare, Award, Sparkles 
+  Cpu, CheckCircle2, Eye, Calendar, MessageSquare, Award, Sparkles, RefreshCw
 } from 'lucide-react';
-import { PRE_VETTED_CANDIDATES } from '../../../data/mockEmployerData';
-import { PreVettedCandidate } from '../../../types/recruitment';
+import { PreVettedCandidate, CandidateProfile } from '../../../types/recruitment';
+import { db } from '../../../lib/firebase';
+import { collection, query, getDocs } from 'firebase/firestore';
 import { CandidateDetailModal } from './CandidateDetailModal';
 import { GenericAvatar } from '../../common/GenericAvatar';
 import toast from 'react-hot-toast';
@@ -28,6 +29,53 @@ export function CandidatePoolBrowser({
   const [selectedGermanLevel, setSelectedGermanLevel] = useState<string>('All');
   const [selectedCandidate, setSelectedCandidate] = useState<PreVettedCandidate | null>(null);
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
+  
+  const [candidates, setCandidates] = useState<PreVettedCandidate[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        const q = query(collection(db, 'candidates'));
+        const snapshot = await getDocs(q);
+        const fetched = snapshot.docs.map(doc => {
+          const data = doc.data() as CandidateProfile;
+          
+          // Securely map CandidateProfile to PreVettedCandidate (Employer-Safe Representation)
+          const mapped: PreVettedCandidate = {
+            id: doc.id,
+            name: data.name || (data.firstName && data.lastName ? data.firstName + ' ' + data.lastName[0] + '.' : 'Candidate'), // Protect full last name
+            title: data.currentJobTitle || 'Professional',
+            sector: (data.industry || 'Technology') as any,
+            subSector: data.fieldOfStudy || 'General',
+            location: data.countryOfResidence || data.country || 'International',
+            targetRelocation: data.willingToRelocate ? 'Worldwide' : 'Local',
+            experienceYears: parseInt(data.totalYearsOfExperience || data.yearsOfExperience || '0') || 2,
+            germanLevel: 'B1', // Default
+            englishLevel: 'B2', // Default
+            education: data.highestDegree || 'Degree',
+            credentialsStatus: 'Verified',
+            fastTrackEligible: String(data.workAuthorization) === 'EU Citizen', // Safe mapping
+            availability: '1 Month',
+            avatar: data.avatarUrl || '',
+            skills: data.skills || [],
+            bio: 'Professional candidate actively open to new opportunities.', // Fallback string
+            rating: data.aiRecruitmentScore?.aiMatchReadiness || 85,
+            salaryExpectation: 'Negotiable', // Fallback string
+            visaStatus: String(data.workAuthorization) !== 'EU Citizen' ? 'Requires Sponsorship' : 'No Sponsorship Needed',
+            documentsReady: [] // Required by PreVettedCandidate
+          };
+          return mapped;
+        });
+        setCandidates(fetched);
+        setLoading(false);
+      } catch (err) {
+        console.error("Failed to load candidates", err);
+        setLoading(false);
+      }
+    };
+    fetchCandidates();
+  }, []);
 
   const toggleBookmark = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,7 +92,7 @@ export function CandidatePoolBrowser({
   };
 
   const filteredCandidates = useMemo(() => {
-    return PRE_VETTED_CANDIDATES.filter((cand) => {
+    return candidates.filter((cand) => {
       // Sector filter
       if (selectedSector !== 'All' && cand.sector.toLowerCase() !== selectedSector.toLowerCase()) {
         return false;
@@ -74,13 +122,13 @@ export function CandidatePoolBrowser({
 
   const sectorCounts = useMemo(() => {
     return {
-      All: PRE_VETTED_CANDIDATES.length,
-      Healthcare: PRE_VETTED_CANDIDATES.filter(c => c.sector === 'Healthcare').length,
-      Construction: PRE_VETTED_CANDIDATES.filter(c => c.sector === 'Construction').length,
-      Hospitality: PRE_VETTED_CANDIDATES.filter(c => c.sector === 'Hospitality').length,
-      Technology: PRE_VETTED_CANDIDATES.filter(c => c.sector === 'Technology').length,
+      All: candidates.length,
+      Healthcare: candidates.filter(c => c.sector === 'Healthcare').length,
+      Construction: candidates.filter(c => c.sector === 'Construction').length,
+      Hospitality: candidates.filter(c => c.sector === 'Hospitality').length,
+      Technology: candidates.filter(c => c.sector === 'Technology').length,
     };
-  }, []);
+  }, [candidates]);
 
   return (
     <div className="space-y-6">
@@ -195,6 +243,13 @@ export function CandidatePoolBrowser({
       </div>
 
       {/* Candidate Cards Grid */}
+      {loading ? (
+        <div className="bg-white p-12 text-center rounded-3xl border border-gray-100 flex flex-col items-center justify-center">
+          <RefreshCw className="w-8 h-8 text-teal-600 animate-spin mb-4" />
+          <h3 className="text-lg font-bold text-navy-900">Loading Candidate Pool...</h3>
+          <p className="text-sm text-gray-500">Retrieving anonymized profiles from the database.</p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCandidates.map((cand) => (
           <motion.div
@@ -314,8 +369,9 @@ export function CandidatePoolBrowser({
           </motion.div>
         ))}
       </div>
+      )}
 
-      {filteredCandidates.length === 0 && (
+      {!loading && filteredCandidates.length === 0 && (
         <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 space-y-4">
           <UserCheck size={36} className="text-gray-300 mx-auto" />
           <h3 className="text-lg font-bold text-navy-900">No Candidates Match Your Filter</h3>

@@ -21,9 +21,9 @@ export function LazyImage({ src, placeholderSrc, alt, className, containerClassN
   return (
     <div
         className={cn("relative overflow-hidden w-full h-full bg-navy-800/40", containerClassName)}>
-      <img onError={(e) => { console.error('Image load error:', e.currentTarget.src); e.currentTarget.style.display = 'none'; }}
+      <img onError={(e) => console.warn('Image load error')}
         ref={imgRef}
-        src={src}
+        src={src ? `${src}?v=2` : src}
         alt={alt}
         loading="eager"
         decoding="async"

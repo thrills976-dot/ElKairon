@@ -2,67 +2,256 @@
   "entities": {
     "User": {
       "title": "User Profile",
-      "description": "User profile containing role and basic info.",
+      "description": "User identity and authorization metadata",
       "type": "object",
       "properties": {
-        "role": { "type": "string", "enum": ["candidate", "employer"] },
-        "name": { "type": "string", "maxLength": 100 },
-        "email": { "type": "string", "maxLength": 150 },
-        "company": { "type": "string", "maxLength": 150 },
-        "title": { "type": "string", "maxLength": 100 },
-        "industry": { "type": "string", "maxLength": 100 },
-        "experience": { "type": "string", "maxLength": 50 },
-        "size": { "type": "string", "maxLength": 50 },
-        "countries": { "type": "array", "items": { "type": "string" } },
-        "skills": { "type": "array", "items": { "type": "string" } },
-        "cvUrl": { "type": "string", "maxLength": 500 },
-        "createdAt": { "type": "timestamp" },
-        "updatedAt": { "type": "timestamp" }
+        "id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "candidate",
+            "employer",
+            "admin"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "timestamp"
+        },
+        "updatedAt": {
+          "type": "timestamp"
+        }
       },
-      "required": ["role", "name", "email", "createdAt", "updatedAt"]
+      "required": [
+        "role",
+        "email",
+        "createdAt"
+      ]
+    },
+    "EmployerProfile": {
+      "title": "Employer Profile",
+      "description": "Public company information",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "company": {
+          "type": "string"
+        },
+        "industry": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "timestamp"
+        },
+        "updatedAt": {
+          "type": "timestamp"
+        }
+      },
+      "required": [
+        "company",
+        "industry"
+      ]
+    },
+    "CandidatePublic": {
+      "title": "Candidate Public Profile",
+      "description": "Employer-safe candidate information",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatarUrl": {
+          "type": "string"
+        },
+        "countryOfResidence": {
+          "type": "string"
+        },
+        "currentJobTitle": {
+          "type": "string"
+        },
+        "industry": {
+          "type": "string"
+        },
+        "totalYearsOfExperience": {
+          "type": "string"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "timestamp"
+        },
+        "updatedAt": {
+          "type": "timestamp"
+        }
+      }
+    },
+    "CandidatePrivate": {
+      "title": "Candidate Private Dossier",
+      "description": "Highly sensitive candidate information",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "dob": {
+          "type": "string"
+        },
+        "nationality": {
+          "type": "string"
+        },
+        "passportAvailable": {
+          "type": "string"
+        },
+        "salaryExpectations": {
+          "type": "object"
+        },
+        "documents": {
+          "type": "object"
+        },
+        "cvUrl": {
+          "type": "string"
+        }
+      }
     },
     "Job": {
       "title": "Job Posting",
       "description": "A job posted by an employer",
       "type": "object",
       "properties": {
-        "employerId": { "type": "string", "maxLength": 128 },
-        "title": { "type": "string", "maxLength": 150 },
-        "description": { "type": "string", "maxLength": 5000 },
-        "location": { "type": "string", "maxLength": 100 },
-        "industry": { "type": "string", "maxLength": 100 },
-        "status": { "type": "string", "enum": ["active", "closed"] },
-        "createdAt": { "type": "timestamp" },
-        "updatedAt": { "type": "timestamp" }
+        "employerId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "closed"
+          ]
+        },
+        "createdAt": {
+          "type": "timestamp"
+        },
+        "updatedAt": {
+          "type": "timestamp"
+        }
       },
-      "required": ["employerId", "title", "description", "location", "status", "createdAt", "updatedAt"]
+      "required": [
+        "employerId",
+        "title",
+        "description",
+        "status"
+      ]
     },
     "Application": {
       "title": "Job Application",
       "description": "A candidate's application to a job",
       "type": "object",
       "properties": {
-        "candidateId": { "type": "string", "maxLength": 128 },
-        "jobId": { "type": "string", "maxLength": 128 },
-        "employerId": { "type": "string", "maxLength": 128 },
-        "status": { "type": "string", "enum": ["pending", "reviewed", "accepted", "rejected"] },
-        "createdAt": { "type": "timestamp" },
-        "updatedAt": { "type": "timestamp" }
+        "candidateId": {
+          "type": "string"
+        },
+        "jobId": {
+          "type": "string"
+        },
+        "employerId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "timestamp"
+        },
+        "updatedAt": {
+          "type": "timestamp"
+        }
       },
-      "required": ["candidateId", "jobId", "employerId", "status", "createdAt", "updatedAt"]
+      "required": [
+        "candidateId",
+        "jobId",
+        "employerId",
+        "status"
+      ]
     }
   },
   "firestore": {
     "users/{userId}": {
-      "schema": { "$ref": "#/entities/User" },
-      "description": "Stores user profiles"
+      "schema": {
+        "$ref": "#/entities/User"
+      },
+      "description": "Stores user identity profiles"
+    },
+    "employers/{employerId}": {
+      "schema": {
+        "$ref": "#/entities/EmployerProfile"
+      },
+      "description": "Stores employer company profiles"
+    },
+    "candidates/{candidateId}": {
+      "schema": {
+        "$ref": "#/entities/CandidatePublic"
+      },
+      "description": "Stores public, employer-safe candidate profiles"
+    },
+    "candidates/{candidateId}/private/info": {
+      "schema": {
+        "$ref": "#/entities/CandidatePrivate"
+      },
+      "description": "Stores private, sensitive candidate information"
     },
     "jobs/{jobId}": {
-      "schema": { "$ref": "#/entities/Job" },
+      "schema": {
+        "$ref": "#/entities/Job"
+      },
       "description": "Stores job postings"
     },
     "applications/{applicationId}": {
-      "schema": { "$ref": "#/entities/Application" },
+      "schema": {
+        "$ref": "#/entities/Application"
+      },
       "description": "Stores job applications"
     }
   }

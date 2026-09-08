@@ -171,14 +171,18 @@ export function CandidateRegistration({
   );
 
   // Step 2: Resume / Documents (Real Upload State)
-  const [uploadedResume, setUploadedResume] = useState<{ 
-    cvName: string; 
+  const [uploadedResume, setUploadedResume] = useState<{
+    cvName: string;
     cvSize?: string;
+    cvFile?: File | null;
     coverLetterName: string;
     coverLetterSize?: string;
+    coverLetterFile?: File | null;
   }>({
     cvName: initialProfile?.documents?.cvName || initialProfile?.cvName || '',
-    coverLetterName: initialProfile?.documents?.coverLetterName || ''
+    cvFile: null,
+    coverLetterName: initialProfile?.documents?.coverLetterName || '',
+    coverLetterFile: null,
   });
 
   // Step 3: AI Skills Confidence Ratings (dynamically initialized from candidate's real skills)
@@ -320,10 +324,10 @@ export function CandidateRegistration({
       : `${Math.round(file.size / 1024)} KB`;
 
     if (type === 'cv') {
-      setUploadedResume(prev => ({ ...prev, cvName: file.name, cvSize: fileSizeFormatted }));
+      setUploadedResume(prev => ({ ...prev, cvName: file.name, cvSize: fileSizeFormatted, cvFile: file }));
       toast.success(`Résumé uploaded: ${file.name} (${fileSizeFormatted})`);
     } else {
-      setUploadedResume(prev => ({ ...prev, coverLetterName: file.name, coverLetterSize: fileSizeFormatted }));
+      setUploadedResume(prev => ({ ...prev, coverLetterName: file.name, coverLetterSize: fileSizeFormatted, coverLetterFile: file }));
       toast.success(`Document loaded: ${file.name}`);
     }
   };
@@ -417,7 +421,9 @@ export function CandidateRegistration({
         coverLetterName: sanitizeText(uploadedResume.coverLetterName, 120)
       },
       cvName: sanitizeText(uploadedResume.cvName, 120),
+      cvFile: uploadedResume.cvFile,
       coverLetterUrl: sanitizeText(uploadedResume.coverLetterName, 120),
+      coverLetterFile: uploadedResume.coverLetterFile,
 
       skillsAssessment: {
         categoryRatings: skillsAssessment
@@ -644,7 +650,7 @@ export function CandidateRegistration({
       certifications: certificationsList,
       languages: languagesList,
       preferredLocations,
-      cvName: uploadedResume.cvName,
+      cvName: uploadedResume.cvName, cvFile: uploadedResume.cvFile, coverLetterFile: uploadedResume.coverLetterFile,
       skillsAssessment: { categoryRatings: skillsAssessment }
     });
   }, [personalInfo, accountForm, calculatedAge, careerInfo, educationInfo, skillsList, certificationsList, languagesList, preferredLocations, uploadedResume, skillsAssessment]);

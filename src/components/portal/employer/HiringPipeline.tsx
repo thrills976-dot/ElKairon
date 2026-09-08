@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { JobApplication, JobItem } from '../../../types/recruitment';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Users, CheckCircle, Clock, Calendar, ArrowRight, 
@@ -106,21 +107,42 @@ const INITIAL_PIPELINE_CANDIDATES: PipelineCandidate[] = [
 ];
 
 interface HiringPipelineProps {
+  applications: JobApplication[];
+  jobs: JobItem[];
+  onUpdateApplicationStatus: (appId: string, newStage: string, newStatus: string) => void;
   onScheduleInterview: (candidate: any) => void;
   onOpenCompliance: () => void;
   onSendMessage: (candidate: any) => void;
 }
 
-export function HiringPipeline({ onScheduleInterview, onOpenCompliance, onSendMessage }: HiringPipelineProps) {
-  const [candidates, setCandidates] = useState<PipelineCandidate[]>(INITIAL_PIPELINE_CANDIDATES);
-  const [selectedCandidate, setSelectedCandidate] = useState<PipelineCandidate | null>(null);
-
-  const moveCandidate = (id: string, nextStage: PipelineCandidate['stage']) => {
-    setCandidates(prev => prev.map(c => c.id === id ? { ...c, stage: nextStage } : c));
-    toast.success(`Candidate advanced to ${getStageTitle(nextStage)}`);
+export function HiringPipeline({ applications, jobs, onUpdateApplicationStatus, onScheduleInterview, onOpenCompliance, onSendMessage }: HiringPipelineProps) {
+  const candidates = useMemo(() => {
+    return applications.map(app => ({
+      id: app.id as string,
+      name: 'Candidate ' + (app.candidateId || '').substring(0, 4), // Placeholder until candidate profiles fetched
+      avatar: undefined,
+      jobTitle: app.jobTitle || 'Unknown Job',
+      matchScore: app.matchScore || 0,
+      stage: app.stage || 'screening',
+      status: app.status || 'pending',
+      interviewDate: app.interviewDate,
+      notes: app.notes,
+      germanLevel: 'B2', // Default mock for now
+      fastTrack: true
+    }));
+  }, [applications]);
+  
+  const moveCandidate = (id: string, nextStage: string) => {
+    let nextStatus = 'pending';
+    if (nextStage === 'interview') nextStatus = 'interview';
+    if (nextStage === 'offer') nextStatus = 'accepted';
+    if (nextStage === 'compliance' || nextStage === 'placed') nextStatus = 'accepted';
+    if (nextStage === 'rejected') nextStatus = 'rejected';
+    
+    onUpdateApplicationStatus(id, nextStage, nextStatus);
   };
 
-  const getStageTitle = (stage: PipelineCandidate['stage']) => {
+  const getStageTitle = (stage: string) => {
     switch (stage) {
       case 'screening': return '1. Screening & Pre-Vet';
       case 'interview': return '2. Interview Scheduled';
@@ -130,7 +152,7 @@ export function HiringPipeline({ onScheduleInterview, onOpenCompliance, onSendMe
     }
   };
 
-  const stages: { key: PipelineCandidate['stage']; title: string; color: string; desc: string }[] = [
+  const stages: { key: string; title: string; color: string; desc: string }[] = [
     { key: 'screening', title: 'Screening & Pre-Vet', color: 'border-blue-500', desc: 'Credential verification' },
     { key: 'interview', title: 'Interviewing', color: 'border-teal-500', desc: 'Technical & clinical calls' },
     { key: 'offer', title: 'Offer Extended', color: 'border-amber-500', desc: 'Contract negotiations' },
@@ -253,17 +275,26 @@ export function HiringPipeline({ onScheduleInterview, onOpenCompliance, onSendMe
                       </button>
 
                       {stage.key === 'screening' && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            onScheduleInterview(c);
-                            moveCandidate(c.id, 'interview');
-                          }}
-                          className="px-2.5 py-1 bg-teal-600 text-white rounded-lg text-[10px] font-bold uppercase tracking-wider hover:bg-teal-700 transition-colors flex items-center gap-1"
-                        >
-                          <span>Invite</span>
-                          <ChevronRight size={12} />
-                        </button>
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => moveCandidate(c.id, 'rejected')}
+                            className="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg text-[10px] font-bold uppercase tracking-wider hover:bg-rose-200 transition-colors"
+                          >
+                            Reject
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onScheduleInterview(c);
+                              moveCandidate(c.id, 'interview');
+                            }}
+                            className="px-2.5 py-1 bg-teal-600 text-white rounded-lg text-[10px] font-bold uppercase tracking-wider hover:bg-teal-700 transition-colors flex items-center gap-1"
+                          >
+                            <span>Invite</span>
+                            <ChevronRight size={12} />
+                          </button>
+                        </>
                       )}
 
                       {stage.key === 'interview' && (

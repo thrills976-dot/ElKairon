@@ -10,6 +10,8 @@ import {
 } from 'firebase/auth';
 import { auth, db, googleProvider, formatAuthError, isDomainUnauthorized } from '../lib/firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../lib/firebase';
 import { CandidateProfile, EmployerProfile, UserProfile } from '../types/recruitment';
 import { computeRecruitmentScores, computePersonalityArchetype } from '../lib/aiRecruitmentEngine';
 import { sanitizeText, sanitizeEmail, sanitizePhone, sanitizeStringArray } from '../lib/sanitization';
@@ -19,7 +21,7 @@ export interface AuthContextType {
   user: User | null;
   userProfile: UserProfile | null;
   loading: boolean;
-  role: 'candidate' | 'employer' | null;
+  role: 'candidate' | 'employer' | 'admin' | 'recruiter' | null;
   candidateProfile: CandidateProfile | null;
   employerProfile: EmployerProfile | null;
   authError: string | null;
@@ -215,8 +217,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
         setEmployerProfile(fullEmpProfile);
       } else if (userRole === 'candidate') {
+        
         const candDoc = await getDoc(doc(db, 'candidates', currentUser.uid));
-        const candData = candDoc.exists() ? candDoc.data() : userData;
+        const privateDoc = await getDoc(doc(db, 'candidates', currentUser.uid, 'private', 'info'));
+        
+        const publicCandData = candDoc.exists() ? candDoc.data() : {};
+        const privateCandData = privateDoc.exists() ? privateDoc.data() : {};
+        const candData = { ...userData, ...publicCandData, ...privateCandData };
+
         const fullCandidate: CandidateProfile = {
           ...DEFAULT_EMPTY_CANDIDATE,
           ...candData,
@@ -229,9 +237,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setCandidateProfile(fullCandidate);
       } else {
         // Fallback: check candidates collection, then employers
+        
         const candDoc = await getDoc(doc(db, 'candidates', currentUser.uid));
         if (candDoc.exists()) {
-          const candData = candDoc.data();
+          const privateDoc = await getDoc(doc(db, 'candidates', currentUser.uid, 'private', 'info'));
+          const publicCandData = candDoc.data();
+          const privateCandData = privateDoc.exists() ? privateDoc.data() : {};
+          const candData = { ...publicCandData, ...privateCandData };
+
           setRoleState('candidate');
           const fullCandidate: CandidateProfile = {
             ...DEFAULT_EMPTY_CANDIDATE,
@@ -374,6 +387,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const setRole = async (newRole: 'candidate' | 'employer', profileData: any = {}) => {
+    // SECURITY: Prevent role escalation or switching if a role is already established
+    if (role && role !== newRole) {
+      toast.error('Role cannot be changed once established.');
+      return;
+    }
     setRoleState(newRole);
 
     const activeUid = user ? user.uid : `user-${Date.now()}`;
@@ -394,6 +412,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (profileData.country) mergedProfile.country = sanitizeText(profileData.country, 100);
       if (profileData.skills) mergedProfile.skills = sanitizeStringArray(profileData.skills);
 
+      if (profileData.cvFile) {
+        try {
+          const cvRef = ref(storage, `candidates/${activeUid}/documents/${profileData.cvFile.name}`);
+          await uploadBytes(cvRef, profileData.cvFile);
+          mergedProfile.cvUrl = await getDownloadURL(cvRef);
+          mergedProfile.cvName = profileData.cvFile.name;
+        } catch (err) {
+          console.error("Failed to upload CV", err);
+        }
+      }
+      if (profileData.coverLetterFile) {
+        try {
+          const clRef = ref(storage, `candidates/${activeUid}/documents/${profileData.coverLetterFile.name}`);
+          await uploadBytes(clRef, profileData.coverLetterFile);
+          mergedProfile.coverLetterUrl = await getDownloadURL(clRef);
+          mergedProfile.coverLetterName = profileData.coverLetterFile.name;
+        } catch (err) {
+          console.error("Failed to upload Cover Letter", err);
+        }
+      }
+
+
       mergedProfile.aiRecruitmentScore = computeRecruitmentScores(mergedProfile);
       setCandidateProfile(mergedProfile);
 
@@ -408,10 +448,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (user) {
         try {
-          await setDoc(doc(db, 'candidates', user.uid), {
-            ...mergedProfile,
-            updatedAt: serverTimestamp()
-          }, { merge: true });
           await setDoc(doc(db, 'users', user.uid), {
             id: user.uid,
             role: 'candidate',
@@ -419,6 +455,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             email: userEmail,
             updatedAt: serverTimestamp()
           }, { merge: true });
+          
+          const { email, phone, dob, age, nationality, passportAvailable, salaryExpectations, documents, cvUrl, coverLetterUrl, ...publicCandidateData } = mergedProfile;
+          const privateCandidateData = { email, phone, dob, age, nationality, passportAvailable, salaryExpectations, documents, cvUrl, coverLetterUrl };
+          
+          Object.keys(privateCandidateData).forEach(key => privateCandidateData[key] === undefined && delete privateCandidateData[key]);
+
+          await setDoc(doc(db, 'candidates', user.uid), {
+            ...publicCandidateData,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          
+          await setDoc(doc(db, 'candidates', user.uid, 'private', 'info'), {
+            ...privateCandidateData,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+
         } catch (err) {
           console.warn('Firestore candidate save notice:', err);
         }
@@ -449,17 +501,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (user) {
         try {
-          await setDoc(doc(db, 'employers', user.uid), {
-            ...empData,
-            ...profileData,
-            updatedAt: serverTimestamp()
-          }, { merge: true });
           await setDoc(doc(db, 'users', user.uid), {
             id: user.uid,
             role: 'employer',
             name: userDisplayName,
             email: userEmail,
             company: empData.company,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          await setDoc(doc(db, 'employers', user.uid), {
+            ...empData,
+            ...profileData,
             updatedAt: serverTimestamp()
           }, { merge: true });
         } catch (err) {
