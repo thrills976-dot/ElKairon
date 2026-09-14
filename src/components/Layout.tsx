@@ -39,6 +39,12 @@ interface LayoutProps {
 }
 
 export function Layout({ children, currentView, onNavigate }: LayoutProps) {
+  const [load3D, setLoad3D] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setLoad3D(true), 2500); // Delay heavy 3D background
+    return () => clearTimeout(timer);
+  }, []);
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -115,7 +121,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col font-body relative bg-navy-950 text-white overflow-x-hidden w-full max-w-full">
       {/* 3D Interactive Global Recruitment Background Canvas */}
-      <Suspense fallback={null}><RecruitmentJourneyCanvas scrollProgress={scrollProgress} /></Suspense>
+      {load3D && <Suspense fallback={null}><RecruitmentJourneyCanvas scrollProgress={scrollProgress} /></Suspense>}
 
       {/* Ambient Floating Motion Background Orbs across entire website */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">

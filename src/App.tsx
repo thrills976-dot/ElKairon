@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { motion, AnimatePresence } from 'motion/react';
@@ -21,6 +21,12 @@ function MinimalLoader() {
 }
 
 export default function App() {
+  const [showChat, setShowChat] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setShowChat(true), 3000); // Delay AI chat loading
+    return () => clearTimeout(timer);
+  }, []);
+
   const [currentView, setCurrentView] = useState<'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees' | 'services-terms'>('home');
 
   const handleNavigate = (view: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees' | 'services-terms') => {
@@ -48,11 +54,13 @@ export default function App() {
         </Suspense>
       </Layout>
       
-      <Suspense fallback={null}>
-        <ChatWidget 
-          context={currentView === 'home' ? 'home' : currentView === 'candidate-portal' ? 'candidate' : 'employer'} 
-        />
-      </Suspense>
+      {showChat && (
+        <Suspense fallback={null}>
+          <ChatWidget 
+            context={currentView === 'home' ? 'home' : currentView === 'candidate-portal' ? 'candidate' : 'employer'} 
+          />
+        </Suspense>
+      )}
     </>
   );
 }

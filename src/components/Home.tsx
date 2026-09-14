@@ -4,6 +4,7 @@ import { useGsapParallax } from '../hooks/useGsapParallax';
 
 // Critical components for initial load
 import { Hero } from './home/Hero';
+import { InViewLoader } from './InViewLoader';
 import { CredibilityStrip } from './home/CredibilityStrip';
 
 // Lazy-loaded components for below-the-fold
@@ -30,20 +31,9 @@ interface HomeProps {
   onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void;
 }
 
-const sectionAnimation = {
-  initial: { opacity: 0, y: 35 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-60px" },
-  transition: { duration: 0.6, ease: "easeOut" as const }
-};
 
-function LazySection({ children }: { children: React.ReactNode }) {
-  return (
-    <Suspense fallback={<div className="h-48 flex items-center justify-center opacity-50"><div className="w-6 h-6 rounded-full border-2 border-teal-400/30 border-t-teal-400 animate-spin" /></div>}>
-      {children}
-    </Suspense>
-  );
-}
+
+
 
 export function Home({ onNavigate }: HomeProps) {
   const rootRef = useGsapParallax();
@@ -80,66 +70,30 @@ export function Home({ onNavigate }: HomeProps) {
 
       <Hero onNavigate={onNavigate} />
       
-      <motion.div {...sectionAnimation}>
+      <div className="w-full relative">
         <CredibilityStrip />
-      </motion.div>
+      </div>
 
-      <LazySection>
-        <motion.div {...sectionAnimation}>
-          <Services />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <HowItWorks />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <KeyMetrics />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <Visas />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <WhyGermany />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <TwoJourneys onNavigate={onNavigate} />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <JobOpportunities />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <GuaranteedBenefits />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <Pricing />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <Testimonials />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <Impact />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <About />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <AboutStory />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <WhyElKairon />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <FAQ />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <ContactMap />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <NewsletterSignup />
-        </motion.div>
-        <motion.div {...sectionAnimation}>
-          <FinalCTA onNavigate={onNavigate} />
-        </motion.div>
-      </LazySection>
+      
+        <InViewLoader><Services /></InViewLoader>
+        <InViewLoader><HowItWorks /></InViewLoader>
+        <InViewLoader><KeyMetrics /></InViewLoader>
+        <InViewLoader><Visas /></InViewLoader>
+        <InViewLoader><WhyGermany /></InViewLoader>
+        <InViewLoader><TwoJourneys onNavigate={onNavigate} /></InViewLoader>
+        <InViewLoader><JobOpportunities /></InViewLoader>
+        <InViewLoader><GuaranteedBenefits /></InViewLoader>
+        <InViewLoader><Pricing /></InViewLoader>
+        <InViewLoader><Testimonials /></InViewLoader>
+        <InViewLoader><Impact /></InViewLoader>
+        <InViewLoader><About /></InViewLoader>
+        <InViewLoader><AboutStory /></InViewLoader>
+        <InViewLoader><WhyElKairon /></InViewLoader>
+        <InViewLoader><FAQ /></InViewLoader>
+        <InViewLoader><ContactMap /></InViewLoader>
+        <InViewLoader><NewsletterSignup /></InViewLoader>
+        <InViewLoader><FinalCTA onNavigate={onNavigate} /></InViewLoader>
+      
     </div>
   );
 }
