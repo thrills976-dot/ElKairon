@@ -1,4 +1,6 @@
-import React, { Suspense } from 'react';
+const fs = require('fs');
+
+const homeCode = `import React, { Suspense } from 'react';
 import { motion } from 'motion/react';
 import { useGsapParallax } from '../hooks/useGsapParallax';
 
@@ -143,3 +145,7 @@ export function Home({ onNavigate }: HomeProps) {
     </div>
   );
 }
+`;
+
+fs.writeFileSync('src/components/Home.tsx', homeCode);
+console.log('Fixed Home.tsx');

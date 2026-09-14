@@ -27,7 +27,8 @@ import { PrivacyModal } from './PrivacyModal';
 import { ConsultationModal } from './ConsultationModal';
 import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
-import { RecruitmentJourneyCanvas } from './3d/RecruitmentJourneyCanvas';
+import { Suspense } from 'react';
+const RecruitmentJourneyCanvas = React.lazy(() => import('./3d/RecruitmentJourneyCanvas').then(m => ({ default: m.RecruitmentJourneyCanvas })));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -114,7 +115,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col font-body relative bg-navy-950 text-white overflow-x-hidden w-full max-w-full">
       {/* 3D Interactive Global Recruitment Background Canvas */}
-      <RecruitmentJourneyCanvas scrollProgress={scrollProgress} />
+      <Suspense fallback={null}><RecruitmentJourneyCanvas scrollProgress={scrollProgress} /></Suspense>
 
       {/* Ambient Floating Motion Background Orbs across entire website */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">

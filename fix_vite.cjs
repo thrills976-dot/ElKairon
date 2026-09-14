@@ -1,17 +1,8 @@
-import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
-import {defineConfig} from 'vite';
+const fs = require('fs');
 
-export default defineConfig(() => {
-  return {
-    plugins: [react(), tailwindcss()],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, '.'),
-      },
-    },
-    
+let configCode = fs.readFileSync('vite.config.ts', 'utf-8');
+
+const buildConfig = `
     build: {
       rollupOptions: {
         output: {
@@ -31,12 +22,9 @@ export default defineConfig(() => {
         }
       }
     },
-    server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
-      hmr: process.env.DISABLE_HMR !== 'true',
-      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
-      watch: process.env.DISABLE_HMR === 'true' ? null : {},
-    },
-  };
-});
+`;
+
+configCode = configCode.replace('server: {', buildConfig + '    server: {');
+
+fs.writeFileSync('vite.config.ts', configCode);
+console.log('Fixed vite.config.ts');

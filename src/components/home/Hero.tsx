@@ -1,11 +1,18 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, PlaneTakeoff, ShieldCheck, Clock, Globe as GlobeIcon, Building2, Sparkles } from 'lucide-react';
 import { useRef } from 'react';
-import { Globe } from './Globe';
+import React, { Suspense, useState, useEffect } from 'react';
+const Globe = React.lazy(() => import('./Globe').then(m => ({ default: m.Globe })));
 import { BACKGROUND_IMAGES } from '../../data/imageMap';
 
 
 export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' | 'about' | 'insights' | 'candidate-portal' | 'employer-portal' | 'fees') => void }) {
+  const [loadGlobe, setLoadGlobe] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setLoadGlobe(true), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -22,7 +29,10 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
       {/* Permanent Background Image Overlay */}
       <div className="absolute inset-0 z-0 opacity-60 pointer-events-none overflow-hidden">
         <img 
-          src={BACKGROUND_IMAGES.heroGlobalConnect} 
+          src={BACKGROUND_IMAGES.heroGlobalConnect}
+          fetchPriority="high"
+          decoding="sync"
+          loading="eager" 
           alt="Global Connect" 
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
@@ -46,7 +56,11 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
         className="absolute inset-0 z-0 flex items-center justify-center pointer-events-auto overflow-hidden"
       >
         <div className="w-full h-full flex items-center justify-center">
-          <Globe />
+          {loadGlobe && (
+            <Suspense fallback={<div className="w-full h-full bg-navy-950/80 animate-pulse rounded-full blur-3xl absolute inset-0" />}>
+              <Globe />
+            </Suspense>
+          )}
         </div>
       </div>
 

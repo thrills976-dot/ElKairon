@@ -1,4 +1,6 @@
-import React, { useState, Suspense } from 'react';
+const fs = require('fs');
+
+const appTsx = `import React, { useState, Suspense } from 'react';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { motion, AnimatePresence } from 'motion/react';
@@ -56,3 +58,7 @@ export default function App() {
     </>
   );
 }
+`;
+
+fs.writeFileSync('src/App.tsx', appTsx);
+console.log('Fixed App.tsx');
