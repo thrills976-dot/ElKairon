@@ -26,7 +26,7 @@ export function BlurImage({ src, alt, className, containerClassName, zoomOnHover
         loading="lazy"
         onLoad={() => setLoading(false)}
         initial={false}
-        animate={{ 
+        whileInView={{ 
           filter: isLoading ? "blur(20px)" : "blur(0px)",
           scale: isLoading ? 1.1 : 1,
         }}

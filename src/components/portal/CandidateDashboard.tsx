@@ -551,8 +551,8 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
                   <motion.div
                     key={job.id}
                     layout
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 1, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-6"
                   >
                     {/* Job Details */}
@@ -1185,9 +1185,9 @@ export function CandidateDashboard({ onOpenProfileEditor }: CandidateDashboardPr
         {selectedJobForModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 1, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 1, scale: 0.95 }}
               className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl space-y-6"
             >
               {/* Modal Header */}

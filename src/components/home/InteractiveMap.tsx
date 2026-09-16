@@ -94,8 +94,8 @@ export function InteractiveMap() {
                     stroke="url(#arcGradient)"
                     strokeWidth={1.5}
                     strokeDasharray="4 4"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    whileInView={{ pathLength: 1, opacity: 0.6 }}
+                    initial={{ pathLength: 0, opacity: 1 }}
+                    whileInView={{ pathLength: 1, opacity: 1.6 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1.5, delay: i * 0.2, ease: "easeOut" }}
                   />
@@ -159,8 +159,8 @@ export function InteractiveMap() {
               }}
             >
               <motion.div 
-                initial={{ opacity: 0, y: 5, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
+                initial={{ opacity: 1, y: 5, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 className="bg-navy-900 border border-teal-500/30 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-xl whitespace-nowrap"
               >
                 <div className="flex items-center gap-1.5 mb-1">

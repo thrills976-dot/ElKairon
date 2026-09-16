@@ -34,15 +34,15 @@ export function PrivacyModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 1 }}
+          whileInView={{ opacity: 1 }}
+          exit={{ opacity: 1 }}
           className="fixed inset-0 z-[110] flex items-center justify-center bg-navy-900/80 backdrop-blur-sm p-4"
         >
           <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            initial={{ scale: 0.9, opacity: 1, y: 20 }}
+            whileInView={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 1, y: 20 }}
             className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative"
           >
             <div className="sticky top-0 bg-white/95 backdrop-blur z-10 border-b border-gray-100 p-6 flex items-center justify-between">

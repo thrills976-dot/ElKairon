@@ -24,8 +24,8 @@ export function FeesAndPayment() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 1, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-teal-200 text-xs font-bold tracking-widest uppercase border border-white/20 mb-6">
@@ -48,8 +48,8 @@ export function FeesAndPayment() {
           ].map((milestone, i) => (
             <motion.div 
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 1, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + i * 0.1 }}
               className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-center shadow-lg"
             >
@@ -64,8 +64,8 @@ export function FeesAndPayment() {
         </div>
 
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 1, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
           className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden shadow-2xl"
         >
@@ -85,8 +85,8 @@ export function FeesAndPayment() {
                 {feeData.map((row, idx) => (
                   <motion.tr 
                     key={row.country}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 1, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.8 + idx * 0.05 }}
                     className="border-b border-white/5 hover:bg-white/5 transition-colors group"
                   >
@@ -107,8 +107,8 @@ export function FeesAndPayment() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 1 }}
+          whileInView={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
           className="mt-12 flex items-start gap-4 bg-navy-900/30 p-6 rounded-2xl border border-white/10 max-w-3xl mx-auto"
         >

@@ -22,9 +22,9 @@ export function Toast({ message, isVisible, onClose }: ToastProps) {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.9 }}
+          initial={{ opacity: 1, y: 50, scale: 0.9 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 1, y: 20, scale: 0.9 }}
           className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] bg-navy-900 border border-gold-500 shadow-2xl rounded-lg px-6 py-4 flex items-center gap-4 text-white min-w-[300px]"
         >
           <div className="w-8 h-8 rounded-full bg-gold-500/20 flex items-center justify-center text-gold-500">

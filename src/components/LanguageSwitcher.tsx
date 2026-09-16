@@ -64,9 +64,9 @@ export function LanguageSwitcher({ isMobile = false }: { isMobile?: boolean }) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 1, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 1, y: 10 }}
             className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100 flex flex-col py-2 z-50"
           >
             {languages.map((lang) => (

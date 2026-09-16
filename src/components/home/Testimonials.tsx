@@ -73,7 +73,7 @@ export function Testimonials() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 1, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -91,9 +91,9 @@ export function Testimonials() {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
-              initial={{ opacity: 0, x: 40, scale: 0.98 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: -40, scale: 0.98 }}
+              initial={{ opacity: 1, x: 40, scale: 0.98 }}
+              whileInView={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 1, x: -40, scale: 0.98 }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="w-full bg-navy-900/90 backdrop-blur-md p-8 sm:p-12 rounded-3xl border border-white/20 shadow-2xl flex flex-col md:flex-row items-center gap-8 relative overflow-hidden"
             >

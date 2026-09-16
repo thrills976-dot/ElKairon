@@ -30,7 +30,7 @@ export function NewsletterSignup() {
     <section className="py-24 bg-gray-50 border-t border-gray-100">
       <div className="max-w-4xl mx-auto px-6 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
@@ -56,9 +56,9 @@ export function NewsletterSignup() {
                 {status === 'idle' && (
                   <motion.button 
                     key="submit"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 1, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 1, scale: 0.8 }}
                     type="submit"
                     className="absolute right-2 top-2 bottom-2 bg-navy-900 text-white px-6 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-teal-600 transition-colors flex items-center justify-center gap-2"
                   >
@@ -68,9 +68,9 @@ export function NewsletterSignup() {
                 {status === 'loading' && (
                   <motion.div 
                     key="loading"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 1, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 1, scale: 0.8 }}
                     className="absolute right-2 top-2 bottom-2 px-6 flex items-center justify-center text-teal-600"
                   >
                     <div className="w-5 h-5 border-2 border-teal-600 border-t-transparent rounded-full animate-spin" />
@@ -79,9 +79,9 @@ export function NewsletterSignup() {
                 {status === 'success' && (
                   <motion.div 
                     key="success"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 1, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 1, scale: 0.8 }}
                     className="absolute right-2 top-2 bottom-2 bg-green-500 text-white px-6 rounded-xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-sm"
                   >
                     Subscribed <CheckCircle size={14} />

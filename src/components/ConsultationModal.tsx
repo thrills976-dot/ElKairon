@@ -64,9 +64,9 @@ export function ConsultationModal({ isOpen, onClose, defaultType = 'candidate' }
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-navy-950/80">
       <AnimatePresence>
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 1, scale: 0.95, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 1, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3 }}
           className="bg-navy-900 border-2 border-gold-500 rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto text-white shadow-2xl relative"
         >

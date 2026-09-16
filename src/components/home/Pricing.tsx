@@ -271,9 +271,9 @@ export function Pricing() {
                   <AnimatePresence>
                     {openFaq === idx && (
                       <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
+                        initial={{ height: 0, opacity: 1 }}
+                        whileInView={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 1 }}
                         className="overflow-hidden"
                       >
                         <div className="px-6 pb-5 pt-1 text-sm text-gray-400 leading-relaxed border-t border-white/5">

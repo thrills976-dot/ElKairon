@@ -117,9 +117,9 @@ export function TermsAndConditionsModal({
         >
           <motion.div
             id="terms-modal-container"
-            initial={{ opacity: 0, scale: 0.95, y: 15 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+            initial={{ opacity: 1, scale: 0.95, y: 15 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 1, scale: 0.95, y: 15 }}
             className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] shadow-2xl flex flex-col overflow-hidden border border-slate-200"
           >
             {/* Header */}

@@ -56,9 +56,9 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
             ) : selectedRole === 'candidate' ? (
               <motion.div
                 key="candidate-registration-flow"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 1, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 1, y: -10 }}
                 className="w-full"
               >
                 <CandidateRegistration
@@ -72,9 +72,9 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
             ) : (
               <motion.div
                 key="employer-registration-flow"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 1, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 1, y: -10 }}
                 className="w-full"
               >
                 <EmployerRegistration
@@ -106,9 +106,9 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
             ) : selectedRole === 'candidate' ? (
               <motion.div
                 key="candidate-auth-onboarding"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 1, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 1, y: -10 }}
                 className="w-full"
               >
                 <CandidateRegistration
@@ -122,9 +122,9 @@ export function Portal({ initialMode }: { initialMode?: "candidate" | "employer"
             ) : (
               <motion.div
                 key="employer-auth-onboarding"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 1, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 1, y: -10 }}
                 className="w-full"
               >
                 <EmployerRegistration

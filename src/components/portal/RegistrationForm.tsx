@@ -704,7 +704,7 @@ export function CandidateRegistration({
           
           {/* STEP 1: CREATE ACCOUNT & TERMS */}
           {currentStep === 1 && (
-            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
+            <motion.div initial={{ opacity: 1, y: 15 }} whileInView={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
               <div className="max-w-xl mx-auto">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 text-teal-800 text-xs font-bold uppercase tracking-wider mb-4 border border-teal-200">
                   <ShieldCheck className="w-4 h-4 text-teal-600" />
@@ -933,7 +933,7 @@ export function CandidateRegistration({
               <AnimatePresence mode="wait">
                 {/* 2.1 Personal Information */}
                 {subSection === 1 && (
-                  <motion.div key="sub-1" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="space-y-6">
+                  <motion.div key="sub-1" initial={{ opacity: 1, x: 10 }} whileInView={{ opacity: 1, x: 0 }} exit={{ opacity: 1, x: -10 }} className="space-y-6">
                     <div className="border-b border-gray-100 pb-4">
                       <h3 className="text-2xl font-display font-bold text-navy-900">Personal Information</h3>
                       <p className="text-sm text-gray-500">Provide legal identification and relocation feasibility details.</p>
@@ -1102,7 +1102,7 @@ export function CandidateRegistration({
 
                 {/* 2.2 Career Information */}
                 {subSection === 2 && (
-                  <motion.div key="sub-2" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="space-y-6">
+                  <motion.div key="sub-2" initial={{ opacity: 1, x: 10 }} whileInView={{ opacity: 1, x: 0 }} exit={{ opacity: 1, x: -10 }} className="space-y-6">
                     <div className="border-b border-gray-100 pb-4">
                       <h3 className="text-2xl font-display font-bold text-navy-900">Career Information</h3>
                       <p className="text-sm text-gray-500">Your current role seniority, professional domain, and track record.</p>
@@ -1186,7 +1186,7 @@ export function CandidateRegistration({
 
                 {/* 2.3 Education */}
                 {subSection === 3 && (
-                  <motion.div key="sub-3" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="space-y-6">
+                  <motion.div key="sub-3" initial={{ opacity: 1, x: 10 }} whileInView={{ opacity: 1, x: 0 }} exit={{ opacity: 1, x: -10 }} className="space-y-6">
                     <div className="border-b border-gray-100 pb-4">
                       <h3 className="text-2xl font-display font-bold text-navy-900">Education & Academic Background</h3>
                       <p className="text-sm text-gray-500">Degree details used for CIPA / NARIC qualification equivalence assessment.</p>
@@ -1262,7 +1262,7 @@ export function CandidateRegistration({
 
                 {/* 2.4 Skills */}
                 {subSection === 4 && (
-                  <motion.div key="sub-4" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="space-y-6">
+                  <motion.div key="sub-4" initial={{ opacity: 1, x: 10 }} whileInView={{ opacity: 1, x: 0 }} exit={{ opacity: 1, x: -10 }} className="space-y-6">
                     <div className="border-b border-gray-100 pb-4">
                       <h3 className="text-2xl font-display font-bold text-navy-900">Core Professional & Technical Skills</h3>
                       <p className="text-sm text-gray-500">Select or type your primary tools, technologies, and clinical/technical proficiencies (minimum 2).</p>
@@ -1352,7 +1352,7 @@ export function CandidateRegistration({
 
                 {/* 2.5 Certifications */}
                 {subSection === 5 && (
-                  <motion.div key="sub-5" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="space-y-6">
+                  <motion.div key="sub-5" initial={{ opacity: 1, x: 10 }} whileInView={{ opacity: 1, x: 0 }} exit={{ opacity: 1, x: -10 }} className="space-y-6">
                     <div className="border-b border-gray-100 pb-4">
                       <h3 className="text-2xl font-display font-bold text-navy-900">Accreditations & Certifications</h3>
                       <p className="text-sm text-gray-500">Optional: Add recognized industry certifications to boost your AI match ranking.</p>
@@ -1421,7 +1421,7 @@ export function CandidateRegistration({
 
                 {/* 2.6 Languages */}
                 {subSection === 6 && (
-                  <motion.div key="sub-6" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="space-y-6">
+                  <motion.div key="sub-6" initial={{ opacity: 1, x: 10 }} whileInView={{ opacity: 1, x: 0 }} exit={{ opacity: 1, x: -10 }} className="space-y-6">
                     <div className="border-b border-gray-100 pb-4">
                       <h3 className="text-2xl font-display font-bold text-navy-900">Language Proficiencies</h3>
                       <p className="text-sm text-gray-500">Specify languages for host-country workplace communication and visa criteria.</p>
@@ -1489,7 +1489,7 @@ export function CandidateRegistration({
 
                 {/* 2.7 Preferences */}
                 {subSection === 7 && (
-                  <motion.div key="sub-7" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="space-y-6">
+                  <motion.div key="sub-7" initial={{ opacity: 1, x: 10 }} whileInView={{ opacity: 1, x: 0 }} exit={{ opacity: 1, x: -10 }} className="space-y-6">
                     <div className="border-b border-gray-100 pb-4">
                       <h3 className="text-2xl font-display font-bold text-navy-900">Relocation & Role Preferences</h3>
                       <p className="text-sm text-gray-500">Destination countries, compensation expectations, and work environment preferences.</p>
@@ -1553,7 +1553,7 @@ export function CandidateRegistration({
 
                 {/* 2.8 Resume Upload */}
                 {subSection === 8 && (
-                  <motion.div key="sub-8" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="space-y-6">
+                  <motion.div key="sub-8" initial={{ opacity: 1, x: 10 }} whileInView={{ opacity: 1, x: 0 }} exit={{ opacity: 1, x: -10 }} className="space-y-6">
                     <div className="border-b border-gray-100 pb-4">
                       <h3 className="text-2xl font-display font-bold text-navy-900">Upload Authentic Résumé & Dossier Documents</h3>
                       <p className="text-sm text-gray-500">Upload your verified Curriculum Vitae for AI parsing and recruiter qualification validation.</p>
@@ -1666,7 +1666,7 @@ export function CandidateRegistration({
 
           {/* STEP 3: AI SKILLS ASSESSMENT */}
           {currentStep === 3 && (
-            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
+            <motion.div initial={{ opacity: 1, y: 15 }} whileInView={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
               <div className="max-w-3xl mx-auto">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 text-teal-800 text-xs font-bold uppercase tracking-wider mb-4 border border-teal-200">
                   <Cpu className="w-4 h-4 text-teal-600" />
@@ -1736,7 +1736,7 @@ export function CandidateRegistration({
 
           {/* STEP 4: AI PERSONALITY & WORK STYLE */}
           {currentStep === 4 && (
-            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
+            <motion.div initial={{ opacity: 1, y: 15 }} whileInView={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
               <div className="max-w-3xl mx-auto">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 text-teal-800 text-xs font-bold uppercase tracking-wider mb-4 border border-teal-200">
                   <Sparkles className="w-4 h-4 text-teal-600" />
@@ -1805,7 +1805,7 @@ export function CandidateRegistration({
 
           {/* STEP 5: AI CAREER GOALS */}
           {currentStep === 5 && (
-            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
+            <motion.div initial={{ opacity: 1, y: 15 }} whileInView={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
               <div className="max-w-3xl mx-auto">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 text-teal-800 text-xs font-bold uppercase tracking-wider mb-4 border border-teal-200">
                   <Award className="w-4 h-4 text-teal-600" />
@@ -1869,7 +1869,7 @@ export function CandidateRegistration({
 
           {/* STEP 6: AI MATCHING PREFERENCES */}
           {currentStep === 6 && (
-            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
+            <motion.div initial={{ opacity: 1, y: 15 }} whileInView={{ opacity: 1, y: 0 }} className="p-8 md:p-12">
               <div className="max-w-3xl mx-auto">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 text-teal-800 text-xs font-bold uppercase tracking-wider mb-4 border border-teal-200">
                   <Sliders className="w-4 h-4 text-teal-600" />
@@ -1931,7 +1931,7 @@ export function CandidateRegistration({
 
           {/* STEP 7: AI RECRUITMENT SCORE REVEAL & ACCREDITATION */}
           {currentStep === 7 && (
-            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="p-8 md:p-12">
+            <motion.div initial={{ opacity: 1, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} className="p-8 md:p-12">
               <div className="max-w-3xl mx-auto text-center">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-50 text-teal-800 text-xs font-bold uppercase tracking-wider mb-6 border border-teal-200">
                   <ShieldCheck className="w-4 h-4 text-teal-600" />

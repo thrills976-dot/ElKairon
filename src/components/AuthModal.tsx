@@ -153,16 +153,16 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'candidate' }: AuthMo
         {isOpen && (
           <motion.div
             id="auth-modal-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 1 }}
+            whileInView={{ opacity: 1 }}
+            exit={{ opacity: 1 }}
             className="fixed inset-0 z-[100] flex items-center justify-center bg-navy-950/80 backdrop-blur-md p-4 overflow-y-auto"
           >
             <motion.div
               id="auth-modal-dialog"
-              initial={{ scale: 0.95, opacity: 0, y: 16 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 16 }}
+              initial={{ scale: 0.95, opacity: 1, y: 16 }}
+              whileInView={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 1, y: 16 }}
               className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl relative border border-gray-100 my-8"
             >
               <button
@@ -196,8 +196,8 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'candidate' }: AuthMo
                 {/* Optional Configuration Notice for Google OAuth */}
                 {showDomainNotice && (
                   <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    initial={{ opacity: 1, height: 0 }}
+                    whileInView={{ opacity: 1, height: 'auto' }}
                     className="mb-5 p-4 bg-amber-50/90 border border-amber-300 rounded-2xl text-xs text-amber-950 space-y-2.5 shadow-xs"
                   >
                     <div className="flex items-start justify-between gap-2">

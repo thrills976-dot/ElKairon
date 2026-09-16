@@ -178,7 +178,7 @@ export function JobOpportunities() {
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -198,7 +198,7 @@ export function JobOpportunities() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 1, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -329,9 +329,9 @@ export function JobOpportunities() {
                   return (
                   <motion.div
                     layout
-                    initial={{ opacity: 0, scale: 0.94, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.92, y: -10 }}
+                    initial={{ opacity: 1, scale: 0.94, y: 20 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 1, scale: 0.92, y: -10 }}
                     transition={{ duration: 0.4, delay: idx * 0.05, ease: [0.22, 1, 0.36, 1] }}
                     whileHover={{ 
                       y: -6,
@@ -416,8 +416,8 @@ export function JobOpportunities() {
 
               {filteredJobs.length === 0 && (
                 <motion.div 
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 1, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   className="col-span-full py-16 text-center bg-navy-900/80 rounded-2xl border border-dashed border-white/30 p-8"
                 >
                   <Search className="mx-auto text-sky-300 mb-4" size={48} />

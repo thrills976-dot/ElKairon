@@ -48,7 +48,7 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -68,7 +68,7 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
         >
           {/* For Talent */}
           <motion.div
-            initial={{ opacity: 0, x: -30, y: 20 }}
+            initial={{ opacity: 1, x: -30, y: 20 }}
             whileInView={{ opacity: 1, x: 0, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -130,7 +130,7 @@ export function TwoJourneys({ onNavigate }: { onNavigate: (v: 'home' | 'opportun
 
           {/* For Employers */}
           <motion.div
-            initial={{ opacity: 0, x: 30, y: 20 }}
+            initial={{ opacity: 1, x: 30, y: 20 }}
             whileInView={{ opacity: 1, x: 0, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}

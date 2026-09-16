@@ -46,7 +46,7 @@ export function FinalCTA({ onNavigate }: { onNavigate: (v: 'home' | 'opportuniti
       
       <div className="max-w-4xl mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          initial={{ opacity: 1, scale: 0.9, y: 20 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -57,7 +57,7 @@ export function FinalCTA({ onNavigate }: { onNavigate: (v: 'home' | 'opportuniti
         </motion.div>
 
         <motion.h2 
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
@@ -67,7 +67,7 @@ export function FinalCTA({ onNavigate }: { onNavigate: (v: 'home' | 'opportuniti
         </motion.h2>
         
         <motion.p 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
@@ -77,7 +77,7 @@ export function FinalCTA({ onNavigate }: { onNavigate: (v: 'home' | 'opportuniti
         </motion.p>
         
         <motion.div 
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 1, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}

@@ -458,9 +458,9 @@ export function ProfileManagementModal({ isOpen, onClose }: ProfileManagementMod
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/80 backdrop-blur-md overflow-y-auto">
       <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 15 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 15 }}
+        initial={{ opacity: 1, scale: 0.96, y: 15 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 1, scale: 0.96, y: 15 }}
         className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full border border-gray-100 overflow-hidden my-8 flex flex-col max-h-[90vh]"
       >
         {/* Modal Header */}

@@ -20,8 +20,8 @@ export const RoleSelectionView: React.FC<RoleSelectionViewProps> = ({
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-8">
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 1, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25 }}
         className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 space-y-8"
       >

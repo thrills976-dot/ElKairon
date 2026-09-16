@@ -66,8 +66,8 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
 
       {/* Floating Status Badges - With perpetual gentle float and micro-interactions */}
       <motion.div 
-        initial={{ opacity: 0, x: 30, y: 0 }}
-        animate={{ 
+        initial={{ opacity: 1, x: 30, y: 0 }}
+        whileInView={{ 
           opacity: 1, 
           x: 0,
           y: [0, -6, 0]
@@ -91,8 +91,8 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
       </motion.div>
 
       <motion.div 
-        initial={{ opacity: 0, x: -30, y: 0 }}
-        animate={{ 
+        initial={{ opacity: 1, x: -30, y: 0 }}
+        whileInView={{ 
           opacity: 1, 
           x: 0,
           y: [0, 6, 0]
@@ -127,8 +127,8 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
           >
             {/* Header / Brand & Accreditation Badges */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 1, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col sm:flex-row items-center justify-center gap-2.5"
             >
@@ -162,7 +162,7 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold italic text-white leading-[1.08] tracking-tight [text-shadow:_0_4px_20px_rgba(2,16,30,0.95)] drop-shadow-xl">
                 <motion.div 
                   variants={{ 
-                    hidden: { opacity: 0, y: 30, rotateX: 20 }, 
+                    hidden: { opacity: 1, y: 30, rotateX: 20 }, 
                     visible: { opacity: 1, y: 0, rotateX: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } } 
                   }}
                   className="transform-gpu"
@@ -171,7 +171,7 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
                 </motion.div>
                 <motion.div 
                   variants={{ 
-                    hidden: { opacity: 0, y: 30, rotateX: 20 }, 
+                    hidden: { opacity: 1, y: 30, rotateX: 20 }, 
                     visible: { opacity: 1, y: 0, rotateX: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } } 
                   }} 
                   className="text-gold-300 [text-shadow:_0_4px_20px_rgba(2,16,30,0.95)] transform-gpu"
@@ -180,7 +180,7 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
                 </motion.div>
                 <motion.div 
                   variants={{ 
-                    hidden: { opacity: 0, y: 30, rotateX: 20 }, 
+                    hidden: { opacity: 1, y: 30, rotateX: 20 }, 
                     visible: { opacity: 1, y: 0, rotateX: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } } 
                   }}
                   className="transform-gpu"
@@ -192,8 +192,8 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
 
             {/* Subtitle / Description */}
             <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 1, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="text-base sm:text-lg text-sky-50 max-w-2xl font-normal leading-relaxed [text-shadow:_0_2px_12px_rgba(2,16,30,0.95)]"
             >
@@ -202,8 +202,8 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
 
             {/* Action Buttons with High-Performance Micro-Interactions */}
             <motion.div 
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 1, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3.5 w-full sm:w-auto pt-2"
             >
@@ -240,8 +240,8 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
 
             {/* Trust Markers Strip */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 1, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.75, ease: "easeOut" }}
               className="pt-5 border-t border-white/20 grid grid-cols-3 gap-6 w-full max-w-lg text-center"
             >
@@ -265,8 +265,8 @@ export function Hero({ onNavigate }: { onNavigate: (v: 'home' | 'opportunities' 
 
       {/* Bottom Center Interaction Cue */}
       <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 1, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.6 }}
         className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
       >

@@ -255,8 +255,8 @@ export function CandidatePoolBrowser({
           <motion.div
             key={cand.id}
             layout
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 1, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
             className="bg-white rounded-3xl border border-gray-100 hover:border-teal-500 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between overflow-hidden group"
           >
             {/* Card Header & Profile */}

@@ -219,8 +219,8 @@ export function ServicesAndTerms() {
 
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 1, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-navy-900 border border-gold-400/40 text-gold-400 text-xs font-extrabold uppercase tracking-widest mb-6 shadow-sm"
           >
             <ShieldCheck size={14} className="text-gold-400" />
@@ -228,8 +228,8 @@ export function ServicesAndTerms() {
           </motion.div>
 
           <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 1, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-white mb-6 tracking-tight leading-tight"
           >
@@ -237,8 +237,8 @@ export function ServicesAndTerms() {
           </motion.h1>
 
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 1, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="text-base sm:text-xl text-sky-100 max-w-3xl mx-auto leading-relaxed font-body"
           >
@@ -294,9 +294,9 @@ export function ServicesAndTerms() {
           {activeTab === 'candidates' && (
             <motion.div
               key="candidates"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
+              initial={{ opacity: 1, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 1, y: -15 }}
               transition={{ duration: 0.3 }}
               className="space-y-16"
             >
@@ -486,9 +486,9 @@ export function ServicesAndTerms() {
           {activeTab === 'employers' && (
             <motion.div
               key="employers"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
+              initial={{ opacity: 1, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 1, y: -15 }}
               transition={{ duration: 0.3 }}
               className="space-y-16"
             >
@@ -605,9 +605,9 @@ export function ServicesAndTerms() {
           {activeTab === 'resources' && (
             <motion.div
               key="resources"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
+              initial={{ opacity: 1, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 1, y: -15 }}
               transition={{ duration: 0.3 }}
               className="space-y-16"
             >

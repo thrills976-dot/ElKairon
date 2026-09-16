@@ -126,7 +126,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
       {/* Ambient Floating Motion Background Orbs across entire website */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <motion.div
-          animate={{
+          whileInView={{
             x: [0, 40, 0],
             y: [0, -30, 0],
             scale: [1, 1.12, 1],
@@ -139,7 +139,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
           className="absolute -top-32 -left-32 w-80 sm:w-96 h-80 sm:h-96 bg-teal-500/10 rounded-full blur-[140px]"
         />
         <motion.div
-          animate={{
+          whileInView={{
             x: [0, -50, 0],
             y: [0, 40, 0],
             scale: [1, 1.15, 1],
@@ -152,7 +152,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
           className="absolute top-1/3 -right-32 w-96 sm:w-[450px] h-96 sm:h-[450px] bg-gold-500/10 rounded-full blur-[160px]"
         />
         <motion.div
-          animate={{
+          whileInView={{
             x: [0, 30, 0],
             y: [0, 50, 0],
             scale: [1, 1.1, 1],
@@ -305,9 +305,9 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 1, height: 0 }}
+              whileInView={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 1, height: 0 }}
               className="xl:hidden bg-navy-950 border-b border-white/15 px-4 sm:px-6 py-6 overflow-hidden"
             >
               <div className="flex flex-col gap-3.5 text-sm font-bold uppercase tracking-wider mb-6">

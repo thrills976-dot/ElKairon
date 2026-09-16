@@ -49,7 +49,7 @@ export function RecruitmentJourneyCanvas({ scrollProgress = 0 }: JourneyCanvasPr
       color: 0x0f766e,
       wireframe: true,
       transparent: true,
-      opacity: 0.12,
+      opacity: 1.12,
     });
     const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
     globeGroup.add(sphereMesh);
@@ -88,7 +88,7 @@ export function RecruitmentJourneyCanvas({ scrollProgress = 0 }: JourneyCanvasPr
       size: 0.18,
       vertexColors: true,
       transparent: true,
-      opacity: 0.75,
+      opacity: 1.75,
       blending: THREE.AdditiveBlending,
     });
     const particleSystem = new THREE.Points(particleGeo, particleMat);
@@ -122,14 +122,14 @@ export function RecruitmentJourneyCanvas({ scrollProgress = 0 }: JourneyCanvasPr
 
       // Glowing Hub Marker
       const meshGeo = new THREE.SphereGeometry(0.22, 16, 16);
-      const meshMat = new THREE.MeshBasicMaterial({ color: h.color, transparent: true, opacity: 0.9 });
+      const meshMat = new THREE.MeshBasicMaterial({ color: h.color, transparent: true, opacity: 1.9 });
       const mesh = new THREE.Mesh(meshGeo, meshMat);
       mesh.position.copy(pos);
       globeGroup.add(mesh);
 
       // Outer Pulse Ring
       const ringGeo = new THREE.RingGeometry(0.3, 0.45, 16);
-      const ringMat = new THREE.MeshBasicMaterial({ color: h.color, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
+      const ringMat = new THREE.MeshBasicMaterial({ color: h.color, side: THREE.DoubleSide, transparent: true, opacity: 1.5 });
       const ring = new THREE.Mesh(ringGeo, ringMat);
       ring.position.copy(pos);
       ring.lookAt(new THREE.Vector3(0,0,0));
@@ -157,14 +157,14 @@ export function RecruitmentJourneyCanvas({ scrollProgress = 0 }: JourneyCanvasPr
       const arcMat = new THREE.LineBasicMaterial({
         color: i % 2 === 0 ? 0xd4af37 : 0x2dd4bf,
         transparent: true,
-        opacity: 0.45,
+        opacity: 1.45,
       });
       const arcLine = new THREE.Line(arcGeo, arcMat);
       arcsGroup.add(arcLine);
 
       // Moving Flight Pulse Light along Arc
       const pulseGeo = new THREE.SphereGeometry(0.12, 8, 8);
-      const pulseMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95 });
+      const pulseMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.95 });
       const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
       arcsGroup.add(pulseMesh);
 

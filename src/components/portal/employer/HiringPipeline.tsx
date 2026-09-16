@@ -216,8 +216,8 @@ export function HiringPipeline({ applications, jobs, onUpdateApplicationStatus, 
                   <motion.div
                     key={c.id}
                     layout
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 1, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
                     className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-teal-500 transition-all space-y-3"
                   >
                     <div className="flex items-start justify-between gap-2">

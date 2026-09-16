@@ -15,7 +15,7 @@ export function About() {
   const scale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1]);
 
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 1 },
     visible: {
       opacity: 1,
       transition: { staggerChildren: 0.2 }
@@ -23,7 +23,7 @@ export function About() {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 1, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } }
   };
 
@@ -31,7 +31,7 @@ export function About() {
     <section ref={containerRef} className="py-32 bg-gray-50 relative overflow-hidden">
       {/* Background Parallax */}
       <motion.div 
-        style={{ y: y1, opacity: 0.03 }}
+        style={{ y: y1, opacity: 1.03 }}
         className="absolute top-0 right-0 text-[30rem] font-display font-bold leading-none text-navy-900 pointer-events-none select-none z-0"
       >
         KAIROS

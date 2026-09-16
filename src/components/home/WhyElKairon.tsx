@@ -61,7 +61,7 @@ export function WhyElKairon() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
@@ -79,7 +79,7 @@ export function WhyElKairon() {
           {features.map((feature, idx) => (
             <motion.div 
               key={idx}
-              initial={{ opacity: 0, y: 25 }}
+              initial={{ opacity: 1, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.12, duration: 0.6 }}
